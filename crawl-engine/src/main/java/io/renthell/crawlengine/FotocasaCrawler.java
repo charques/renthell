@@ -5,9 +5,13 @@ import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpStatus;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.ParseException;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
@@ -15,11 +19,12 @@ import java.util.regex.Pattern;
 /**
  * Created by cfhernandez on 4/7/17.
  */
+@Slf4j
 public class FotocasaCrawler extends WebCrawler {
 
-    private static final Logger logger = LoggerFactory.getLogger(FotocasaCrawler.class);
-
-    private final static Pattern FILTERS = Pattern.compile(".*(\\.(css|js|gif|jpg|png|mp3|mp3|zip|gz))$");
+    private static final Pattern FILTERS = Pattern.compile(
+            ".*(\\.(css|js|bmp|gif|jpe?g|png|tiff?|mid|mp2|mp3|mp4|wav|avi|mov|mpeg|ram|m4v|pdf" +
+                    "|rm|smil|wmv|swf|wma|zip|rar|gz))$");
 
     CrawlStats crawlStats;
     FotocasaService fotocasaService;
@@ -42,8 +47,9 @@ public class FotocasaCrawler extends WebCrawler {
     @Override
     public boolean shouldVisit(Page referringPage, WebURL url) {
         String href = url.getURL().toLowerCase();
-        return !FILTERS.matcher(href).matches()
-                && href.startsWith("http://www.fotocasa.es/vivienda/madrid-capital/");
+        Boolean shouldVisit = !FILTERS.matcher(href).matches()
+                && href.startsWith("http://www.fotocasa.es/vivienda/");
+        return shouldVisit;
     }
 
     /**
@@ -60,26 +66,43 @@ public class FotocasaCrawler extends WebCrawler {
             Set<WebURL> links = htmlParseData.getOutgoingUrls();
             WebURL webUrl = page.getWebURL();
 
-            logger.debug("Number of outgoing links: {}", links.size());
+            log.info(webUrl.getURL());
 
-            crawlStats.incTotalLinks(links.size());
+            try {
+                FotocasaItem item = (new FotocasaPageParser())
+                        .webUrl(webUrl)
+                        .parseData(htmlParseData)
+                        .build();
+                log.debug(item.toString());
 
-            FotocasaPageParser parser = new FotocasaPageParser(webUrl, htmlParseData);
-            FotocasaItem item = parser.getItem();
-
-            if(item != null) {
-                CompletableFuture<FotocasaItem> item1;
-                try {
-                    item1 = fotocasaService.saveItem(item);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                CompletableFuture<FotocasaItem> item1 = fotocasaService.saveItem(item);
+            } catch (ParseException e) {
+                log.warn(e.getMessage());
+            } catch (JSONException e) {
+                log.warn(e.getMessage());
+            } catch (InterruptedException e) {
+                log.error(e.getMessage());
             }
         }
 
         // We dump this crawler statistics after processing every 50 pages
-        if ((crawlStats.getTotalProcessedPages() % 10) == 0) {
+        if ((crawlStats.getTotalProcessedPages() % 50) == 0) {
             dumpMyData();
+        }
+    }
+
+    @Override
+    protected void handlePageStatusCode(WebURL webUrl, int statusCode, String statusDescription) {
+
+        if (statusCode != HttpStatus.SC_OK) {
+
+            if (statusCode == HttpStatus.SC_NOT_FOUND) {
+                log.warn("Broken link: {}, this link was found in page: {}", webUrl.getURL(),
+                        webUrl.getParentUrl());
+            } else {
+                log.warn("Non success status for link: {} status code: {}, description: ",
+                        webUrl.getURL(), statusCode, statusDescription);
+            }
         }
     }
 
@@ -103,8 +126,6 @@ public class FotocasaCrawler extends WebCrawler {
 
     public void dumpMyData() {
         int id = getMyId();
-        // You can configure the log to output to file
-        logger.info("Crawler {} > Processed Pages: {}", id, crawlStats.getTotalProcessedPages());
-        logger.info("Crawler {} > Total Links Found: {}", id, crawlStats.getTotalLinks());
+        log.info("Crawler {} > Processed Pages: {}", id, crawlStats.getTotalProcessedPages());
     }
 }

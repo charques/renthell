@@ -3,15 +3,17 @@ package io.renthell.crawlengine;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
 import org.apache.commons.io.IOUtils;
+import org.json.JSONException;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.text.ParseException;
 
 public class FotocasaPageParserTests {
 
 	@Test
-	public void parseTextAlquilerTest() {
+	public void parseAlquilerTextTest() throws ParseException, JSONException {
 		WebURL webUrl = new WebURL();
 		webUrl.setURL("http://www.fotocasa.es/vivienda/madrid-capital/aire-acondicionado-calefaccion-ascensor-amueblado-dodge-143204775?RowGrid=4&tti=1&opi=300");
 
@@ -24,11 +26,29 @@ public class FotocasaPageParserTests {
 			e.printStackTrace();
 		}
 
-		FotocasaPageParser parser = new FotocasaPageParser(webUrl, parseData);
-		FotocasaItem item = parser.getItem();
+		FotocasaItem item = (new FotocasaPageParser()).webUrl(webUrl).parseData(parseData).build();
 
 		Assert.assertNotNull(item.getId());
 		Assert.assertNotNull(item.getWebUrl());
+	}
+
+	@Test
+	public void parseEmptyTextTest() throws ParseException, JSONException {
+		WebURL webUrl = new WebURL();
+
+		HtmlParseData parseData = new HtmlParseData();
+		parseData.setText("");
+
+		try {
+			FotocasaItem item = (new FotocasaPageParser())
+					.webUrl(webUrl)
+					.parseData(parseData)
+					.build();
+		} catch (ParseException | JSONException e) {
+			Assert.assertNotNull(e);
+		}
+
+
 	}
 
 }

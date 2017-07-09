@@ -125,11 +125,6 @@ public class FotocasaItem {
             return this;
         }
 
-        private void check(JSONObject mainObj, JSONObject secondaryObj) {
-            notNull(mainObj, "mainObj cannot be null");
-            notNull(secondaryObj, "secondaryObj cannot be null");
-        }
-
         FotocasaItem build() {
             FotocasaItem build = new FotocasaItem();
 
@@ -257,5 +252,11 @@ public class FotocasaItem {
                 return false;
             }
         }
+
+        private void check(JSONObject mainObj, JSONObject secondaryObj) {
+            notNull(mainObj, "mainObj cannot be null");
+            notNull(secondaryObj, "secondaryObj cannot be null");
+        }
+
     }
 }

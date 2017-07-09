@@ -2,9 +2,12 @@ package io.renthell.crawlengine;
 
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.lang.StringBuilder;
@@ -18,28 +21,48 @@ public class FotocasaPageParser {
     private WebURL webURL;
     private HtmlParseData parseData;
 
-    public FotocasaPageParser(WebURL webURL, HtmlParseData parseData) {
+    public FotocasaPageParser webUrl(WebURL webURL) {
         this.webURL = webURL;
-        this.parseData = parseData;
+        return this;
     }
 
-    public FotocasaItem getItem() {
-        FotocasaItem item = null;
+    public FotocasaPageParser parseData(HtmlParseData parseData) {
+        this.parseData = parseData;
+        return this;
+    }
 
+    public FotocasaItem build() throws ParseException, JSONException {
         String text = parseData.getText();
+        text = removeComplexChars(text);
+
         String utag = getInfo(text, "var utag_data =(.*?);");
         String adConfig = getInfo(text, "var advertisementConfig = JSON.parse\\(\\'(.*?)\\'\\);");
 
-        JSONObject utagJson = utagJsonBuilder(utag);
-        JSONObject adConfigJsonObj = new JSONObject(adConfig);
+        if(utag.isEmpty() || adConfig.isEmpty()) {
+            throw new ParseException("No info to parse.", 0);
+        }
 
-        item = FotocasaItem.builder()
+        JSONObject utagJson = null;
+        try {
+            utagJson = utagJsonBuilder(utag);
+        }
+        catch (JSONException e) {
+            throw new ParseException("Parse error UTAG: " + e.getMessage() + System.getProperty("line.separator") + utag, 0);
+        }
+
+        JSONObject adConfigJsonObj = null;
+        try {
+            adConfigJsonObj = new JSONObject(adConfig);
+        }
+        catch (JSONException e) {
+            throw new ParseException("Parse error ADCONFIG: " + e.getMessage() + System.getProperty("line.separator") + adConfig, 0);
+        }
+
+        FotocasaItem item = FotocasaItem.builder()
                 .weburl(webURL)
                 .mainObj(utagJson)
                 .secondaryObj(adConfigJsonObj)
                 .build();
-
-        log.debug(item.toString());
 
         return item;
     }
@@ -54,6 +77,11 @@ public class FotocasaPageParser {
         return info;
     }
 
+    private String removeComplexChars(String text) {
+        text = text.replaceAll("&hellip;", "");
+        return text;
+    }
+
     private JSONObject utagJsonBuilder(String utagStrJson) {
         String[] lines = utagStrJson.split(System.getProperty("line.separator"));
         for(int i=0;i<lines.length;i++){
@@ -63,6 +91,10 @@ public class FotocasaPageParser {
             if(lines[i].startsWith("            features")){
                 lines[i]="";
             }
+            /*if(lines[i].startsWith("            ad_title")) {
+                lines[i] = lines[i].replaceAll("&hellip", "");
+                lines[i] = lines[i].replaceAll(";", "");
+            }*/
         }
         StringBuilder finalStringBuilder=new StringBuilder("");
         for(String s:lines){
