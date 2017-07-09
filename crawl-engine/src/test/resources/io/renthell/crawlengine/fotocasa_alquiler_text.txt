@@ -1,0 +1,1565 @@
+var utag_data={user_role_id:"",xiti_is_enabled: "true", user_id: "0",event_name: "others",host_name:"INMESPWEB09",is_msite: "False",ABTest: "",site: "Fotocasa"};
+
+
+//<![CDATA[
+if (typeof(FTC) != 'undefined') FTC.bingKey='ApnuJs1wa4UK84nxb1XQpeOVxFTW71d9yK1dB-Eoihby1KN_P_flLSD96xQBEwqM';//]]>
+
+
+ /*<![CDATA[*/
+var XiTi ={
+xtnv: "document",xtsd: "http://logc209",xtsite:470361, xtn2:"4", xtpage:"det_detalle_anuncio_responsive",xt_multc:" &x1=1&x2=&x3=&x4=&x5=&x6=&x7=&x8=&x9= &x10=&x11=&x12=es-es&x13=&x14=&x15=&x19=&x23=09&x20=72&x21=0",xt_an:"1189736",xt_ac:"3"};/*]]>*/
+
+
+
+
+
+
+
+
+
+
+                             Publicidad
+
+
+
+
+                             Publicidad
+
+
+
+
+
+
+
+
+
+             Ir al contenido
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     Publica tu inmueble Buscar piso Ayuda y sugerencias Blog Índice de precios Servicios Lujo Alquiler Compra Internacional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                  Español
+
+
+
+
+                                 Español Català English Deutsch
+
+
+
+
+
+                             Tu cuenta
+
+
+
+
+
+
+
+
+
+                                Publica tu anuncio gratis
+
+
+
+
+
+
+
+    var publishAdvertismentSmall = 'Publica anuncio';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    Estás en:
+
+
+                 ...
+
+
+
+                        Inicio
+
+
+
+
+
+                         Comprar Casas
+
+
+
+
+
+                         Madrid
+
+
+
+
+
+                         Madrid, Zona de
+
+
+
+
+
+                          Madrid Capital
+
+
+
+
+
+                         Orcasitas
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //<![CDATA[
+
+        var nextDetail = null;
+
+        //Siguiente/anterior anuncio
+        function ViewDetail(strAction, strId, position) {
+            MarkPropertyAsVisited(strId);
+            submitForm(strAction, strId, position);
+        }
+
+
+        //enviamos el formulario para renderizar el detalle
+        //siguiente y la paginacion
+        function submitForm(strAction, strId, position) {
+            $('#ctl00_content1_PaginationTop_hid_pag_selected_id').val(strId);
+            $('#ctl00_content1_PaginationTop_hid_pag_position').val(position);
+            document.forms[0].action = strAction;
+            document.forms[0].submit();
+        }
+
+        function ChangePage(page) {
+            $('#ctl00_content1_PaginationTop_hid_pag_page').val(page);
+            $('#ctl00_content1_PaginationTop_hid_pag_ids').val($('#ctl00_content1_PaginationTop_hid_aux_ids').val());
+        };
+
+        function ChangeAdjacentPage(adjpage) {
+            $('#ctl00_content1_PaginationTop_hid_pag_Adjacentpage').val(adjpage);
+            $('#ctl00_content1_PaginationTop_hid_pag_ids').val($('#ctl00_content1_PaginationTop_hid_aux_ids').val());
+        };
+
+        function ChangeHidIsTopAd(isTopAd) {
+            $('#ctl00_content1_PaginationTop_hid_isTopAd').val(isTopAd);
+            $("input[id$=hid_isTopAd]").val(isTopAd);
+        }
+
+        function GoBack(action) {
+            document.forms[0].action = action;
+            document.forms[0].submit();
+        };
+
+        function MarkPropertyAsVisited(id) {
+            try {
+                if (localStorage) {
+                     localStorage.setItem(parseInt(id), 1);
+                }
+            }
+            catch (e) {
+                if (console)
+                    console.log(e.message);
+            }
+        };
+
+        //]]>
+
+
+
+
+
+        var featuresValues = "aire-acondicionado,armarios,calefaccion,parquet,ascensor,amueblado,electrodomesticos,horno,lavadora,nevera,serv-porteria,puerta-blindada,";
+        var utag_data = {
+            ad_id : "143204775",
+            promotion_id: "0",
+            ad_publisher_type_id: "1",
+            ads_name_page: "fotocasaes/tv/ficha",
+            city: " Madrid Capital",
+            city_id: "28079",
+            city_zone: "Orcasitas",
+            company_idwas: "920140252991",
+            county: "Madrid, Zona de",
+            county_id: "173",
+            district_id: "205",
+            features_id: JSON.parse("[1,2,3,9,13,19,21,22,23,25,28,84,131]"),
+            heating_id: "1",
+            mts2: "63",
+            mts2_max: "",
+            mts2_min: "",
+            neighbourhood: "Orcasitas",
+            neighbourhood_id: "59",
+            postal_code: "28041",
+            price: "625",
+            price_max: "",
+            price_min: "",
+            property: "Flat",
+            property_id: "2",
+            property_state: "Good",
+            property_state_id: "3",
+            property_sub: "Flat",
+            property_sub_id: "1",
+            query: "",
+            region_level2: "Madrid",
+            region_level2_id: "28",
+            reload: "0",
+            rooms: "2",
+            search_terms: "",
+            site: "Fotocasa",
+            street: "DODGE",
+            transaction_id: "3",
+            water_id: "1",
+            ad_publisher_id: "1189736",
+            ad_publisher_type: "professional",
+            ad_title: "Piso e n alquiler en Dodge",
+            bathrooms: "1",
+            city_zone_id: "",
+            country: "España",
+            country_id: "724",
+            create_date: "05/07/2017 18:01:42",
+            district: "Usera",
+            event_name: "detail",
+            features: featuresValues=="" ? [] : featuresValues.split(","),
+            host_name: "INMESPWEB09",
+            is_msite: "false",
+            list_type: "",
+            locality: "",
+            locality_id: "0",
+            more_filters: "",
+            other_filters: "",
+            publish_date: "05/07/2017 18:01:42",
+            recommendation_id: "",
+            region_level1: "Madrid",
+            region_level1_id: "14",
+            search_id: "",
+            search_results_number: "",
+            search_results_position: "",
+            search_type: "",
+            sell_type_id: "2",
+            transaction: "alquiler",
+            user_role_id: "",
+            xiti_is_enabled: "true",
+            user_id: "0",
+            company: "RENTA GARANTIZADA SA"
+        };
+
+
+
+
+
+
+
+            var versaTag = {};
+            versaTag.id = "2545";
+            versaTag.sync = 0;
+            versaTag.dispType = "js";
+            versaTag.ptcl = "HTTPS";
+            versaTag.bsUrl = "bs.serving-sys.com/BurstingPipe";
+            versaTag.activityParams = {"Session":""};
+
+            versaTag.dynamicRetargetParams = {"17467":"","18098":"","17824":"143204775"};
+            versaTag.conditionalParams = {"tp_idcoche":"","tp_idmoto":"","tp_idcasa":""};
+
+
+
+
+
+
+
+
+                    Piso en alquiler en Dodge
+
+
+                     625   €/Mes
+
+
+
+
+                         Añadir a favoritos
+
+                           Compartir
+
+
+
+
+
+
+        Haz clic en   para guardar este anuncio en Favoritos.
+
+
+
+
+
+
+
+
+
+                Piso en  Dodge / Orcasitas,  Madrid Capital
+
+
+
+                     2  habitaciones
+
+
+                     1  baño
+
+
+                     63  m ²
+
+
+
+
+
+
+
+
+
+
+
+
+
+                625  €  / mes
+
+
+
+
+
+                            Sugerir un precio
+
+
+                     Avisar si baja
+
+
+
+
+
+
+
+
+
+
+
+
+                        Llamar
+
+
+
+
+
+                        Contactar
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                             /
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                         Añadir a favoritos Añadir a favoritos
+
+
+
+
+
+                                            Compartir
+
+
+
+
+
+                                            Reportar
+
+
+
+
+
+
+                                     Tu valoración:
+
+
+
+                                     Tu notas:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            Descripción
+
+
+
+
+
+                            ORCASITAS- Piso exterior de 63m² nuevo, semiamueblado para entrar a vivir. Tiene dos dormitorios, hall, salón independiente, un baño, pintura de gotele, suelo de parquet, cuatro armarios empotrados, aire acondicionado, portero, piscina y puerta blindada. Cocina equipada con frigorífico, lavadora, horno y vitroceramica. Calefacción y agua caliente individual por gas natural. Admite mascotas. Parada de cercanías mas cercana Orcasitas. Gastos de comunidad incluidos en el precio. SIN COMISIÓN DE AGENCIA rentagarantizada
+
+
+
+
+
+
+
+
+
+
+                     La posición en el mapa es aproximada por deseo del anunciante
+
+
+
+
+
+
+
+
+
+                            Ubicación del inmueble
+
+
+
+                        Piso en  Dodge / Orcasitas,  Madrid Capital
+
+
+
+
+
+
+
+
+                    Información de la zona
+
+
+
+
+
+                     Toda la información sobre la zona
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    Referencia fotocasa.es: 143204775
+
+
+
+
+
+
+
+
+
+
+                     ¡Contacta ahora!
+
+
+
+
+
+
+    .modal-form .contact-client-phone,
+    .modal-form .property-phone {
+        margin-top: 24px;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    Precio actual:
+
+
+
+
+
+
+
+
+                 Precio propuesto: *
+
+
+
+                         Revisa tu precio, no parece correcto
+
+
+
+
+
+
+
+
+                     No est ás conectado
+
+                         Conectado como
+                         Tus datos
+
+
+
+
+                     Me gustaría recibir más información de este Piso
+
+
+
+
+                         Debes escribir un mensaje
+
+
+
+
+
+
+
+
+
+
+
+                         E-mail incorrecto
+
+
+
+                             Indica tu e-mail
+
+
+
+
+
+
+
+
+
+
+                         Teléfono incorrecto
+
+
+
+
+
+
+
+
+                 Acepto el   aviso legal  y la  privacidad
+                     Debes aceptar el aviso legal
+
+
+
+
+
+
+                 Contactar
+
+
+
+
+
+
+                 Enviando...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+             Renta Garantizada Sa
+
+
+             Contacto: Miguel
+
+             Referencia : DODGE, 3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                     No olvides decir que lo has visto en fotocasa.es
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //<![CDATA[
+    var _userId = '0';
+    var formType = '1';
+    var txtDoCounterOffer = 'Sugerir un precio';
+    var txtDefaultPhotoContactTitle = '¡Contacta ahora!';
+    var txtPhotoContactTitle = 'Sugerir un precio';
+    var txtSendCounterOffer = 'Enviaremos tu propuesta y tus datos al anunciante <b>si es razonable </ b > . Además te avisaremos si alcanza el precio que indicas';
+    var txtValrPriceOffer = '<span class="val-msg">Revisa tu precio, no parece correcto </ span > ';
+    var txtValrMaxPricePercentDiscount = '<span class="val-msg">Este cliente sólo acepta rebajas hasta un {0}% </ span > ';
+
+    function loadPhoneForm(){
+        GetCookieContact('ctl00_ucInfoRequestGeneric');
+        //-- Show/Hide PhoneForm when is trackedClient
+        $('#ctl00_ucInfoRequestGeneric_lnkChangeForm').click(function (e) {
+            ViewPhoneFormTracked('ctl00_ucInfoRequestGeneric', '49', '31', 'http://www.fotocasa.es/Handlers/PhoneImageText.ashx?Text=B9D812D85D6B9043DFE65545D250D2DC&Size=20&Bold=True', 'false', '0', 'false');
+            EventStop(e);
+            return false;
+        });
+    }
+    FTC.BindLinkMoreBuildings= function(){
+        $('A[qs]').click( function (e) {
+            var qs = '';
+
+            if ($(e.currentTarget).attr('qs') != null) {
+                qs = $(e.currentTarget).attr('qs');
+            }
+
+            if ($(e.target).attr('target') == '_blank') {
+                AutoClick('hiddenanchor', $(e.currentTarget).attr('href') + qs, '_blank');
+            } else {
+                AutoClick('hiddenanchor', $(e.currentTarget).attr('href') + qs, '');
+            }
+            return false;
+        });
+    };
+
+    if ('False' == 'True') {
+        $(function () {
+            loadPhoneForm();
+            if ($('#lnkMoreBuildings').length > 0) {
+                FTC.BindLinkMoreBuildings();
+            }
+        });
+    } else {
+        $(document).bind("jsLoaded", function () {
+            loadPhoneForm();
+            if($('#lnkMoreBuildings').length> 0) {
+                FTC.BindLinkMoreBuildings();
+            }
+        });
+    }
+
+
+
+    //Simula el click de Ver Telefono
+    function ClickViewPhone(showPhoneModel) {
+        showPhoneModel.urlType = '0';
+        showPhoneModel.external = '3';
+        showPhoneModel.kenshooImageUrl = 'https://5002.xg4ken.com/media/redir.php?track=1&token=f001f3cf-6228-4100-8cc4-7555e3742fc1&type=contacto_vivienda_alquiler&val=1.5&orderId=&promoCode=&valueCurrency=EUR&GCID=&kw=&product=';
+        return REALESTATE.views.Contact_Modal.clickViewPhone(showPhoneModel);
+    }
+
+    //Limpiamos ciertas casuísticas
+    FTC.cleanTag = function (obj) {
+        var str = REALESTATE.utils.ReplaceAll($(obj).val(), "<", "");
+        str = REALESTATE.utils.ReplaceAll(str, ">", "");
+        $(obj).val(str);
+    };
+
+    FTC.proposePrice = 'False';
+    //]]>
+
+
+
+    //<![CDATA[
+    modalURL = 'false';
+    originModalURL = '';
+    contactModalURL = 'false';
+    originDobleProperty = 'Ad';
+
+    function countModalNielsen() {
+        //Para que se ejecute desde la parrilla de ON, al hacer click en "Contactar".
+        if (contactModalURL == "true") {
+            if(originDobleProperty == "TVModalListGrid") {
+                FTC.ClickTrackModalbyLevel("modal_Contact", originModalURL, "others","2");
+            } else if(originDobleProperty == "Ad") {
+                FTC.ClickTrackModalbyLevel("modal_Contact", originModalURL, "others","4");
+            } else {
+                FTC.ClickTrackModalbyLevel("modal_Contact", originModalURL, "others","2");
+            }
+        }
+    }
+    //]]>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                 Consejo:   También puedes desplazarte por los anuncios con las teclas de navegación de tu teclado.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                         Gracias por dejarnos tu opinión.
+
+
+
+
+                         Lo sentimos no hemos podido realizar la acción.
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            Compartir
+
+
+
+
+
+
+
+
+                             Enviar a un amigo
+
+
+
+                             Compartir
+
+
+
+                             Twittear
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //<![CDATA[
+        var language = 'es-es';
+        var transactionType = '3';
+        var culture = 'es-ES'; // Por defecto
+        var adId = '143204775';
+        var promotionId = '0';
+        var clientTypeId = '3';
+
+        FTC.language = 'es-es';
+        FTC.isNewDetail = 'False';
+        FTC.isDetailResponsive = 'True';
+        var _idMapNoPhoto = "";
+
+        $("#ctl00_buttonContextualShowPhone .header-pagination_item_inner").attr("href", $("#hid_AdPhone").val());
+
+        FTC.jsonVideos = '';
+        FTC.acceptVideoTagHtml5 = 'True';
+
+        function removeTooltip(objMouseOver, id) {
+            var idElem = $("#" + id);
+            var tooltipWidth = idElem.outerWidth();
+            var iconWidth = 20;
+            var elOffset = $(objMouseOver).offset();
+
+            idElem.css({
+                "left": elOffset.left - (tooltipWidth / 2) + (iconWidth / 2),
+                "top": elOffset.top + 32
+            }).show();
+        }
+
+        //Tooltip for icon fav in the top bar
+        $("#topBarIconFav").mouseover(function () {
+            if ($('#topBarIconFav').hasClass('cFavorite')) {
+                removeTooltip(this, "favToolTip");
+            }
+        }).mouseout(function () {
+            $("#favToolTip").hide();
+        });
+
+        $("#iconInfoShowPhone").mouseover(function () {
+            removeTooltip(this, "infoPhoneToolTip");
+        }).mouseout(function () {
+            $("#infoPhoneToolTip").hide();
+        });
+
+        function setClickForPhoneIcon()
+        {
+            FTC.clickbyLevel('contact_sent_call_phone','', 'noclick');
+            scrollToContactFormIfShowPhoneIsFalse();
+        }
+
+        //]]>
+
+
+
+        {
+            "@context": "http://schema.org",
+            "@type": "Product",
+            "name": "Piso en alquiler en Dodge",
+            "image": "https://d.inmofactory.com/1/86714/12193109/131290323.jpg/640x480",
+            "description": "Orcasitas piso exterior de 63m2 nuevo semiamueblado para entrar a vivir. tiene dos dormitorios hall salon independiente un bano pintura de gotele suelo de parquet cuatro armarios empotrados aire acondicionado portero piscina y puerta blindada. cocina equipada con frigorifico lavadora horno y vitroceramica. calefaccion y agua caliente individual por gas natural. admite mascotas. parada de cercanias mas cercana orcasitas. gastos de comunidad incluidos en el precio. sin comision de agencia rentagarantizada",
+            "offers": {
+                "priceCurrency": "EUR",
+                "price": "625"
+            }
+        }
+
+
+
+        //<![CDATA[
+        function applyModificationsToMarketplaceElements() {
+            var widthWindow = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+            if (widthWindow <= 415) {
+                // Mobile, keep as it is
+            } else {
+                // Desktop
+                // Move element
+                $('span#priceContainer').after($('div.mpResultLink#mpResultFinance'));
+                $('i.icon-fin-hogar').remove();
+            }
+        }
+
+        // Check for PAO Add Optimizely tracking to marketplace links & apply experiment changes (if needed)
+        // Those links are added to the DOM later... so wait for them
+        function checkForMarketplaceElements() {
+            if ($("#mpResultFinance a").length==1) {
+                applyModificationsToMarketplaceElements();
+            } else {
+                setTimeout(checkForMarketplaceElements, 1000);
+            }
+        }
+
+        checkForMarketplaceElements();
+        //]]>
+
+         window.criteo_q = window.criteo_q || [];    window.criteo_q.push(            { event: 'setAccount', account: [14719, 21383, 25946] },            { event: 'setCustomerId', id: '' },            { event: 'setSiteType', type: 'd' },            { event: 'setHashedEmail', email: '' },            { event: 'viewItem', item: '143204775' }    );
+
+        function LoadAdvertisement() {
+            if (REALESTATE.modules.realmedia) {
+                REALESTATE.modules.realmedia.config.SitePage = "tv/ficha";
+                REALESTATE.modules.realmedia.config.Positions = "Top1,Middle1,Middle2,x01,x02,x03,x10";
+                REALESTATE.modules.realmedia.config.Environment = "pro";
+                if (REALESTATE.modules.realmedia.config.Environment != "pro") {
+                    REALESTATE.modules.realmedia.config.Host = '';
+                }
+
+                var advertisementConfig = JSON.parse('{"Country": "espana","oasGeoCountry": "724","Region": "madrid","oasGeoRegion": "28","oasGeoRegionStr": "Madrid","Zone1": "mad-madrid-centro","oasGeoZone1": "173","City": "mad-madrid-capital","oasGeoCity": "28079","oasGeoCityStr": "Madrid Capital","District": "madr-usera","oasGeoDistrict": "205","Neighbourhood": "madr-orcasitas","oasGeoNeighbourhood": "59","NeighbourhoodPremium": "madr-orcasitas","TransactionType": "Alquiler","oasTransaction": "3","PropertyType": "Vivienda","oasProperty": "2","PropertySubtype": "1","oasPropertySub": ",1,","oasPropertySubStr": ",piso,","CustomerType": "Profesional","oasCustomer": "1","oasFeatures": ",1,2,3,9,13,19,21,22,23,25,28,84,131,","PropertyFeature": "aire-acondicionado|||armarios|||calefaccion|||parquet|||ascensor|||amueblado|||electrodomesticos|||horno|||lavadora|||nevera|||serv-porteria|||puerta-blindada|||","PriceRange": "501-700","oasPrice": "625","Lat": "40.3687","Lng": "-3.71253","oasGeoPostalCode": "28041","oasDetailid": "103623212","oasNumRooms": "2","oasCompanyid": "920140252991","urlp": "https://d.inmofactory.com/1/86714/12193109/131290323.jpg/640x480","oasSqmetres": "63","oasEnergeticCert": "8","oasAntiquity": "0","oasState": ",3,","oasStateStr": ",bien,","Conservation": "bien","": "3","oasWater": "1","oasHeating": "1","oasCategory": "1"}');
+
+                $.each(advertisementConfig, function (key, value) {
+                    REALESTATE.modules.realmedia.config[key] = value;
+                });
+            };
+        }
+
+
+var _T={Ads:{Page: 'tv/ficha',Taxonomy: false, Query: {"Country": "espana","oasGeoCountry": "724","Region": "madrid","oasGeoRegion": "28","oasGeoRegionStr": "Madrid","Zone1": "mad-madrid-centro","oasGeoZone1": "173","City": "mad-madrid-capital","oasGeoCity": "28079","oasGeoCityStr": "Madrid Capital","District": "madr-usera","oasGeoDistrict": "205","Neighbourhood": "madr-orcasitas","oasGeoNeighbourhood": "59","NeighbourhoodPremium": "madr-orcasitas","TransactionType": "Alquiler","oasTransaction": "3","PropertyType": "Vivienda","oasProperty": "2","PropertySubtype": "1","oasPropertySub": ",1,","oasPropertySubStr": ",piso,","CustomerType": "Profesional","oasCustomer": "1","oasFeatures": ",1,2,3,9,13,19,21,22,23,25,28,84,131,","PropertyFeature": "aire-acondicionado|||armarios|||calefaccion|||parquet|||ascensor|||amueblado|||electrodomesticos|||horno|||lavadora|||nevera|||serv-porteria|||puerta-blindada|||","PriceRange": "501-700","oasPrice": "625","Lat": "40.3687","Lng": "-3.71253","oasGeoPostalCode": "28041","oasDetailid": "103623212","oasNumRooms": "2","oasCompanyid": "920140252991","urlp": "https://d.inmofactory.com/1/86714/12193109/131290323.jpg/640x480","oasSqmetres": "63","oasEnergeticCert": "8","oasAntiquity": "0","oasState": ",3,","oasStateStr": ",bien,","Conservation": "bien","": "3","oasWater": "1","oasHeating": "1","oasCategory": "1"}}}
+
+
+
+
+
+
+     /*<![CDATA[*/
+_adId = 143204775;
+_opi = 300;
+_detailId =1;
+function AdVisit() {
+var pars = {};pars.AdId=143204775;pars.DetailTransactionTypeId=1;pars.PageId=1;pars.Olap_originId=300;pars.WasId=103623212;pars.Origin=72;pars.ClientId=920140252991;pars.DelegationId=0;pars.RowGrid=4;pars.Pagination=0;pars.LanguageId=2;pars.RecommendationId='';var wsShowContactAdd = new FTC.Ajax();wsShowContactAdd.url = '/WS/OLAP.asmx/AdVisit_Add';wsShowContactAdd.data = pars;wsShowContactAdd.load();}
+$(document).bind('jsLoaded', function () {
+AdVisit();
+});
+/*]]>*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+            (function(a,b,c,d){
+            a='//tags.tiqcdn.com/utag/schibsted/fotocasa/prod/utag.js';
+            b=document;c='script';d=b.createElement(c);d.src=a;d.type='text/java'+c;d.async=true;
+            a=b.getElementsByTagName(c)[0];a.parentNode.insertBefore(d,a);
+            })();
+
+
+//<![CDATA[
+if (typeof(FTC) != 'undefined'){ FTC.environment='pro';FTC.host = 'www.fotocasa.es';FTC.isVacationalChannel = 'false';FTC.isNewHome = true;FTC.culture = 'es-es';FTC.RSA_E = '010001';FTC.RSA_M = 'D6E6C555DF1DF3B348B2376014560A3A72751F42A5A2CE79B5A745727303E8FBB66DD4D3264C2BF40FABB69536C6054AB1137CADD77B8764865DC5257C4579596F5E423189C90F4C8B59248F4586BA21A651060A9DD3C0050636231942E9B9ADDE55D02D1F8F4A6ADADF97AFFCC54840323DF0FE03D7D7D47F746D33CBE0ACBF';}//]]>
+
+
+
+
+
+
+
+
+
+
+
+             Lo m ás buscado
+
+             Capitales
+
+             Provincias
+
+             Islas
+
+             Inmuebles
+
+
+
+
+
+
+
+
+         Alquiler de pisos en Madrid Capital Comprar pisos Alquiler casas en Barcelona Alquiler casas Alquiler de pisos en A Coruña Alquiler de pisos en Alicante Alquiler de pisos Ibiza Alquiler de pisos en Barcelona Capital Alquiler de pisos en Barcelona Provincia Venta de pisos en Sevilla Capital Alquiler de pisos en Gijon Alquiler de pisos en Las Palmas de Gran Canaria Venta de pisos en Gijon Alquiler de pisos en Centro, Madrid Capital Alquiler de pisos en Chamberí Alquiler de pisos en Madrid Alquiler de pisos en Malaga Alquiler de pisos en Sevilla Alquiler de pisos en Palma de Mallorca Alquiler de pisos en Tenerife
+         Alquiler de pisos en Vigo Alquiler de pisos en Zaragoza Alquiler de pisos en Zaragoza Provincia Alquiler de  pisos en Valencia Alquiler de pisos en Valladolid Comprar casas en Barcelona Capital Comprar casas en Barcelona Provincia Comprar casas en Madrid Capital Compartir pisos en Barcelona Capital Comprar casas en Madrid Comprar casas en Malaga Comprar casas en Sevilla Comprar casas en Valencia Ciudad Comprar casas en Valencia Comprar casas en Zaragoza Comprar pisos en Barcelona Comprar pisos en Bilbao Comprar pisos en Donostia San Sebastián Comprar pisos en Carabanchel
+         Comprar pisos en Centro, Madrid Capital Comprar pisos en Chamberí Comprar pisos en Madrid Capital Comprar pisos en Salamanca Comprar pisos en Centro, Zaragoza Capital Comprar pisos en Zaragoza Capital Alquiler de casas en Barcelona Alquiler de casas en Madrid Comprar casas en Barcelona Comprar casas Comprar casas en Madrid Capital Comprar casas en Madrid Comprar casas en Malaga Comprar casas en Sevilla Comprar casas en Valencia Casas y chalets de lujo Casas en Venta Casas en Alquiler Pisos en Venta Pisos en Alquiler Alquiler vacacional pisos Alquiler vacacional casas
+
+
+
+
+
+
+         Alquiler de pisos en Valencia Alquiler de pisos en Sevilla Alquiler de pisos en Zaragoza Alquiler de pisos en Málaga Alquiler de pisos en Salamanca Alquiler de pisos en Girona Alquiler de pisos en Albacete Alquiler de pisos en Alicante Alquiler de pisos en Almería Alquiler de pisos en Ávila Alquiler de pisos en Badajoz Alquiler de pisos en Bilbao Alquiler de pisos en Burgos Alquiler de pisos en Cáceres Alquiler de pisos en Cádiz Alquiler de pisos en Castellón de la Plana Alquiler de pisos en Ceuta
+         Alquiler de pisos en Ciudad Real Alquiler de pisos en Córdoba Alquiler de pisos en Cuenca Alquiler de pisos en Granada Alquiler de pisos en Guadalajara Alquiler de pisos en Huelva Alquiler de pisos en Huesca Alquiler de pisos en Jaén Alquiler de pisos en Coruña Alquiler de pisos en Las Palmas de Gran Canaria Alquiler de pisos en Lleida Alquiler de pisos en León Alquiler de pisos en Logroño Alquiler de pisos en Lugo Alquiler de pisos en Melilla Alquiler de pisos en Murcia Alquiler de pisos en Ourense
+         Alquiler de pisos en Oviedo Alquiler de pisos en Palencia Alquiler de pisos en Palma de Mallorca Alquiler de pisos en Pontevedra Alquiler de pisos en San Sebastián Alquiler de pisos en Santa Cruz de Tenerife Alquiler de pisos en Santander Alquiler de pisos en Segovia Alquiler de pisos en Soria Alquiler de pisos en Tarragona Alquiler de pisos en Teruel Alquiler de pisos en Toledo Alquiler de pisos en Valladolid Alquiler de pisos en Vitoria Alquiler de pisos en Zamora
+
+
+
+
+
+
+         Palma de Mallorca Las Palmas Bilbao Vigo Gijón L’Hospitalet de Llobregat Vitoria Elche Alcalá de Henares Badalona Cartagena Donostia - San Sebastián Fuenlabrada Jerez de la Frontera Logroño
+         Palma de Mallorca Las Palmas Bilbao Vigo Gijón L’Hospitalet de Llobregat Vitoria Elche Alcalá de Henares Badalona Cartagena Donostia - San Sebastián Fuenlabrada Jerez de la Frontera Logroño
+         Palma de Mallorca Las Palmas Bilbao Vigo Gijón L’Hospitalet de Llobregat Vitoria Elche Alcalá de Henares Badalona Cartagena Donostia - San Sebastián Fuenlabrada Jerez de la Frontera Logroño
+         Palma de Mallorca Las Palmas Bilbao Vigo Gijón L’Hospitalet de Llobregat Vitoria Elche Alcalá de Henares Badalona Cartagena Donostia - San Sebastián Fuenlabrada Jerez de la Frontera Logroño
+         Palma de Mallorca Las Palmas Bilbao Vigo Gijón L’Hospitalet de Llobregat Vitoria Elche Alcalá de Henares Badalona Cartagena Donostia - San Sebastián Fuenlabrada Jerez de la Frontera Logroño
+
+
+
+
+
+
+
+         Alquiler de pisos en Alicante Provincia Alquiler de pisos en Cádiz Provincia Alquiler de pisos en A Coruña Provincia Alquiler de pisos en Álava Provincia Alquiler de pisos en Albacete Provincia Alquiler de pisos en Almería Provincia Alquiler de pisos en Asturias Provincia Alquiler de pisos en Ávila Provincia Alquiler de pisos en Badajoz Provincia Alquiler de pisos en Burgos Provincia Alquiler de pisos en Cáceres Provincia Alquiler de pisos en Cantabria Provincia Alquiler de pisos en Castellón Provincia
+         Alquiler de pisos en Ciudad Real Provincia Alquiler de pisos en Córdoba Provincia Alquiler de pisos en Cuenca Provincia Alquiler de pisos en Guadalajara Provincia Alquiler de pisos en Guipúzcoa Provincia Alquiler de pisos en Huelva Provincia Alquiler de pisos en Huesca Provincia Alquiler de pisos en Jaén Provincia Alquiler de pisos en La Rioja Provincia Alquiler de pisos en León Provincia Alquiler de pisos en Lugo Provincia Alquiler de pisos en Navarra Provincia Alquiler de pisos en Palencia Provincia
+         Alquiler de pisos en Pontevedra Provincia Alquiler de pisos en Salamanca Provincia Alquiler de pisos en Segovia Provincia Alquiler de pisos en Soria Provincia Alquiler de pisos en Tarragona Provincia Alquiler de pisos en Teruel Provincia Alquiler de pisos en Toledo Provincia Alquiler de pisos en Vizcaya Provincia Alquiler de pisos en Zamora Provincia Alquiler de pisos en Zaragoza Provincia
+
+
+
+
+
+
+         Comprar pisos en Tenerife Comprar pisos en Mallorca Comprar pisos en Gran Canaria Comprar pisos en Lanzarote Comprar pisos en Ibiza Comprar pisos en Fuerteventura Comprar pisos en Menorca Comprar pisos en La Palma
+         Alquiler de pisos en Tenerife Alquiler de pisos en Mallorca Alquiler de pisos en Gran Canaria Alquiler de pisos en Lanzarote Alquiler de pisos en Fuerteventura Alquiler de pisos en Menorca Alquiler de pisos en La Palma
+
+
+
+
+
+
+           Pisos   Chalets   Apartamentos   Áticos   Duplex   Estudios   Garajes   Locales comerciales   Lofts   Casas   Pisos de bancos   Venta   Alquiler   Compartir   Casas rurales
+           Pisos embargados   Terrenos   Pisos baratos   Alquiler de habitaciones   Traspaso   Segunda Mano   Obra Nueva   Oficinas   Plantas bajas   Trasteros   Publica tu piso en alquiler   Publica tu piso en venta   Publica tu casa en alquiler   Publica tu casa en venta   Publica tu garaje en alquiler
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    $(".quicksearch nav a").click(function () {
+        $(this).parent().siblings().removeClass("selected");
+        $(".content-tab-footer.tab-content-default").removeClass("tab-content-default");
+        $(this).parent().addClass("selected");
+    });
+
+
+
+
+
+
+
+                     Sobre fotocasa
+
+                             Ayuda
+
+                             Mapa web
+
+                             Catálogo de productos
+
+                             Nuestras Apps
+
+                             Internacional
+
+
+
+                     Prensa
+
+                             Sala de Prensa
+
+                             Blog de fotocasa
+
+                             Índice de precios
+
+
+
+                     Síguenos en
+
+
+
+
+                                    Facebook
+
+
+
+
+
+                                    Twitter
+
+
+
+
+
+                                    Youtube
+
+
+
+
+
+                                    Pinterest
+
+
+
+
+
+                                    Google+
+
+
+
+
+                     En tu móvil y tablet
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                     inmogeo.com vibbo.com infojobs.net coches.net motos.net milanuncios.com Inmobiliaria en Europa
+
+
+                 ©  document.write(new Date().getFullYear())  Schibsted Classified Media Spain S.L. Aviso legal Protección de datos Política de cookies
+
+
+
+
+
+
+
+
+
+     /*<![CDATA[*/
+$(document).bind('jsLoaded', function () {
+REALESTATE.modules.toolbar.getUserMenuPanel('false' , 'es-es');
+});
+var _auditUrl = '/building/building_detail.aspx';
+/*]]>*/
+
+
+
+        //<![CDATA[
+        jQuery.extend({
+            getScript: function (url, callback) {
+                var head = document.getElementsByTagName("head")[0];
+                var script = document.createElement("script");
+                var cache = 'true';
+
+                if (cache == 'false') {
+                    var rnd = Math.floor(Math.random() * 80000);
+                    script.src = url + "?r=" + rnd;
+                }
+                else
+                    script.src = url;
+                {
+                    var done = false;
+                    script.onload = script.onreadystatechange = function () {
+                        if (!done && (!this.readyState || this.readyState == "loaded" || this.readyState == "complete")) {
+                            done = true;
+                            if (callback) callback();
+                            script.onload = script.onreadystatechange = null;
+                        }
+                    };
+                }
+                head.appendChild(script);
+                return undefined;
+            }
+        });
+        //]]>
+
+
+
+
+
+        var _loadJSComscore = true;
+        var _comscore = _comscore || [];
+        _comscore.push({ c1: "2", c2: "7109919" });
+        (function () {
+            var s = document.createElement("script"), el = document.getElementsByTagName("script")[0]; s.async = true;
+            s.src = (document.location.protocol == "https:" ? "https://sb" : "http://b") + ".scorecardresearch.com/beacon.js";
+            el.parentNode.insertBefore(s, el);
+            _loadJSComscore = false;
+        })();
+
+
+
+
+
+
+
+
+
+
+     $(document).trigger("jsLoaded");
+
+
+
+        if (REALESTATE.modules.MarketerToolInjector) {
+            var isProd = true;
+            REALESTATE.modules.MarketerToolInjector.inject('body', isProd);
+        }
