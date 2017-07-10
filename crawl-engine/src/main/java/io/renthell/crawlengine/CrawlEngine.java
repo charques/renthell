@@ -5,15 +5,15 @@ import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
+import io.renthell.crawlengine.fotocasa.FotocasaCrawlerFactory;
+import io.renthell.crawlengine.fotocasa.FotocasaService;
+import io.renthell.crawlengine.fotocasa.FotocasaUrlSeedConfig;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by cfhernandez on 4/7/17.

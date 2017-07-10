@@ -1,4 +1,4 @@
-package io.renthell.crawlengine;
+package io.renthell.crawlengine.fotocasa;
 
 import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;

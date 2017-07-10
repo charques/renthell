@@ -1,12 +1,8 @@
 package io.renthell.crawlengine;
 
-import edu.uci.ics.crawler4j.parser.HtmlParseData;
-import edu.uci.ics.crawler4j.url.WebURL;
-import org.apache.commons.io.IOUtils;
+import io.renthell.crawlengine.fotocasa.FotocasaUrlSeedConfig;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.io.IOException;
 
 public class FotocasaUrlSeedConfigTests {
 

@@ -1,4 +1,4 @@
-package io.renthell.crawlengine;
+package io.renthell.crawlengine.fotocasa;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

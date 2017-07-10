@@ -1,8 +1,7 @@
-package io.renthell.crawlengine;
+package io.renthell.crawlengine.fotocasa;
 
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
-import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -1,4 +1,4 @@
-package io.renthell.crawlengine;
+package io.renthell.crawlengine.fotocasa;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 

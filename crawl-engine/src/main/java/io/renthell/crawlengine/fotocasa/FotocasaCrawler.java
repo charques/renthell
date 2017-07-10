@@ -1,19 +1,17 @@
-package io.renthell.crawlengine;
+package io.renthell.crawlengine.fotocasa;
 
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
 
+import io.renthell.crawlengine.CrawlStats;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import org.json.JSONException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
 
 /**
@@ -63,7 +61,6 @@ public class FotocasaCrawler extends WebCrawler {
 
         if (page.getParseData() instanceof HtmlParseData) {
             HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
-            Set<WebURL> links = htmlParseData.getOutgoingUrls();
             WebURL webUrl = page.getWebURL();
 
             log.info(webUrl.getURL());
@@ -75,10 +72,8 @@ public class FotocasaCrawler extends WebCrawler {
                         .build();
                 log.debug(item.toString());
 
-                CompletableFuture<FotocasaItem> item1 = fotocasaService.saveItem(item);
-            } catch (ParseException e) {
-                log.warn(e.getMessage());
-            } catch (JSONException e) {
+                fotocasaService.saveItem(item);
+            } catch (ParseException | JSONException e) {
                 log.warn(e.getMessage());
             } catch (InterruptedException e) {
                 log.error(e.getMessage());

@@ -1,4 +1,4 @@
-package io.renthell.crawlengine;
+package io.renthell.crawlengine.fotocasa;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,12 +22,12 @@ public class FotocasaUrlSeedConfig {
         this.seeds = new ArrayList<String>();
     }
 
-    private void addSeed(String seed) {
-        this.seeds.add(seed);
+    public static FotocasaUrlSeedConfigBuilder builder() {
+        return new FotocasaUrlSeedConfigBuilder();
     }
 
-    static FotocasaUrlSeedConfigBuilder builder() {
-        return new FotocasaUrlSeedConfigBuilder();
+    private void addSeed(String seed) {
+        this.seeds.add(seed);
     }
 
     @Getter
@@ -39,7 +39,7 @@ public class FotocasaUrlSeedConfig {
         private int pages;
     }
 
-    static class FotocasaUrlSeedConfigBuilder {
+    public static class FotocasaUrlSeedConfigBuilder {
 
         private final String URL_BASE = "http://www.fotocasa.es/es/";
         private final String URL_PROPERTY_TYPE = "/casas/";
