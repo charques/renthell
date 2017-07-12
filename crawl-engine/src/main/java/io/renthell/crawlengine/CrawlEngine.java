@@ -8,6 +8,7 @@ import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 import io.renthell.crawlengine.fotocasa.FotocasaCrawlerFactory;
 import io.renthell.crawlengine.fotocasa.FotocasaService;
 import io.renthell.crawlengine.fotocasa.FotocasaUrlSeedConfig;
+import io.renthell.crawlengine.trackingfeeder.TrackingFeederService;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class CrawlEngine {
 
     @Autowired
     private FotocasaService fotocasaService;
+
+    @Autowired
+    private TrackingFeederService trackingService;
 
     public void init(int numberOfCrawlers, int executionTime) throws InterruptedException {
         String pwd = System.getenv().get("PWD");
@@ -73,7 +77,7 @@ public class CrawlEngine {
          * Start the crawl. This is a blocking operation, meaning that your code
          * will reach the line after this only when crawling is finished.
          */
-        FotocasaCrawlerFactory factory = new FotocasaCrawlerFactory(fotocasaService);
+        FotocasaCrawlerFactory factory = new FotocasaCrawlerFactory(fotocasaService, trackingService);
         controller.startNonBlocking(factory, numberOfCrawlers);
         //controller.start(FotocasaCrawler.class, numberOfCrawlers);
 

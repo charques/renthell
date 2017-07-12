@@ -6,12 +6,12 @@ import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
 
 import io.renthell.crawlengine.CrawlStats;
+import io.renthell.crawlengine.trackingfeeder.TrackingFeederService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import org.json.JSONException;
 
 import java.text.ParseException;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -26,10 +26,12 @@ public class FotocasaCrawler extends WebCrawler {
 
     CrawlStats crawlStats;
     FotocasaService fotocasaService;
+    TrackingFeederService trackingFeederService;
 
-    public FotocasaCrawler(FotocasaService fotocasaService) {
+    public FotocasaCrawler(FotocasaService fotocasaService, TrackingFeederService trackingFeederService) {
         this.crawlStats = new CrawlStats();
         this.fotocasaService = fotocasaService;
+        this.trackingFeederService = trackingFeederService;
     }
 
     /**
@@ -72,7 +74,10 @@ public class FotocasaCrawler extends WebCrawler {
                         .build();
                 log.debug(item.toString());
 
-                fotocasaService.saveItem(item);
+                FotocasaItem saved = fotocasaService.saveItem(item);
+
+                // TODO: solo si hay cambios
+                trackingFeederService.addPropertyTransaction(item);
             } catch (ParseException | JSONException e) {
                 log.warn(e.getMessage());
             } catch (InterruptedException e) {

@@ -2,6 +2,7 @@ package io.renthell.crawlengine.fotocasa;
 
 import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
+import io.renthell.crawlengine.trackingfeeder.TrackingFeederService;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -10,15 +11,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FotocasaCrawlerFactory implements CrawlController.WebCrawlerFactory {
 
-    FotocasaService service;
+    FotocasaService fotocasaService;
+    TrackingFeederService trackingFeederService;
 
-    public FotocasaCrawlerFactory(FotocasaService service) {
-        this.service = service;
+    public FotocasaCrawlerFactory(FotocasaService fotocasaService, TrackingFeederService trackingFeederService) {
+        this.fotocasaService = fotocasaService;
+        this.trackingFeederService = trackingFeederService;
     }
 
     @Override
     public WebCrawler newInstance() {
         log.debug("new FotocasaCrawler created");
-        return new FotocasaCrawler(service);
+        return new FotocasaCrawler(fotocasaService, trackingFeederService);
     }
 }
