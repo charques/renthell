@@ -16,23 +16,14 @@ public class FotocasaService {
     @Autowired
     private FotocasaRepository fotocasaRepository;
 
-    public FotocasaItem saveItem(FotocasaItem item) throws InterruptedException {
+    public FotocasaItem checkAndSaveItem(FotocasaItem item) throws InterruptedException, TransactionAlreadySavedException {
         FotocasaItem findItem = fotocasaRepository.findOne(item.getId());
 
         // add or update transactions
         if(findItem != null) {
-            FotocasaTransactionItem currentTransaction = item.getTransactions().get(0);
             List<FotocasaTransactionItem> transactionItemList = findItem.getTransactions();
-            int index = getTransactionIndex(transactionItemList, currentTransaction);
-            if (index >= 0) {
-                // update transaction
-                transactionItemList.set(index, currentTransaction);
-            }
-            else {
-                // new transaction
-                transactionItemList.add(currentTransaction);
-            }
 
+            transactionItemList = getTransactionIndex(transactionItemList, item.getTransactions().get(0));
             item.setTransactions(transactionItemList);
         }
 
@@ -41,13 +32,20 @@ public class FotocasaService {
         return itemSaved;
     }
 
-    private int getTransactionIndex(List<FotocasaTransactionItem> transactionItemList, FotocasaTransactionItem transaction) {
+    private List<FotocasaTransactionItem> getTransactionIndex(List<FotocasaTransactionItem> transactionItemList, FotocasaTransactionItem transaction) throws TransactionAlreadySavedException {
         for(int i = 0; i < transactionItemList.size(); i++) {
             FotocasaTransactionItem t = transactionItemList.get(i);
-            if(t.getTransactionId().equals(transaction.getTransactionId())) {
-                return i;
+            if(transaction.equals(t)) {
+                throw new TransactionAlreadySavedException();
+            }
+            else if(t.getTransactionId().equals(transaction.getTransactionId())) {
+                transactionItemList.set(i, transaction);
+                return transactionItemList;
             }
         }
-        return -1;
+        transactionItemList.add(transaction);
+        return transactionItemList;
     }
+
+    public class TransactionAlreadySavedException extends Exception {}
 }

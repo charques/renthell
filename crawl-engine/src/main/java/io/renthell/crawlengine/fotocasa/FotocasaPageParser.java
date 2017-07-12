@@ -90,10 +90,6 @@ public class FotocasaPageParser {
             if(lines[i].startsWith("            features")){
                 lines[i]="";
             }
-            /*if(lines[i].startsWith("            ad_title")) {
-                lines[i] = lines[i].replaceAll("&hellip", "");
-                lines[i] = lines[i].replaceAll(";", "");
-            }*/
         }
         StringBuilder finalStringBuilder=new StringBuilder("");
         for(String s:lines){

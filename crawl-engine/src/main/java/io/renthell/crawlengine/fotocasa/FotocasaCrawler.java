@@ -74,15 +74,15 @@ public class FotocasaCrawler extends WebCrawler {
                         .build();
                 log.debug(item.toString());
 
-                FotocasaItem saved = fotocasaService.saveItem(item);
-
-                // TODO: solo si hay cambios
+                fotocasaService.checkAndSaveItem(item);
                 trackingFeederService.addPropertyTransaction(item);
 
             } catch (ParseException | JSONException e) {
                 log.warn(e.getMessage());
             } catch (InterruptedException e) {
                 log.error(e.getMessage());
+            } catch (FotocasaService.TransactionAlreadySavedException e) {
+                log.info("Transaction already crawled.");
             }
         }
 
