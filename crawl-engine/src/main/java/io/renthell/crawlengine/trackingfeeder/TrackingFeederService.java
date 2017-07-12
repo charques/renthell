@@ -61,11 +61,9 @@ public class TrackingFeederService {
         String urlString = "http://localhost:8080/commands/propertytransaction";
         ResponseEntity<String> pTransactionResponse = restTemplate.exchange(urlString, HttpMethod.POST, entity, String.class);
         if (pTransactionResponse.getStatusCode() == HttpStatus.OK) {
-            //JSONObject userJson = new JSONObject(pTransactionResponse.getBody());
-        } else if (pTransactionResponse.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-            // nono... bad credentials
+            log.info("Adding property transaction: OK");
         } else if (pTransactionResponse.getStatusCode() == HttpStatus.BAD_REQUEST) {
-            log.error(entity.toString());
+            log.error("Adding property transaction: KO" + entity.toString());
         }
 
     }

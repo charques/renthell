@@ -78,6 +78,7 @@ public class FotocasaCrawler extends WebCrawler {
 
                 // TODO: solo si hay cambios
                 trackingFeederService.addPropertyTransaction(item);
+
             } catch (ParseException | JSONException e) {
                 log.warn(e.getMessage());
             } catch (InterruptedException e) {
