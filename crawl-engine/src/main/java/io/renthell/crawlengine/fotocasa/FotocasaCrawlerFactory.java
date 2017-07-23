@@ -14,14 +14,13 @@ public class FotocasaCrawlerFactory implements CrawlController.WebCrawlerFactory
     FotocasaService fotocasaService;
     TrackingFeederService trackingFeederService;
 
-    public FotocasaCrawlerFactory(FotocasaService fotocasaService, TrackingFeederService trackingFeederService) {
+    public FotocasaCrawlerFactory(FotocasaService fotocasaService) {
         this.fotocasaService = fotocasaService;
-        this.trackingFeederService = trackingFeederService;
     }
 
     @Override
     public WebCrawler newInstance() {
         log.debug("new FotocasaCrawler created");
-        return new FotocasaCrawler(fotocasaService, trackingFeederService);
+        return new FotocasaCrawler(fotocasaService);
     }
 }

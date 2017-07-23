@@ -1,5 +1,6 @@
 package io.renthell.crawlengine.fotocasa;
 
+import io.renthell.crawlengine.trackingfeeder.TrackingFeederService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,36 +17,68 @@ public class FotocasaService {
     @Autowired
     private FotocasaRepository fotocasaRepository;
 
-    public FotocasaItem checkAndSaveItem(FotocasaItem item) throws InterruptedException, TransactionAlreadySavedException {
-        FotocasaItem findItem = fotocasaRepository.findOne(item.getId());
+    @Autowired
+    private TrackingFeederService trackingFeederService;
 
-        // add or update transactions
-        if(findItem != null) {
-            List<FotocasaTransactionItem> transactionItemList = findItem.getTransactions();
 
-            transactionItemList = getTransactionIndex(transactionItemList, item.getTransactions().get(0));
-            item.setTransactions(transactionItemList);
+    public FotocasaItem saveUpdate(FotocasaItem itemToSave) {
+        FotocasaItem itemRetrieved = fotocasaRepository.findOne(itemToSave.getId());
+        FotocasaItem itemSaved = null;
+        if (itemRetrieved == null) {
+            // save new item
+            itemSaved = fotocasaRepository.save(itemToSave);
+            log.info("Saved: " + itemSaved.toString());
+
+            // post ADD property transaction event
+            trackingFeederService.addPropertyTransaction(itemSaved, 0);
+        } else {
+            Integer transactionIndex = getTransactionIndex(itemRetrieved, itemToSave);
+            FotocasaTransactionItem transaction = itemToSave.getTransactions().get(0);
+            if(shouldUpdate(itemRetrieved, itemToSave)) {
+                if(transactionIndex < 0) {
+                    // new transaction
+                    List<FotocasaTransactionItem> transactions = itemRetrieved.getTransactions();
+                    transactions.add(transaction);
+                    itemToSave.setTransactions(transactions);
+                }
+                else {
+                    // update transaction
+                    List<FotocasaTransactionItem> transactions = itemRetrieved.getTransactions();
+                    transactions.set(transactionIndex, transaction);
+                    itemToSave.setTransactions(transactions);
+                }
+                itemToSave.setUpdated(true);
+                // update item
+                itemSaved = fotocasaRepository.save(itemToSave);
+                log.info("Updated: " + itemSaved.toString());
+
+                // post UPDATED property transaction event
+                trackingFeederService.addPropertyTransaction(itemSaved, transactionIndex);
+            }
+            else {
+                log.info("No update: " + itemRetrieved.toString());
+            }
         }
-
-        final FotocasaItem itemSaved = fotocasaRepository.save(item);
-        log.info("Saved " + itemSaved.toString());
         return itemSaved;
     }
 
-    private List<FotocasaTransactionItem> getTransactionIndex(List<FotocasaTransactionItem> transactionItemList, FotocasaTransactionItem transaction) throws TransactionAlreadySavedException {
+    private Integer getTransactionIndex(FotocasaItem savedItem, FotocasaItem itemToSave) {
+        List<FotocasaTransactionItem> transactionItemList = savedItem.getTransactions();
+        FotocasaTransactionItem transaction = itemToSave.getTransactions().get(0);
         for(int i = 0; i < transactionItemList.size(); i++) {
             FotocasaTransactionItem t = transactionItemList.get(i);
-            if(transaction.equals(t)) {
-                throw new TransactionAlreadySavedException();
-            }
-            else if(t.getTransactionId().equals(transaction.getTransactionId())) {
-                transactionItemList.set(i, transaction);
-                return transactionItemList;
+            if(t.getTransactionId().equals(transaction.getTransactionId())) {
+                return i;
             }
         }
-        transactionItemList.add(transaction);
-        return transactionItemList;
+        return -1;
     }
 
-    public class TransactionAlreadySavedException extends Exception {}
+    private Boolean shouldUpdate(FotocasaItem savedItem, FotocasaItem itemToSave) {
+        Integer index = getTransactionIndex(savedItem, itemToSave);
+        FotocasaTransactionItem t1 = savedItem.getTransactions().get(index);
+        FotocasaTransactionItem t2 = itemToSave.getTransactions().get(0);
+        return !(t1.equals(t2));
+    }
+
 }

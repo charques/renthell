@@ -41,7 +41,7 @@ public class FotocasaUrlSeedConfig {
 
     public static class FotocasaUrlSeedConfigBuilder {
 
-        private final String URL_BASE = "http://www.fotocasa.es/es/";
+        private final String URL_BASE = "https://www.fotocasa.es/es/";
         private final String URL_PROPERTY_TYPE = "/casas/";
         private final String URL_SEARCH = "/todas-las-zonas/l/";
 

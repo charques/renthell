@@ -98,6 +98,8 @@ public class FotocasaItem {
     private List<FotocasaTransactionItem> transactions;
     private String webUrl;
 
+    private Boolean updated = false;
+
     static FotocasaItemBuilder builder() {
         return new FotocasaItemBuilder();
     }

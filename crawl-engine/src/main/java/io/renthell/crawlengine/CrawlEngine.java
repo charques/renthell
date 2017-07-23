@@ -27,8 +27,6 @@ public class CrawlEngine {
     @Autowired
     private FotocasaService fotocasaService;
 
-    @Autowired
-    private TrackingFeederService trackingService;
 
     public void init(int numberOfCrawlers, int executionTime) throws InterruptedException {
         String pwd = System.getenv().get("PWD");
@@ -61,7 +59,8 @@ public class CrawlEngine {
          * which are found in these pages
          */
         FotocasaUrlSeedConfig seedsConfig = FotocasaUrlSeedConfig.builder()
-            .addCrawlArea("alquiler", "madrid-capital", 5)
+            //.addCrawlArea("alquiler", "madrid-capital", 5)
+                .addCrawlArea("alquiler","madrid-provincia",3)
             //.addCrawlArea("comprar", "madrid-capital", 300)
             .build();
 
@@ -69,17 +68,15 @@ public class CrawlEngine {
         for(int i = 0; i < seeds.size(); i++) {
             controller.addSeed(seeds.get(i));
         }
-        //controller.addSeed("http://www.fotocasa.es/vivienda/madrid-capital/aire-acondicionado-calefaccion-ascensor-amueblado-dodge-143204775?RowGrid=4&tti=1&opi=300");
-        //controller.addSeed("http://www.fotocasa.es/vivienda/madrid-capital/guindalera-139115105?RowGrid=4&tti=7&opi=300");
-        //controller.addSeed("http://www.fotocasa.es/vivienda/madrid-capital/calefaccion-terraza-ascensor-los-angeles-143230578");
+        //controller.addSeed("https://www.fotocasa.es/vivienda/madrid-capital/calefaccion-terraza-ascensor-castellana-138786116?RowGrid=10&tti=3&opi=300");
+        //controller.addSeed("https://www.fotocasa.es/es/");
 
         /*
          * Start the crawl. This is a blocking operation, meaning that your code
          * will reach the line after this only when crawling is finished.
          */
-        FotocasaCrawlerFactory factory = new FotocasaCrawlerFactory(fotocasaService, trackingService);
+        FotocasaCrawlerFactory factory = new FotocasaCrawlerFactory(fotocasaService);
         controller.startNonBlocking(factory, numberOfCrawlers);
-        //controller.start(FotocasaCrawler.class, numberOfCrawlers);
 
         // Wait for 30 seconds
         Thread.sleep(executionTime * 1000);

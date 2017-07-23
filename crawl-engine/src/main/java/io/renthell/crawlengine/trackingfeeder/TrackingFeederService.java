@@ -18,8 +18,25 @@ import java.nio.charset.Charset;
 @Slf4j
 public class TrackingFeederService {
 
-    public void addPropertyTransaction(FotocasaItem item) {
-        FotocasaTransactionItem t = item.getTransactions().get(0);
+    public void addPropertyTransaction(FotocasaItem item, Integer transactionIndex) {
+        JSONObject request = buildObject(item, transactionIndex);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<String>(request.toString(), headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
+        String urlString = "http://localhost:8080/commands/add-property-transaction";
+        ResponseEntity<String> pTransactionResponse = restTemplate.exchange(urlString, HttpMethod.POST, entity, String.class);
+        if (pTransactionResponse.getStatusCode() == HttpStatus.OK) {
+            log.info("Adding property transaction: OK");
+        } else if (pTransactionResponse.getStatusCode() == HttpStatus.BAD_REQUEST) {
+            log.error("Adding property transaction: KO" + entity.toString());
+        }
+    }
+
+    private JSONObject buildObject(FotocasaItem item, Integer transactionIndex) {
+        FotocasaTransactionItem t = item.getTransactions().get(transactionIndex);
 
         JSONObject request = new JSONObject();
         request.put("identifier", item.getId());
@@ -52,19 +69,8 @@ public class TrackingFeederService {
         request.put("priceMax", t.getPriceMax());
         request.put("priceRange", t.getPriceRange());
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> entity = new HttpEntity<String>(request.toString(), headers);
+        request.put("updated", item.getUpdated());
 
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
-        String urlString = "http://localhost:8080/commands/propertytransaction";
-        ResponseEntity<String> pTransactionResponse = restTemplate.exchange(urlString, HttpMethod.POST, entity, String.class);
-        if (pTransactionResponse.getStatusCode() == HttpStatus.OK) {
-            log.info("Adding property transaction: OK");
-        } else if (pTransactionResponse.getStatusCode() == HttpStatus.BAD_REQUEST) {
-            log.error("Adding property transaction: KO" + entity.toString());
-        }
-
+        return request;
     }
 }

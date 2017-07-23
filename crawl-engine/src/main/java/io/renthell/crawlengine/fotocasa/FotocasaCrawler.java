@@ -26,12 +26,10 @@ public class FotocasaCrawler extends WebCrawler {
 
     CrawlStats crawlStats;
     FotocasaService fotocasaService;
-    TrackingFeederService trackingFeederService;
 
-    public FotocasaCrawler(FotocasaService fotocasaService, TrackingFeederService trackingFeederService) {
+    public FotocasaCrawler(FotocasaService fotocasaService) {
         this.crawlStats = new CrawlStats();
         this.fotocasaService = fotocasaService;
-        this.trackingFeederService = trackingFeederService;
     }
 
     /**
@@ -48,7 +46,7 @@ public class FotocasaCrawler extends WebCrawler {
     public boolean shouldVisit(Page referringPage, WebURL url) {
         String href = url.getURL().toLowerCase();
         Boolean shouldVisit = !FILTERS.matcher(href).matches()
-                && href.startsWith("http://www.fotocasa.es/vivienda/");
+                && (href.startsWith("http://www.fotocasa.es/vivienda/") || href.startsWith("https://www.fotocasa.es/vivienda/"));
         return shouldVisit;
     }
 
@@ -64,25 +62,24 @@ public class FotocasaCrawler extends WebCrawler {
         if (page.getParseData() instanceof HtmlParseData) {
             HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
             WebURL webUrl = page.getWebURL();
+            log.debug("Status code: {}", page.getStatusCode());
+            log.debug("Response headers: {}", page.getFetchResponseHeaders().toString());
+            log.debug("Redirected to URL: {}", page.getRedirectedToUrl());
+            log.debug("Outgoing Urls: {}", htmlParseData.getOutgoingUrls());
 
             log.info(webUrl.getURL());
 
             try {
-                FotocasaItem item = (new FotocasaPageParser())
+                FotocasaItem parsedItem = (new FotocasaPageParser())
                         .webUrl(webUrl)
                         .parseData(htmlParseData)
                         .build();
-                log.debug(item.toString());
+                log.debug(parsedItem.toString());
 
-                fotocasaService.checkAndSaveItem(item);
-                trackingFeederService.addPropertyTransaction(item);
+                fotocasaService.saveUpdate(parsedItem);
 
             } catch (ParseException | JSONException e) {
                 log.warn(e.getMessage());
-            } catch (InterruptedException e) {
-                log.error(e.getMessage());
-            } catch (FotocasaService.TransactionAlreadySavedException e) {
-                log.info("Transaction already crawled.");
             }
         }
 
