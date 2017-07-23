@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.UUID;
 
 /**
  * Created by cfhernandez on 10/7/17.
@@ -23,8 +22,8 @@ public class EventStoreService {
     @Autowired
     private RawEventRepo eventRepo;
 
-    public String save(final BaseEvent event) {
-        return eventRepo.save(convert(event)).getId();
+    public RawEvent save(final BaseEvent event) {
+        return eventRepo.save(convert(event));
     }
 
     private RawEvent convert(final BaseEvent event) {

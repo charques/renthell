@@ -49,4 +49,6 @@ public class AddPropertyTransactionCmd extends Command {
     private String priceMin;
     private String priceMax;
     private String priceRange;
+
+    private Boolean updated;
 }

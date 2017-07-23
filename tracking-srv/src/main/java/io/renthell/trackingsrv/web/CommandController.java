@@ -1,8 +1,10 @@
 package io.renthell.trackingsrv.web;
 
+import io.renthell.trackingsrv.common.persistence.event.RawEvent;
 import io.renthell.trackingsrv.service.EventStoreService;
 import io.renthell.trackingsrv.events.PropertyTransactionAddedEvent;
 import io.renthell.trackingsrv.commands.AddPropertyTransactionCmd;
+import io.renthell.trackingsrv.service.KafkaProducerService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -25,15 +27,19 @@ public class CommandController {
     private EventStoreService eventStore;
 
     @Autowired
+    private KafkaProducerService kafkaProducer;
+
+    @Autowired
     private ModelMapper modelMapper;
 
-    @RequestMapping(value = "/propertytransaction", method = RequestMethod.POST)
+    @RequestMapping(value = "/add-property-transaction", method = RequestMethod.POST)
     public void cratePropertyTransaction(final @Valid @RequestBody AddPropertyTransactionCmd addPropertyCommand) {
         PropertyTransactionAddedEvent event = modelMapper.map(addPropertyCommand, PropertyTransactionAddedEvent.class);
         String correlationId = UUID.randomUUID().toString();
         event.setCorrelationId(correlationId);
 
-        eventStore.save(event);
+        RawEvent rawEvent = eventStore.save(event);
+        kafkaProducer.publishEvent(rawEvent);
     }
 
     @Bean
