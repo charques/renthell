@@ -25,19 +25,13 @@ public class RawEvent  implements Serializable {
      */
     @Id
     private String id;
-
-    /**
-     * Assigned by database, identical for all events saved in one transaction
-     */
     private Instant transactionTime;
 
     /**
      * This ID is the same for all events committed in the same transaction.
      */
     private String correlationId;
-
     private String payload;
-
     private String type;
 
     public RawEvent() {

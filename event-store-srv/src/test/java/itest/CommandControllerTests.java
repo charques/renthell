@@ -1,8 +1,11 @@
 package itest;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import io.renthell.eventstoresrv.commands.AddPropertyTransactionCmd;
+import io.renthell.eventstoresrv.common.persistence.event.RawEvent;
 import itest.config.ConfigServerWithFongoConfiguration;
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,14 +16,19 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.util.UUID;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = { ConfigServerWithFongoConfiguration.class }, properties = {
@@ -39,35 +47,30 @@ public class CommandControllerTests {
 
     @Before
     public void setUp() {
-        jsonMapper = new ObjectMapper();
+        jsonMapper = new ObjectMapper()
+                .registerModule(new ParameterNamesModule())
+                .registerModule(new Jdk8Module())
+                .registerModule(new JavaTimeModule());
     }
 
-    /*@Test
-    public void testGetPerson() throws Exception {
+    @Test
+    public void testGetRawEvent() throws Exception {
 
-        AddPropertyTransactionCmd addPropertyFongo = new AddPropertyTransactionCmd();
-        addPropertyFongo.set
+        String correlationId = UUID.randomUUID().toString();
+        RawEvent rawEventFongo = new RawEvent(correlationId, "{}", "Test");
 
-        {"correlationId":"c39b2782-5e0b-4ad0-9402-d9eeca124475","identifier":"142550444","publishDate":"18/05/2017 8:01:36","region":"Madrid","city":"Madrid Capital","district":"Retiro","neighbourhood":"Jerónimos","street":"Alfonso XII","postalCode":"28014","property":"Flat","propertySub":"Flat","propertyState":"VeryGood","propertyType":"Vivienda","mts2":"140","rooms":"4","bathrooms":"3","heating":"0","energeticCert":"0","features":"aire-acondicionado|||calefaccion|||garaje-privado|||ascensor","lat":"40.4138","lng":"-3.68511","feed":"https://www.fotocasa.es/vivienda/madrid-capital/aire-acondicionado-calefaccion-parking-ascensor-alfonso-xii-142550444?RowGrid=11&tti=3&opi=300","transactionId":"3","transaction":"alquiler","price":"1890","priceMin":"","priceMax":"","priceRange":"1501-2000"}
-        Person personFongo = new Person();
-        personFongo.setId(1);
-        personFongo.setName("Name1");
-        personFongo.setAddress("Address1");
-        mongoTemplate.createCollection("person");
-        mongoTemplate.insert(personFongo);
+        mongoTemplate.createCollection("rawevent");
+        mongoTemplate.insert(rawEventFongo);
 
-        ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:8090/api/person/1"));
+        ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:8090/commands/get-raw-event/" + rawEventFongo.getId()));
         resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
         MvcResult result = resultAction.andReturn();
-        Person personResponse = jsonMapper.readValue(result.getResponse().getContentAsString(), Person.class);
-        Assert.assertEquals(1, personResponse.getId());
-        Assert.assertEquals("Name1", personResponse.getName());
-        Assert.assertEquals("Address1", personResponse.getAddress());
-
-    }*/
+        RawEvent rawEventResponse = jsonMapper.readValue(result.getResponse().getContentAsString(), RawEvent.class);
+        Assert.assertEquals(rawEventFongo.getId(), rawEventResponse.getId());
+    }
 
     @Test
-    public void testCreatePerson() throws Exception {
+    public void testAddPropertyTransaction() throws Exception {
 
         AddPropertyTransactionCmd addPropertyCmd = new AddPropertyTransactionCmd();
         addPropertyCmd.setIdentifier("142550444");
@@ -103,10 +106,8 @@ public class CommandControllerTests {
                 .contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andReturn();
-        String content = result.getResponse().getContentAsString();
+        MockHttpServletResponse response = result.getResponse();
 
-        JsonNode eventJson = jsonMapper.readTree(content);
-        JsonNode payloadJson = jsonMapper.readTree(eventJson.get("payload").textValue());
-        Assert.assertEquals(payloadJson.get("identifier").textValue(), "142550444");
+        Assert.assertEquals(response.getStatus(), HttpStatus.CREATED.value());
     }
 }

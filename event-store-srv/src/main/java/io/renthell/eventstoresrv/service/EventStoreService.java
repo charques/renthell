@@ -7,4 +7,6 @@ import io.renthell.eventstoresrv.common.persistence.event.RawEvent;
 public interface EventStoreService {
 
     public RawEvent save(final BaseEvent event);
+
+    public RawEvent findById(final String id);
 }
