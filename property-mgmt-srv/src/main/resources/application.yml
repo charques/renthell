@@ -5,3 +5,11 @@ endpoints:
   event-store:
     uri-base: http://localhost:8090
     add-property-command: /commands/add-property-transaction
+
+kafka:
+  groups:
+    events: events-group
+  topics:
+    events: test
+  bootstrap:
+    servers: 192.168.99.100:9092

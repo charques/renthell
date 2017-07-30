@@ -64,7 +64,7 @@ public class PropertyMgmtControllerTests {
 
         String body = jsonMapper.writeValueAsString(property);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:8090/api/property")
+        mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:8090/api/property-transaction")
                 .contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
     }

@@ -24,7 +24,7 @@ public class PropertyMgmtController {
     @Autowired
     private EventStoreServiceDefault eventStoreService;
 
-    @RequestMapping(value = "/property", method = RequestMethod.POST)
+    @RequestMapping(value = "/property-transaction", method = RequestMethod.POST)
     public @ResponseBody
     ResponseEntity<?> createPropertyTransaction(final @Valid @RequestBody Property property) {
         log.info("Creating Property : {}", property);
