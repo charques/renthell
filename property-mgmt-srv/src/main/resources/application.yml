@@ -1,0 +1,7 @@
+server:
+  port: 8091
+
+endpoints:
+  event-store:
+    uri-base: http://localhost:8090
+    add-property-command: /commands/add-property-transaction
