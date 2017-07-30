@@ -1,9 +1,6 @@
 package itest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import io.renthell.eventstoresrv.commands.AddPropertyTransactionCmd;
 import io.renthell.eventstoresrv.common.persistence.event.RawEvent;
 import itest.config.ConfigServerWithFongoConfiguration;
@@ -16,9 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -43,14 +38,11 @@ public class CommandControllerTests {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
     private ObjectMapper jsonMapper;
 
     @Before
     public void setUp() {
-        jsonMapper = new ObjectMapper()
-                .registerModule(new ParameterNamesModule())
-                .registerModule(new Jdk8Module())
-                .registerModule(new JavaTimeModule());
     }
 
     @Test
@@ -67,6 +59,13 @@ public class CommandControllerTests {
         MvcResult result = resultAction.andReturn();
         RawEvent rawEventResponse = jsonMapper.readValue(result.getResponse().getContentAsString(), RawEvent.class);
         Assert.assertEquals(rawEventFongo.getId(), rawEventResponse.getId());
+    }
+
+    @Test
+    public void testGetRawEventError() throws Exception {
+
+        ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:8090/commands/get-raw-event/xxx"));
+        resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError());
     }
 
     @Test
@@ -102,12 +101,8 @@ public class CommandControllerTests {
 
         String body = jsonMapper.writeValueAsString(addPropertyCmd);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:8090/commands/add-property-transaction")
+        mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:8090/commands/add-property-transaction")
                 .contentType(MediaType.APPLICATION_JSON).content(body))
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andReturn();
-        MockHttpServletResponse response = result.getResponse();
-
-        Assert.assertEquals(response.getStatus(), HttpStatus.CREATED.value());
+                .andExpect(MockMvcResultMatchers.status().isCreated());
     }
 }

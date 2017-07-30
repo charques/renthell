@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import io.renthell.eventstoresrv.common.events.BaseEvent;
 import io.renthell.eventstoresrv.common.persistence.event.RawEvent;
+import io.renthell.eventstoresrv.exceptions.EventStoreException;
 import io.renthell.eventstoresrv.persistence.RawEventRepo;
 import io.renthell.eventstoresrv.service.EventStoreService;
 import lombok.extern.slf4j.Slf4j;
@@ -21,13 +22,15 @@ import javax.annotation.PostConstruct;
 @Service
 @Slf4j
 public class EventStoreServiceDefault implements EventStoreService {
-    private ObjectMapper mapper;
+
+    @Autowired
+    private ObjectMapper jsonMapper;
 
     @Autowired
     private RawEventRepo eventRepo;
 
     @Override
-    public RawEvent save(final BaseEvent event) {
+    public RawEvent save(final BaseEvent event) throws EventStoreException {
         return eventRepo.save(convert(event));
     }
 
@@ -36,29 +39,21 @@ public class EventStoreServiceDefault implements EventStoreService {
         return eventRepo.findOne(uuid);
     }
 
-    private RawEvent convert(final BaseEvent event) {
+    private RawEvent convert(final BaseEvent event) throws EventStoreException {
         final RawEvent rawEvent = new RawEvent();
         rawEvent.setType(event.getClass().getCanonicalName());
         rawEvent.setCorrelationId(event.getCorrelationId());
 
         String eventAsString = null;
         try {
-            eventAsString = mapper.writeValueAsString(event);
+            eventAsString = jsonMapper.writeValueAsString(event);
         } catch (final JsonProcessingException ex) {
-            throw new IllegalStateException("Error serializing the event: " + event.toString(), ex);
+            throw new EventStoreException("Error serializing the event: " + event.toString(), ex);
         }
         rawEvent.setPayload(eventAsString);
-
         log.info(rawEvent.toString());
 
         return rawEvent;
     }
 
-    @PostConstruct
-    void instantiate() {
-        this.mapper = new ObjectMapper()
-                .registerModule(new ParameterNamesModule())
-                .registerModule(new Jdk8Module())
-                .registerModule(new JavaTimeModule());
-    }
 }

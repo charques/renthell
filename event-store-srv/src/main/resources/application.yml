@@ -5,3 +5,9 @@ spring:
 
 server:
   port: 8090
+
+kafka:
+  topics:
+    events: test
+  bootstrap:
+    servers: 192.168.99.100:9092

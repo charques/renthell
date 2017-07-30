@@ -4,6 +4,7 @@ import io.renthell.eventstoresrv.commands.AddPropertyTransactionCmd;
 import io.renthell.eventstoresrv.common.persistence.event.RawEvent;
 import io.renthell.eventstoresrv.common.util.CustomErrorType;
 import io.renthell.eventstoresrv.events.PropertyTransactionAddedEvent;
+import io.renthell.eventstoresrv.exceptions.EventStoreException;
 import io.renthell.eventstoresrv.service.EventStoreService;
 import io.renthell.eventstoresrv.service.KafkaProducerService;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -45,9 +47,15 @@ public class CommandController {
         String correlationId = UUID.randomUUID().toString();
         event.setCorrelationId(correlationId);
 
-        RawEvent rawEvent = eventStore.save(event);
-        //kafkaProducer.publishEvent(rawEvent);
-        //return new ResponseEntity<>(rawEvent, HttpStatus.CREATED);
+        RawEvent rawEvent = null;
+        try {
+            rawEvent = eventStore.save(event);
+            kafkaProducer.publishEvent(rawEvent);
+        } catch (EventStoreException e) {
+            return new ResponseEntity<>(new CustomErrorType("Error adding property transaction " +
+                    addPropertyCommand.getIdentifier()), HttpStatus.BAD_REQUEST);
+        }
+
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/commands/get-raw-event/{id}").buildAndExpand(rawEvent.getId()).toUri());
         return new ResponseEntity<String>(headers, HttpStatus.CREATED);
@@ -59,15 +67,10 @@ public class CommandController {
         RawEvent rawEvent = eventStore.findById(uuid);
         if (rawEvent == null) {
             log.error("RawEvent with uuid {} not found.", uuid);
-            return new ResponseEntity(new CustomErrorType("RawEvent with uuid " + uuid
+            return new ResponseEntity<>(new CustomErrorType("RawEvent with uuid " + uuid
                     + " not found"), HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<RawEvent>(rawEvent, HttpStatus.OK);
+        return new ResponseEntity<>(rawEvent, HttpStatus.OK);
     }
 
-
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
 }
