@@ -1,0 +1,9 @@
+logging:
+  level:
+    io.renthell.crawlengine: DEBUG
+  file: /Users/cfhernandez/projects_ws/renthell/crawl-engine/tmp/crawl-engine.log
+
+endpoints:
+  property-mgmt:
+    uri-base: http://localhost:8091
+    property-transaction: /api/property-transaction

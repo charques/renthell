@@ -1,7 +1,8 @@
-package io.renthell.crawlengine.fotocasa;
+package io.renthell.crawlengine.fotocasa.crawler;
 
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
+import io.renthell.crawlengine.fotocasa.model.FotocasaItem;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,11 +58,7 @@ public class FotocasaPageParser {
             throw new ParseException("Parse error ADCONFIG: " + e.getMessage() + System.getProperty("line.separator") + adConfig, 0);
         }
 
-        FotocasaItem item = FotocasaItem.builder()
-                .weburl(webURL)
-                .mainObj(utagJson)
-                .secondaryObj(adConfigJsonObj)
-                .build();
+        FotocasaItem item = FotocasaItem.build(webURL, utagJson, adConfigJsonObj);
 
         return item;
     }

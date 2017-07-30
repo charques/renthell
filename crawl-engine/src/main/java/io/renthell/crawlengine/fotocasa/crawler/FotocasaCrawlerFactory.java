@@ -1,8 +1,8 @@
-package io.renthell.crawlengine.fotocasa;
+package io.renthell.crawlengine.fotocasa.crawler;
 
 import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
-import io.renthell.crawlengine.trackingfeeder.TrackingFeederService;
+import io.renthell.crawlengine.fotocasa.service.FotocasaService;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 public class FotocasaCrawlerFactory implements CrawlController.WebCrawlerFactory {
 
     FotocasaService fotocasaService;
-    TrackingFeederService trackingFeederService;
 
     public FotocasaCrawlerFactory(FotocasaService fotocasaService) {
         this.fotocasaService = fotocasaService;

@@ -1,4 +1,4 @@
-package io.renthell.crawlengine.fotocasa;
+package io.renthell.crawlengine.fotocasa.crawler;
 
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
@@ -6,7 +6,8 @@ import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
 
 import io.renthell.crawlengine.CrawlStats;
-import io.renthell.crawlengine.trackingfeeder.TrackingFeederService;
+import io.renthell.crawlengine.fotocasa.model.FotocasaItem;
+import io.renthell.crawlengine.fotocasa.service.FotocasaService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import org.json.JSONException;

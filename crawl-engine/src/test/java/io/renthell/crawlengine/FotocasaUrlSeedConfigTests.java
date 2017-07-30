@@ -1,6 +1,6 @@
 package io.renthell.crawlengine;
 
-import io.renthell.crawlengine.fotocasa.FotocasaUrlSeedConfig;
+import io.renthell.crawlengine.fotocasa.crawler.FotocasaUrlSeedConfig;
 import org.junit.Assert;
 import org.junit.Test;
 

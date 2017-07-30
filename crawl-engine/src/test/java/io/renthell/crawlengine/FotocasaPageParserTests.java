@@ -2,8 +2,8 @@ package io.renthell.crawlengine;
 
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
-import io.renthell.crawlengine.fotocasa.FotocasaItem;
-import io.renthell.crawlengine.fotocasa.FotocasaPageParser;
+import io.renthell.crawlengine.fotocasa.model.FotocasaItem;
+import io.renthell.crawlengine.fotocasa.crawler.FotocasaPageParser;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.junit.Assert;

@@ -1,4 +1,4 @@
-package io.renthell.crawlengine.fotocasa;
+package io.renthell.crawlengine.fotocasa.crawler;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

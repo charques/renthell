@@ -1,5 +1,6 @@
-package io.renthell.crawlengine.fotocasa;
+package io.renthell.crawlengine.fotocasa.persistence;
 
+import io.renthell.crawlengine.fotocasa.model.FotocasaItem;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;

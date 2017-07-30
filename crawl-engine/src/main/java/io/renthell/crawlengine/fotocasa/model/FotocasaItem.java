@@ -1,4 +1,4 @@
-package io.renthell.crawlengine.fotocasa;
+package io.renthell.crawlengine.fotocasa.model;
 
 import edu.uci.ics.crawler4j.url.WebURL;
 import lombok.Getter;
@@ -100,8 +100,8 @@ public class FotocasaItem {
 
     private Boolean updated = false;
 
-    static FotocasaItemBuilder builder() {
-        return new FotocasaItemBuilder();
+    public static FotocasaItem build(WebURL weburl, JSONObject mainObj, JSONObject secondaryObj) {
+        return new FotocasaItemBuilder(weburl, mainObj, secondaryObj).build();
     }
 
     static class FotocasaItemBuilder {
@@ -110,24 +110,13 @@ public class FotocasaItem {
         private JSONObject mainObj;
         private JSONObject secondaryObj;
 
-        private FotocasaItemBuilder() {}
-
-        FotocasaItemBuilder weburl(WebURL weburl) {
+        private FotocasaItemBuilder(WebURL weburl, JSONObject mainObj, JSONObject secondaryObj) {
             this.weburl = weburl;
-            return this;
-        }
-
-        FotocasaItemBuilder mainObj(JSONObject mainObj) {
             this.mainObj = mainObj;
-            return this;
-        }
-
-        FotocasaItemBuilder secondaryObj(JSONObject secondaryObj) {
             this.secondaryObj = secondaryObj;
-            return this;
         }
 
-        FotocasaItem build() {
+        public FotocasaItem build() {
             FotocasaItem build = new FotocasaItem();
 
             check(mainObj, secondaryObj);

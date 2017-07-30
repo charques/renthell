@@ -1,4 +1,4 @@
-package io.renthell.crawlengine.fotocasa;
+package io.renthell.crawlengine.fotocasa.model;
 
 import lombok.*;
 

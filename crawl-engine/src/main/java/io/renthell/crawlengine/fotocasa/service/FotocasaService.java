@@ -1,6 +1,10 @@
-package io.renthell.crawlengine.fotocasa;
+package io.renthell.crawlengine.fotocasa.service;
 
-import io.renthell.crawlengine.trackingfeeder.TrackingFeederService;
+import io.renthell.crawlengine.fotocasa.model.FotocasaItem;
+import io.renthell.crawlengine.fotocasa.model.FotocasaTransactionItem;
+import io.renthell.crawlengine.fotocasa.persistence.FotocasaRepository;
+import io.renthell.crawlengine.propertymgmt.service.PropertyMgmtService;
+import io.renthell.crawlengine.propertymgmt.service.impl.PropertyMgmtServiceDefault;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +22,7 @@ public class FotocasaService {
     private FotocasaRepository fotocasaRepository;
 
     @Autowired
-    private TrackingFeederService trackingFeederService;
+    private PropertyMgmtService propertyMgmtService;
 
 
     public FotocasaItem saveUpdate(FotocasaItem itemToSave) {
@@ -29,8 +33,8 @@ public class FotocasaService {
             itemSaved = fotocasaRepository.save(itemToSave);
             log.info("Saved: " + itemSaved.toString());
 
-            // post ADD property transaction event
-            trackingFeederService.addPropertyTransaction(itemSaved, 0);
+            // post ADD property transaction
+            propertyMgmtService.addPropertyTransaction(itemSaved, 0);
         } else {
             Integer transactionIndex = getTransactionIndex(itemRetrieved, itemToSave);
             FotocasaTransactionItem transaction = itemToSave.getTransactions().get(0);
@@ -53,7 +57,7 @@ public class FotocasaService {
                 log.info("Updated: " + itemSaved.toString());
 
                 // post UPDATED property transaction event
-                trackingFeederService.addPropertyTransaction(itemSaved, transactionIndex);
+                propertyMgmtService.addPropertyTransaction(itemSaved, transactionIndex);
             }
             else {
                 log.info("No update: " + itemRetrieved.toString());

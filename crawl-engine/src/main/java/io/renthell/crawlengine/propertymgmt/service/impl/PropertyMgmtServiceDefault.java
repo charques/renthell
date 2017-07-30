@@ -1,9 +1,12 @@
-package io.renthell.crawlengine.trackingfeeder;
+package io.renthell.crawlengine.propertymgmt.service.impl;
 
-import io.renthell.crawlengine.fotocasa.FotocasaItem;
-import io.renthell.crawlengine.fotocasa.FotocasaTransactionItem;
+import io.renthell.crawlengine.configuration.PropertyMgmtConfiguration;
+import io.renthell.crawlengine.fotocasa.model.FotocasaItem;
+import io.renthell.crawlengine.fotocasa.model.FotocasaTransactionItem;
+import io.renthell.crawlengine.propertymgmt.service.PropertyMgmtService;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Service;
@@ -16,7 +19,10 @@ import java.nio.charset.Charset;
  */
 @Service
 @Slf4j
-public class TrackingFeederService {
+public class PropertyMgmtServiceDefault implements PropertyMgmtService {
+
+    @Autowired
+    private PropertyMgmtConfiguration propertyMgmtConfiguration;
 
     public void addPropertyTransaction(FotocasaItem item, Integer transactionIndex) {
         JSONObject request = buildObject(item, transactionIndex);
@@ -26,8 +32,9 @@ public class TrackingFeederService {
 
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
-        String urlString = "http://localhost:8080/commands/add-property-transaction";
+        String urlString = propertyMgmtConfiguration.getPropertyMgmtUriBase() + propertyMgmtConfiguration.getPropertyTransactionPath();
         ResponseEntity<String> pTransactionResponse = restTemplate.exchange(urlString, HttpMethod.POST, entity, String.class);
+
         if (pTransactionResponse.getStatusCode() == HttpStatus.OK) {
             log.info("Adding property transaction: OK");
         } else if (pTransactionResponse.getStatusCode() == HttpStatus.BAD_REQUEST) {
