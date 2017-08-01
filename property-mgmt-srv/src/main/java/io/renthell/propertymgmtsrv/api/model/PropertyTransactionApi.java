@@ -1,4 +1,4 @@
-package io.renthell.propertymgmtsrv.model;
+package io.renthell.propertymgmtsrv.api.model;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
  */
 @Getter
 @Setter
-public class Property {
+public class PropertyTransactionApi {
 
     @NotNull
     private String identifier;

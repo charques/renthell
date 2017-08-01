@@ -1,12 +1,11 @@
-package io.renthell.propertymgmtsrv.web;
+package io.renthell.propertymgmtsrv.api.web;
 
-import io.renthell.propertymgmtsrv.model.Property;
-import io.renthell.propertymgmtsrv.service.impl.EventStoreServiceDefault;
-import io.renthell.propertymgmtsrv.util.CustomErrorType;
+import io.renthell.propertymgmtsrv.api.model.PropertyTransactionApi;
+import io.renthell.propertymgmtsrv.api.util.CustomErrorType;
+import io.renthell.propertymgmtsrv.api.service.impl.EventStoreServiceDefault;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,13 +25,13 @@ public class PropertyMgmtController {
 
     @RequestMapping(value = "/property-transaction", method = RequestMethod.POST)
     public @ResponseBody
-    ResponseEntity<?> createPropertyTransaction(final @Valid @RequestBody Property property) {
-        log.info("Creating Property : {}", property);
+    ResponseEntity<?> createPropertyTransaction(final @Valid @RequestBody PropertyTransactionApi property) {
+        log.info("Creating PropertyTransactionApi : {}", property);
 
         Boolean success = eventStoreService.addPropertyTransaction(property);
 
         if(success) {
-            log.info("Property transaction added: OK");
+            log.info("PropertyTransactionApi transaction added: OK");
             return new ResponseEntity<String>(HttpStatus.OK);
         }
         else {

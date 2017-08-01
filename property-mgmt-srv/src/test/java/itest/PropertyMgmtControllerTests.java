@@ -1,9 +1,8 @@
 package itest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.renthell.propertymgmtsrv.model.Property;
 import itest.config.ConfigServerWithFongoConfiguration;
-import org.junit.Before;
+import io.renthell.propertymgmtsrv.api.model.PropertyTransactionApi;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,7 @@ public class PropertyMgmtControllerTests {
     @Test
     public void testAddPropertyTransaction() throws Exception {
 
-        Property property = new Property();
+        PropertyTransactionApi property = new PropertyTransactionApi();
         property.setIdentifier("142550444");
         property.setRegion("Madrid");
         property.setCity("Madrid Capital");

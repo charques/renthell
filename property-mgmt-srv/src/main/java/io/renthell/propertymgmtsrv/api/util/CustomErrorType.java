@@ -1,4 +1,4 @@
-package io.renthell.propertymgmtsrv.util;
+package io.renthell.propertymgmtsrv.api.util;
 
 public class CustomErrorType {
 

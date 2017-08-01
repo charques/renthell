@@ -1,16 +1,14 @@
 package io.renthell.propertymgmtsrv;
 
 import io.renthell.propertymgmtsrv.configuration.KafkaConfiguration;
-import io.renthell.propertymgmtsrv.eventhandlers.AddPropertyTransactionEventConsumer;
+import io.renthell.propertymgmtsrv.eventhandlers.consumer.PropertyAddedEventConsumer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
-import org.springframework.context.annotation.ComponentScan;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,9 +35,9 @@ public class PropertyMgmtSrvApplication implements CommandLineRunner {
 		List<String> topics = Arrays.asList(kafkaConfiguration.getEventsTopic());
 		ExecutorService executor = Executors.newFixedThreadPool(numConsumers);
 
-		final List<AddPropertyTransactionEventConsumer> consumers = new ArrayList<>();
+		final List<PropertyAddedEventConsumer> consumers = new ArrayList<>();
 		for (int i = 0; i < numConsumers; i++) {
-			AddPropertyTransactionEventConsumer consumer = new AddPropertyTransactionEventConsumer(i, kafkaConfiguration);
+			PropertyAddedEventConsumer consumer = new PropertyAddedEventConsumer(i, kafkaConfiguration);
 			consumers.add(consumer);
 			executor.submit(consumer);
 		}
@@ -47,7 +45,7 @@ public class PropertyMgmtSrvApplication implements CommandLineRunner {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
-				for (AddPropertyTransactionEventConsumer consumer : consumers) {
+				for (PropertyAddedEventConsumer consumer : consumers) {
 					consumer.shutdown();
 				}
 				executor.shutdown();

@@ -1,4 +1,4 @@
-package io.renthell.propertymgmtsrv.eventhandlers;
+package io.renthell.propertymgmtsrv.eventhandlers.consumer;
 
 import io.renthell.propertymgmtsrv.configuration.KafkaConfiguration;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -9,13 +9,13 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 
 import java.util.*;
 
-public class AddPropertyTransactionEventConsumer implements Runnable {
+public class PropertyAddedEventConsumer implements Runnable {
 
     private final KafkaConsumer<String, String> consumer;
     private final List<String> topics;
     private final int id;
 
-    public AddPropertyTransactionEventConsumer(int id, KafkaConfiguration kafkaConfiguration) {
+    public PropertyAddedEventConsumer(int id, KafkaConfiguration kafkaConfiguration) {
         this.id = id;
         this.topics = Arrays.asList(kafkaConfiguration.getEventsTopic());
         Properties props = new Properties();
