@@ -1,6 +1,11 @@
 server:
   port: 8091
 
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/testdb
+
 endpoints:
   event-store:
     uri-base: http://localhost:8090

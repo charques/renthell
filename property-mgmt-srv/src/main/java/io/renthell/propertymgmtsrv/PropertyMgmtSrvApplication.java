@@ -1,5 +1,6 @@
 package io.renthell.propertymgmtsrv;
 
+import io.renthell.propertymgmtsrv.api.service.PropertyService;
 import io.renthell.propertymgmtsrv.configuration.KafkaConfiguration;
 import io.renthell.propertymgmtsrv.eventhandlers.consumer.PropertyAddedEventConsumer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfigurat
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,20 +24,25 @@ public class PropertyMgmtSrvApplication implements CommandLineRunner {
 	@Autowired
 	private KafkaConfiguration kafkaConfiguration;
 
+	@Autowired
+	private PropertyService propertyService;
+
 	public static void main(String[] args) {
 		SpringApplication.run(PropertyMgmtSrvApplication.class, args);
 	}
 
 	@Override
 	public void run(String... strings) throws Exception {
+		initConsumers();
+	}
+
+	private void initConsumers() {
 		int numConsumers = 1;
-		String groupId = "consumer-group";
-		List<String> topics = Arrays.asList(kafkaConfiguration.getEventsTopic());
 		ExecutorService executor = Executors.newFixedThreadPool(numConsumers);
 
 		final List<PropertyAddedEventConsumer> consumers = new ArrayList<>();
 		for (int i = 0; i < numConsumers; i++) {
-			PropertyAddedEventConsumer consumer = new PropertyAddedEventConsumer(i, kafkaConfiguration);
+			PropertyAddedEventConsumer consumer = new PropertyAddedEventConsumer(i, kafkaConfiguration, propertyService);
 			consumers.add(consumer);
 			executor.submit(consumer);
 		}

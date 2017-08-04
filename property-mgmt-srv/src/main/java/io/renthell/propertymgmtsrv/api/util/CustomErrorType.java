@@ -1,15 +1,18 @@
 package io.renthell.propertymgmtsrv.api.util;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class CustomErrorType {
 
     private String errorMessage;
 
-    public CustomErrorType(String errorMessage){
+    private int errorCode;
+
+    public CustomErrorType(String errorMessage, int errorCode){
         this.errorMessage = errorMessage;
+        this.errorCode = errorCode;
     }
-
-    public String getErrorMessage() {
-        return errorMessage;
-    }
-
 }

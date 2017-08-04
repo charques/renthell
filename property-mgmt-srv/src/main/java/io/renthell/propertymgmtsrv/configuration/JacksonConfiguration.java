@@ -1,5 +1,6 @@
 package io.renthell.propertymgmtsrv.configuration;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,6 +21,7 @@ public class JacksonConfiguration {
                 .registerModule(new JavaTimeModule());;
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         mapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true);
+        mapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true);
         return mapper;
     }
 }

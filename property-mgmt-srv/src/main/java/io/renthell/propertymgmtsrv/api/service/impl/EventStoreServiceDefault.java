@@ -2,8 +2,9 @@ package io.renthell.propertymgmtsrv.api.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.renthell.propertymgmtsrv.api.exception.PropertyMgmtException;
 import io.renthell.propertymgmtsrv.configuration.EventStoreConfiguration;
-import io.renthell.propertymgmtsrv.api.model.PropertyTransactionApi;
+import io.renthell.propertymgmtsrv.api.dto.PropertyTransactionDto;
 import io.renthell.propertymgmtsrv.api.service.EventStoreService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +23,15 @@ import java.nio.charset.Charset;
 public class EventStoreServiceDefault implements EventStoreService {
 
     @Autowired
+    private RestTemplate restTemplate;
+
+    @Autowired
     private EventStoreConfiguration eventStoreConfiguration;
 
     @Autowired
     private ObjectMapper objectMapper;
 
-    public Boolean addPropertyTransaction(PropertyTransactionApi item) {
+    public Boolean addPropertyTransaction(PropertyTransactionDto item) throws PropertyMgmtException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -35,24 +39,19 @@ public class EventStoreServiceDefault implements EventStoreService {
         try {
             body = objectMapper.writeValueAsString(item);
         } catch (JsonProcessingException e) {
-            log.error("Adding property transaction: KO {}", item);
-            return false;
+            log.error("Parsing property transaction {}", item);
+            throw new PropertyMgmtException(PropertyMgmtException.ErrorCode.PARSE_ERROR,
+                    "Error parsing property transaction", e);
         }
 
         HttpEntity<String> entity = new HttpEntity<String>(body, headers);
 
-        RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
         String urlString = eventStoreConfiguration.getEventStoreUriBase() + eventStoreConfiguration.getAddPropertyCommandPath();
 
-        ResponseEntity<String> pTransactionResponse = restTemplate.exchange(urlString, HttpMethod.POST, entity, String.class);
-
-        if (pTransactionResponse.getStatusCode() == HttpStatus.CREATED) {
-            log.info("Adding property transaction: OK");
-            return true;
-        } else {
-            log.error("Adding property transaction: KO {}", pTransactionResponse.getStatusCode());
-            return false;
-        }
+        ResponseEntity<String> pTransactionResponse = null;
+        pTransactionResponse = restTemplate.exchange(urlString, HttpMethod.POST, entity, String.class);
+        log.info("Property transaction added: {}", pTransactionResponse.getStatusCodeValue());
+        return true;
     }
 }
