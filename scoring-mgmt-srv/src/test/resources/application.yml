@@ -1,0 +1,6 @@
+kafka:
+  bootstrap-servers: ${spring.embedded.kafka.brokers}
+  groupid:
+    events: events-group
+  topic:
+    events: test
