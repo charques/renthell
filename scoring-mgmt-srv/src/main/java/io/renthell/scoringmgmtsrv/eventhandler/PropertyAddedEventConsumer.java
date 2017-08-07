@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.TextNode;
 import io.renthell.scoringmgmtsrv.exception.ScoringMgmtException;
 import io.renthell.scoringmgmtsrv.model.Property;
+import io.renthell.scoringmgmtsrv.model.Scoring;
 import io.renthell.scoringmgmtsrv.service.ScoringService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +34,10 @@ public class PropertyAddedEventConsumer {
     return latch;
   }
 
+  private final String PROPERTY_TRANSACTION_ADDED_EVENT = "io.renthell.eventstoresrv.events.PropertyTransactionAddedEvent";
+
   @KafkaListener(topics = "${kafka.topic.events}")
-  public void receive(String payload) {
+  public void consumeEvent(String payload) {
     log.info("Event consumed. Event payload='{}'", payload);
 
     Property property = null;
@@ -43,35 +46,44 @@ public class PropertyAddedEventConsumer {
       TextNode eventPayloadString = (TextNode) payloadJson.get("payload");
       JsonNode eventPayloadJson = objectMapper.readTree(eventPayloadString.textValue());
 
-      String transactionId = eventPayloadJson.get("transactionId").textValue();
-      JsonNode publishDateNode = eventPayloadJson.get("publishDate");
-      Date date = new Date();
-      if(!publishDateNode.isNull()) {
-        DateFormat format = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
-        date = format.parse(publishDateNode.toString());
+      if(PROPERTY_TRANSACTION_ADDED_EVENT.equals(payloadJson.get("type").textValue())) {
+        property = buildProperty(eventPayloadJson);
+        Scoring scoring = scoringService.addPropertyToScoring(property);
+        log.info("Property transaction added event processed. Scoring updated: {}", scoring.toString());
       }
-      String region = eventPayloadJson.get("region").textValue().toLowerCase();
-      String postalCode = eventPayloadJson.get("postalCode").textValue();
-      String district = eventPayloadJson.get("district").textValue().toLowerCase();
-      String city = eventPayloadJson.get("city").textValue().toLowerCase();
-      int rooms = Integer.parseInt(eventPayloadJson.get("rooms").textValue());
-      Float price = Float.parseFloat(eventPayloadJson.get("price").textValue());
 
-      property = new Property();
-      property.setTransactionId(transactionId);
-      property.setDate(date);
-      property.setRegion(region);
-      property.setPostalCode(postalCode);
-      property.setDistrict(district);
-      property.setCity(city);
-      property.setRooms(rooms);
-      property.setPrice(price);
-
-    } catch (Exception e) {
+    } catch (IOException | ParseException e) {
       throw new ScoringMgmtException(ErrorCode.PARSE_ERROR, "Error parsing event payload", e);
     }
 
-    scoringService.addProperty(property);
     latch.countDown();
+  }
+
+  private Property buildProperty(JsonNode eventPayloadJson) throws ParseException {
+    String transactionId = eventPayloadJson.get("transactionId").textValue();
+    String publishDateString = eventPayloadJson.get("publishDate").textValue();
+    Date date = new Date();
+    if (publishDateString != null) {
+      DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+      date = format.parse(publishDateString);
+    }
+    String region = eventPayloadJson.get("region").textValue().toLowerCase();
+    String postalCode = eventPayloadJson.get("postalCode").textValue();
+    String district = eventPayloadJson.get("district").textValue().toLowerCase();
+    String city = eventPayloadJson.get("city").textValue().toLowerCase();
+    int rooms = Integer.parseInt(eventPayloadJson.get("rooms").textValue());
+    Float price = Float.parseFloat(eventPayloadJson.get("price").textValue());
+
+    Property property = new Property();
+    property.setTransactionId(transactionId);
+    property.setDate(date);
+    property.setRegion(region);
+    property.setPostalCode(postalCode);
+    property.setDistrict(district);
+    property.setCity(city);
+    property.setRooms(rooms);
+    property.setPrice(price);
+
+    return property;
   }
 }

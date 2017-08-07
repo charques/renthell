@@ -1,6 +1,5 @@
 package io.renthell.scoringmgmtsrv.service.impl;
 
-import io.renthell.scoringmgmtsrv.exception.ScoringMgmtException;
 import io.renthell.scoringmgmtsrv.model.Property;
 import io.renthell.scoringmgmtsrv.model.Scoring;
 import io.renthell.scoringmgmtsrv.persistence.ScoringRepo;
@@ -23,7 +22,7 @@ public class ScoringServiceDefault implements ScoringService {
     private ScoringRepo scoringRepo;
 
     @Override
-    public Scoring addProperty(Property property) throws ScoringMgmtException {
+    public Scoring addPropertyToScoring(Property property) {
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(property.getDate());

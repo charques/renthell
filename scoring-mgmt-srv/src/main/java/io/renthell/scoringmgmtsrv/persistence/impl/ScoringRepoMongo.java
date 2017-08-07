@@ -32,6 +32,8 @@ public class ScoringRepoMongo implements ScoringRepo {
                 .and("city").is(city)
                 .and("rooms").is(rooms));
 
+        List<Scoring> list = mongoOperations.findAll(Scoring.class);
+
         return mongoOperations.findOne(query, Scoring.class);
     }
 
