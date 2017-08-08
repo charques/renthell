@@ -2,12 +2,14 @@ package io.renthell.scoringmgmtsrv.service.impl;
 
 import io.renthell.scoringmgmtsrv.model.Property;
 import io.renthell.scoringmgmtsrv.model.Scoring;
+import io.renthell.scoringmgmtsrv.model.ScoringStats;
 import io.renthell.scoringmgmtsrv.persistence.ScoringRepo;
 import io.renthell.scoringmgmtsrv.service.ScoringService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -62,8 +64,14 @@ public class ScoringServiceDefault implements ScoringService {
     }
 
     @Override
-    public List<Scoring> findAll() {
-        return scoringRepo.findAll();
+    public List<ScoringStats> findAll() {
+        List<Scoring> scoringList = scoringRepo.findAll();
+        List<ScoringStats> statsList = new ArrayList<>();
+        for (Scoring aScoringList : scoringList) {
+            ScoringStats stats = new ScoringStats(aScoringList);
+            statsList.add(stats);
+        }
+        return statsList;
     }
 
 }

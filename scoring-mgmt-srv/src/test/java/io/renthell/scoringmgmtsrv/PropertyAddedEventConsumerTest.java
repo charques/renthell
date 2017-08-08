@@ -29,10 +29,9 @@ import io.renthell.scoringmgmtsrv.producer.Sender;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = { ConfigServerWithFongoConfiguration.class }, properties = {
         "server.port=8980" }, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@AutoConfigureMockMvc
 @TestPropertySource(properties = { "spring.data.mongodb.database=test" })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
-public class SpringKafkaApplicationTest {
+public class PropertyAddedEventConsumerTest {
 
   private static String EVENTS_TOPIC = "test";
 
