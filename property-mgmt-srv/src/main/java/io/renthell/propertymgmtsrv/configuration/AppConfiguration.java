@@ -1,6 +1,6 @@
 package io.renthell.propertymgmtsrv.configuration;
 
-import io.renthell.propertymgmtsrv.api.exception.PropertyMgmtErrorHandler;
+import io.renthell.propertymgmtsrv.exception.PropertyMgmtErrorHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -13,5 +13,4 @@ public class AppConfiguration {
         restTemplate.setErrorHandler(new PropertyMgmtErrorHandler());
         return restTemplate;
     }
-
 }

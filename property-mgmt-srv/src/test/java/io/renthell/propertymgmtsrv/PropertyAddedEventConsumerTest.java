@@ -1,13 +1,10 @@
-package io.renthell.scoringmgmtsrv;
+package io.renthell.propertymgmtsrv;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
-
-import io.renthell.scoringmgmtsrv.config.ConfigServerWithFongoConfiguration;
+import io.renthell.propertymgmtsrv.config.ConfigServerWithFongoConfiguration;
+import io.renthell.propertymgmtsrv.eventhandler.PropertyAddedEventConsumer;
+import io.renthell.propertymgmtsrv.producer.Sender;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -22,8 +19,10 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import io.renthell.scoringmgmtsrv.eventhandler.PropertyAddedEventConsumer;
-import io.renthell.scoringmgmtsrv.producer.Sender;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = { ConfigServerWithFongoConfiguration.class }, properties = {
