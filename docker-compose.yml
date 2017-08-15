@@ -1,0 +1,61 @@
+version: '3'
+services:
+    event-store-srv:
+        build: .
+        image: renthell/event-store-srv:latest
+        container_name: "event-store-srv"
+        ports:
+            - 8090:8090
+        links:
+            - mongodb
+            - kafka
+        depends_on:
+            - mongodb
+            - kafka
+    property-mgmt-srv:
+        image: renthell/property-mgmt-srv:latest
+        container_name: "property-mgmt-srv"
+        ports:
+            - 8091:8091
+        links:
+            - mongodb
+            - event-store-srv
+            - kafka
+        depends_on:
+            - mongodb
+            - event-store-srv
+            - kafka
+    scoring-mgmt-srv:
+        image: renthell/scoring-mgmt-srv:latest
+        container_name: "scoring-mgmt-srv"
+        ports:
+            - 8092:8092
+        links:
+            - mongodb
+            - kafka
+        depends_on:
+            - mongodb
+            - kafka
+    mongodb:
+        image: mongo:latest
+        container_name: "renthell-mongo"
+        environment:
+          - MONGO_DATA_DIR=/data/db
+          - MONGO_LOG_DIR=/dev/null
+        volumes:
+          - db-data:/data/db
+        ports:
+            - 27017:27017
+        command: mongod --smallfiles
+    kafka:
+        image: spotify/kafka
+        container_name: "renthell-kafka"
+        hostname: kafka
+        environment:
+            - ADVERTISED_PORT=9092
+            - ADVERTISED_HOST=kafka
+        ports:
+            - 2181:2181
+            - 9092:9092
+volumes:
+  db-data:
