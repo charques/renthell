@@ -4,10 +4,10 @@ server:
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/testdb
+      uri: mongodb://mongodb:27017/testdb
 
 kafka:
-  bootstrap-servers: 192.168.99.100:9092
+  bootstrap-servers: kafka:9092
   groupid:
     events: events-group
   topic:
