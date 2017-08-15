@@ -1,6 +1,5 @@
 package io.renthell.propertymgmtsrv.service.impl;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.renthell.propertymgmtsrv.exception.PropertyMgmtException;
 import io.renthell.propertymgmtsrv.model.Property;
@@ -11,8 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

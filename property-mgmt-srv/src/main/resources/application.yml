@@ -4,15 +4,15 @@ server:
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/testdb
+      uri: mongodb://mongodb:27017/testdb
 
 endpoints:
   event-store:
-    uri-base: http://localhost:8090
+    uri-base: http://event-store-srv:8090
     add-property-command: /commands/add-property-transaction
 
 kafka:
-  bootstrap-servers: 192.168.99.100:9092
+  bootstrap-servers: kafka:9092
   groupid:
     events: events-group
   topic:

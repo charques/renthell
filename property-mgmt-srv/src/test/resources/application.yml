@@ -1,11 +1,11 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/testdb
+      uri: mongodb://192.168.99.100:27017/testdb
 
 endpoints:
   event-store:
-    uri-base: http://localhost:8090
+    uri-base: http://192.168.99.100:8090
     add-property-command: /commands/add-property-transaction
 
 kafka:
