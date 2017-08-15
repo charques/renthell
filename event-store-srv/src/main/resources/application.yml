@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/testdb
+      uri: mongodb://mongodb:27017/testdb
 
 server:
   port: 8090
@@ -10,4 +10,4 @@ kafka:
   topics:
     events: test
   bootstrap:
-    servers: 192.168.99.100:9092
+    servers: kafka:9092

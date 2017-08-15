@@ -1,9 +1,9 @@
-package itest;
+package io.renthell.eventstoresrv;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.renthell.eventstoresrv.commands.AddPropertyTransactionCmd;
 import io.renthell.eventstoresrv.common.persistence.event.RawEvent;
-import itest.config.ConfigServerWithFongoConfiguration;
+import io.renthell.eventstoresrv.config.ConfigServerWithFongoConfiguration;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +32,7 @@ import java.util.UUID;
 @TestPropertySource(properties = { "spring.data.mongodb.database=test" })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class CommandControllerTests {
+
     @Autowired
     private MongoTemplate mongoTemplate;
 

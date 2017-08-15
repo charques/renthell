@@ -1,4 +1,4 @@
-package itest.config;
+package io.renthell.eventstoresrv.config;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
