@@ -47,7 +47,7 @@ public class EventStoreServiceDefault implements EventStoreService {
         HttpEntity<String> entity = new HttpEntity<String>(body, headers);
 
         restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
-        String urlString = eventStoreConfiguration.getEventStoreUriBase() + eventStoreConfiguration.getAddPropertyCommandPath();
+        String urlString = eventStoreConfiguration.addPropertyCommandUri();
 
         ResponseEntity<String> pTransactionResponse = null;
         pTransactionResponse = restTemplate.exchange(urlString, HttpMethod.POST, entity, String.class);

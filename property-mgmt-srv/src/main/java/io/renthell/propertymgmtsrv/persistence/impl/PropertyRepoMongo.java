@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import io.renthell.propertymgmtsrv.persistence.PropertyRepo;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -33,6 +34,14 @@ public class PropertyRepoMongo implements PropertyRepo {
 
     @Override
     public Property save(Property property) {
+        if(property.getId() == null) {
+            property.setCreatedDate(new Date());
+            property.setUpdated(false);
+        }
+        else {
+            property.setModifiedDate(new Date());
+            property.setUpdated(true);
+        }
         mongoOperations.save(property);
         return property;
     }

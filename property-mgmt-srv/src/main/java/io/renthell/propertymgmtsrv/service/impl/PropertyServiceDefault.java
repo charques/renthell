@@ -22,9 +22,6 @@ public class PropertyServiceDefault implements PropertyService {
     @Autowired
     private PropertyRepo propertyRepo;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @Override
     public Property save(Property propertyToSave) throws PropertyMgmtException {
         log.info("Saving property");
@@ -33,6 +30,7 @@ public class PropertyServiceDefault implements PropertyService {
         Property propertySaved = null;
         if (propertyRetrieved == null) {
             // save new item
+
             propertySaved = propertyRepo.save(propertyToSave);
             log.info("Saved: " + propertySaved.toString());
 
@@ -44,17 +42,16 @@ public class PropertyServiceDefault implements PropertyService {
                 // new transaction
                 List<Transaction> transactions = propertyRetrieved.getTransactions();
                 transactions.add(transaction);
-                propertyToSave.setTransactions(transactions);
+                propertyRetrieved.setTransactions(transactions);
             }
             else {
                 // update transaction
                 List<Transaction> transactions = propertyRetrieved.getTransactions();
                 transactions.set(transactionIndex, transaction);
-                propertyToSave.setTransactions(transactions);
+                propertyRetrieved.setTransactions(transactions);
             }
-            propertyToSave.setUpdated(true);
             // update item
-            propertySaved = propertyRepo.save(propertyToSave);
+            propertySaved = propertyRepo.save(propertyRetrieved);
             log.info("Updated: " + propertySaved.toString());
         }
 

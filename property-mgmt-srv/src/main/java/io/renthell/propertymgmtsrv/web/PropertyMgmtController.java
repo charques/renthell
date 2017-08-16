@@ -55,6 +55,12 @@ public class PropertyMgmtController {
     @RequestMapping(value = "/property-transaction/{id}", method = RequestMethod.GET)
     public @ResponseBody
     ResponseEntity<Property> getPropertyWithId(@PathVariable String id) {
-        return new ResponseEntity<>(propertyService.findOne(id),HttpStatus.OK);
+        Property property = propertyService.findOne(id);
+        if(property != null) {
+            return new ResponseEntity<>(property, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

@@ -3,8 +3,12 @@ package io.renthell.propertymgmtsrv.model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -13,12 +17,17 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@Document(collection = "property")
 public class Property {
+
+    @Id
+    private String id;
 
     @NotNull
     private String identifier;
 
-    private String publishDate;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private Date publishDate;
 
     private String region;
     private String regionId;
@@ -48,4 +57,10 @@ public class Property {
     private List<Transaction> transactions;
 
     private Boolean updated;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private Date createdDate;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private Date modifiedDate;
 }

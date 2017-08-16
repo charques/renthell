@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -65,8 +66,8 @@ public class PropertyMgmtControllerTests {
 
         // mock event store rest api
         MockRestServiceServer mockServer = MockRestServiceServer.bindTo(restTemplate).build();
-        String eventStoreUri = eventStoreConfiguration.getEventStoreUriBase() + eventStoreConfiguration.getAddPropertyCommandPath();
-        mockServer.expect(requestTo(eventStoreUri)).andRespond(withCreatedEntity(new URI("/commands/get-raw-event/0")));
+        final String EVENT_STORE_URI = eventStoreConfiguration.addPropertyCommandUri();
+        mockServer.expect(requestTo(EVENT_STORE_URI)).andRespond(withCreatedEntity(new URI("/commands/get-raw-event/0")));
 
         // add property transaction
         PropertyTransactionDto property = getTestPropertyTransactionDto();
@@ -82,9 +83,9 @@ public class PropertyMgmtControllerTests {
 
         // mock event store rest api
         MockRestServiceServer mockServer = MockRestServiceServer.bindTo(restTemplate).build();
-        String eventStoreUri = eventStoreConfiguration.getEventStoreUriBase() + eventStoreConfiguration.getAddPropertyCommandPath();
+        final String EVENT_STORE_URI = eventStoreConfiguration.addPropertyCommandUri();
         mockServer.reset();
-        mockServer.expect(requestTo(eventStoreUri)).andRespond(withBadRequest());
+        mockServer.expect(requestTo(EVENT_STORE_URI)).andRespond(withBadRequest());
 
         // add property transaction
         PropertyTransactionDto property = new PropertyTransactionDto();
@@ -118,9 +119,7 @@ public class PropertyMgmtControllerTests {
     @Test
     public void testGetPropertyTransactionNoResult() throws Exception {
         ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:8090/api/property-transaction/0" ));
-        resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
-        MvcResult result = resultAction.andReturn();
-        Assert.assertTrue(result.getResponse().getContentAsString().length() == 0);
+        resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError());
     }
 
     @Test
@@ -173,6 +172,37 @@ public class PropertyMgmtControllerTests {
         property.setPriceMin("");
         property.setPriceMax("");
         property.setPriceRange("1501-2000");
+        return property;
+    }
+
+    private PropertyTransactionDto getTestPropertyUpdateTransactionDto() {
+        PropertyTransactionDto property = new PropertyTransactionDto();
+        property.setIdentifier("142550444");
+        property.setRegion("Madrid");
+        property.setCity("Madrid Capital");
+        property.setDistrict("Retiro");
+        property.setNeighbourhood("Jerónimos");
+        property.setStreet("Alfonso XII");
+        property.setPostalCode("28014");
+        property.setProperty("Flat");
+        property.setPropertySub("Flat");
+        property.setPropertyState("VeryGood");
+        property.setPropertyType("Vivienda");
+        property.setMts2("140");
+        property.setRooms("4");
+        property.setBathrooms("3");
+        property.setHeating("0");
+        property.setEnergeticCert("0");
+        property.setFeatures("aire-acondicionado|||calefaccion|||garaje-privado|||ascensor");
+        property.setLat("40.4138");
+        property.setLng("-3.68511");
+        property.setFeed("https://www.fotocasa.es/vivienda/madrid-capital/aire-acondicionado-calefaccion-parking-ascensor-alfonso-xii-142550444?RowGrid=11&tti=3&opi=300");
+        property.setTransactionId("1");
+        property.setTransaction("venta");
+        property.setPrice("23000000");
+        property.setPriceMin("");
+        property.setPriceMax("");
+        property.setPriceRange("8000000");
         return property;
     }
 

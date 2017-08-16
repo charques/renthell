@@ -13,8 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -27,13 +30,13 @@ public class PropertyAddedEventConsumer {
   @Autowired
   private ObjectMapper objectMapper;
 
+  private final String PROPERTY_TRANSACTION_ADDED_EVENT = "io.renthell.eventstoresrv.events.PropertyTransactionAddedEvent";
+
   private CountDownLatch latch = new CountDownLatch(1);
 
   public CountDownLatch getLatch() {
     return latch;
   }
-
-  private final String PROPERTY_TRANSACTION_ADDED_EVENT = "io.renthell.eventstoresrv.events.PropertyTransactionAddedEvent";
 
   @KafkaListener(topics = "${kafka.topic.events}")
   public void consumeEvent(String payload) {
@@ -61,13 +64,24 @@ public class PropertyAddedEventConsumer {
   private Property buildProperty(JsonNode eventPayloadJson) throws ParseException {
 
     final Property property = new Property();
+    String publishDateString = eventPayloadJson.get("publishDate").textValue();
+    Date date = new Date();
+    if (publishDateString != null) {
+      DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+      date = format.parse(publishDateString);
+    }
+    property.setPublishDate(date);
     property.setIdentifier(eventPayloadJson.get("identifier").textValue());
     property.setRegion(eventPayloadJson.get("region").textValue());
     property.setCity(eventPayloadJson.get("city").textValue());
     property.setDistrict(eventPayloadJson.get("district").textValue());
     property.setNeighbourhood(eventPayloadJson.get("neighbourhood").textValue());
     property.setStreet(eventPayloadJson.get("street").textValue());
-    property.setPostalCode(eventPayloadJson.get("postalCode").textValue());
+    String postalCodeString = eventPayloadJson.get("postalCode").textValue();
+    property.setPostalCode(postalCodeString);
+    if(postalCodeString != null && postalCodeString.length() > 2) {
+      property.setRegionId(postalCodeString.substring(0,2));
+    }
     property.setProperty(eventPayloadJson.get("property").textValue());
     property.setPropertySub(eventPayloadJson.get("propertySub").textValue());
     property.setPropertyState(eventPayloadJson.get("propertyState").textValue());
