@@ -3,7 +3,12 @@ logging:
     io.renthell.crawlengine: DEBUG
   file: /Users/cfhernandez/projects_ws/renthell/crawl-engine/tmp/crawl-engine.log
 
+spring:
+  data:
+    mongodb:
+      uri: mongodb://192.168.99.100:27017/testdb
+
 endpoints:
   property-mgmt:
-    uri-base: http://localhost:8091
+    uri-base: http://192.168.99.100:8091
     property-transaction: /api/property-transaction

@@ -8,8 +8,10 @@ import lombok.ToString;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.data.annotation.Id;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.springframework.util.Assert.notNull;
@@ -99,6 +101,13 @@ public class FotocasaItem {
     private String webUrl;
 
     private Boolean updated = false;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private Date createdDate;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private Date modifiedDate;
+
 
     public static FotocasaItem build(WebURL weburl, JSONObject mainObj, JSONObject secondaryObj) {
         return new FotocasaItemBuilder(weburl, mainObj, secondaryObj).build();

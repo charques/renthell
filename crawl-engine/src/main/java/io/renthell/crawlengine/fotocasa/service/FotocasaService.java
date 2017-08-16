@@ -4,11 +4,11 @@ import io.renthell.crawlengine.fotocasa.model.FotocasaItem;
 import io.renthell.crawlengine.fotocasa.model.FotocasaTransactionItem;
 import io.renthell.crawlengine.fotocasa.persistence.FotocasaRepository;
 import io.renthell.crawlengine.propertymgmt.service.PropertyMgmtService;
-import io.renthell.crawlengine.propertymgmt.service.impl.PropertyMgmtServiceDefault;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,6 +30,7 @@ public class FotocasaService {
         FotocasaItem itemSaved = null;
         if (itemRetrieved == null) {
             // save new item
+            itemToSave.setCreatedDate(new Date());
             itemSaved = fotocasaRepository.save(itemToSave);
             log.info("Saved: " + itemSaved.toString());
 
@@ -43,17 +44,19 @@ public class FotocasaService {
                     // new transaction
                     List<FotocasaTransactionItem> transactions = itemRetrieved.getTransactions();
                     transactions.add(transaction);
-                    itemToSave.setTransactions(transactions);
+                    itemRetrieved.setTransactions(transactions);
+                    transactionIndex = 0;
                 }
                 else {
                     // update transaction
                     List<FotocasaTransactionItem> transactions = itemRetrieved.getTransactions();
                     transactions.set(transactionIndex, transaction);
-                    itemToSave.setTransactions(transactions);
+                    itemRetrieved.setTransactions(transactions);
                 }
-                itemToSave.setUpdated(true);
+                itemRetrieved.setModifiedDate(new Date());
+                itemRetrieved.setUpdated(true);
                 // update item
-                itemSaved = fotocasaRepository.save(itemToSave);
+                itemSaved = fotocasaRepository.save(itemRetrieved);
                 log.info("Updated: " + itemSaved.toString());
 
                 // post UPDATED property transaction event
@@ -80,9 +83,12 @@ public class FotocasaService {
 
     private Boolean shouldUpdate(FotocasaItem savedItem, FotocasaItem itemToSave) {
         Integer index = getTransactionIndex(savedItem, itemToSave);
-        FotocasaTransactionItem t1 = savedItem.getTransactions().get(index);
-        FotocasaTransactionItem t2 = itemToSave.getTransactions().get(0);
-        return !(t1.equals(t2));
+        if(index >= 0) {
+            FotocasaTransactionItem t1 = savedItem.getTransactions().get(index);
+            FotocasaTransactionItem t2 = itemToSave.getTransactions().get(0);
+            return !(t1.equals(t2));
+        }
+        return true;
     }
 
 }

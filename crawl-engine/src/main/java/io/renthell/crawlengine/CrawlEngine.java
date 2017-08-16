@@ -65,10 +65,11 @@ public class CrawlEngine {
 
         List<String> seeds = seedsConfig.getSeeds();
         for(int i = 0; i < seeds.size(); i++) {
-            controller.addSeed(seeds.get(i));
+            //controller.addSeed(seeds.get(i));
         }
-        //controller.addSeed("https://www.fotocasa.es/vivienda/madrid-capital/calefaccion-terraza-ascensor-castellana-138786116?RowGrid=10&tti=3&opi=300");
-        //controller.addSeed("https://www.fotocasa.es/es/");
+        controller.addSeed("https://www.fotocasa.es/vivienda/madrid-capital/calefaccion-parking-jardin-trastero-piscina-valdemarin-142665093?tti=3");
+        controller.addSeed("https://www.fotocasa.es/vivienda/madrid-capital/calefaccion-parking-jardin-trastero-piscina-valdemarin-142665093?tti=1");
+        //controller.addSeed("https://www.fotocasa.es/vivienda/madrid-capital/calefaccion-terraza-ascensor-castellana-138786116?RowGrid=10&tti=3&opi=300")
 
         /*
          * Start the crawl. This is a blocking operation, meaning that your code
