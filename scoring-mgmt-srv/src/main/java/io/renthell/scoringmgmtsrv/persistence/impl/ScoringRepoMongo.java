@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -43,8 +44,14 @@ public class ScoringRepoMongo implements ScoringRepo {
     }
 
     @Override
-    public Scoring save(Scoring property) {
-        mongoOperations.save(property);
-        return property;
+    public Scoring save(Scoring scoring) {
+        if(scoring.getId() == null) {
+            scoring.setCreatedDate(new Date());
+        }
+        else {
+            scoring.setModifiedDate(new Date());
+        }
+        mongoOperations.save(scoring);
+        return scoring;
     }
 }

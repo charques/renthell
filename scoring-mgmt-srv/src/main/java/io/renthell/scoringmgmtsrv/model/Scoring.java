@@ -3,8 +3,12 @@ package io.renthell.scoringmgmtsrv.model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -13,7 +17,11 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@Document(collection = "scoring")
 public class Scoring {
+
+    @Id
+    private String id;
 
     private String transactionId;
 
@@ -35,6 +43,12 @@ public class Scoring {
     //private String range60;
 
     private List<Float> priceList;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private Date createdDate;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private Date modifiedDate;
 
     public Scoring addPrice(Float price) {
         if(this.priceList == null) {
