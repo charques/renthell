@@ -1,5 +1,6 @@
-package io.renthell.propertymgmtsrv.eventhandler;
+package io.renthell.propertymgmtsrv.configuration;
 
+import io.renthell.propertymgmtsrv.eventhandler.PropertyAddedEventConsumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,23 +16,23 @@ import java.util.Map;
 
 @Configuration
 @EnableKafka
-public class PropertyAddedEventConsumerConfig {
+public class KafkaConfiguration {
 
   @Value("${kafka.bootstrap-servers}")
-  private String bootstrapServers;
+  private String BOOTSTRAP_SERVERS;
 
   @Value("${kafka.groupid.events}")
-  private String eventsGroupId;
+  private String EVENTS_GROUP_ID;
 
   @Bean
   public Map<String, Object> consumerConfigs() {
     Map<String, Object> props = new HashMap<>();
     // list of host:port pairs used for establishing the initial connections to the Kakfa cluster
-    props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+    props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
     props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
     props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
     // allows a pool of processes to divide the work of consuming and processing records
-    props.put(ConsumerConfig.GROUP_ID_CONFIG, eventsGroupId);
+    props.put(ConsumerConfig.GROUP_ID_CONFIG, EVENTS_GROUP_ID);
 
     return props;
   }
@@ -50,8 +51,4 @@ public class PropertyAddedEventConsumerConfig {
     return factory;
   }
 
-  @Bean
-  public PropertyAddedEventConsumer receiver() {
-    return new PropertyAddedEventConsumer();
-  }
 }
