@@ -12,7 +12,6 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class PropertyTransactionDto {
 
-    @NotNull
     private String identifier;
 
     private String publishDate;

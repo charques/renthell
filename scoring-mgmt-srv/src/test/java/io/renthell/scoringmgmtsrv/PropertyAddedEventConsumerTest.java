@@ -22,7 +22,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import io.renthell.scoringmgmtsrv.eventhandler.PropertyAddedEventConsumer;
+import io.renthell.scoringmgmtsrv.web.eventhandler.PropertyAddedEventConsumer;
 import io.renthell.scoringmgmtsrv.producer.Sender;
 
 @RunWith(SpringJUnit4ClassRunner.class)

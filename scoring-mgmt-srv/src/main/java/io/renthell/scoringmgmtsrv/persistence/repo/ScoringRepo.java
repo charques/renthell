@@ -1,6 +1,6 @@
-package io.renthell.scoringmgmtsrv.persistence;
+package io.renthell.scoringmgmtsrv.persistence.repo;
 
-import io.renthell.scoringmgmtsrv.model.Scoring;
+import io.renthell.scoringmgmtsrv.persistence.model.Scoring;
 
 import java.util.List;
 

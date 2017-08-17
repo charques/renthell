@@ -1,7 +1,7 @@
-package io.renthell.scoringmgmtsrv.persistence.impl;
+package io.renthell.scoringmgmtsrv.persistence.repo;
 
-import io.renthell.scoringmgmtsrv.model.Scoring;
-import io.renthell.scoringmgmtsrv.persistence.ScoringRepo;
+import io.renthell.scoringmgmtsrv.persistence.model.Scoring;
+import io.renthell.scoringmgmtsrv.persistence.repo.ScoringRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;

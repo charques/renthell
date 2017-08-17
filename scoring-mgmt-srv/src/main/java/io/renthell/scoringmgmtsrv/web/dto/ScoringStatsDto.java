@@ -1,5 +1,6 @@
-package io.renthell.scoringmgmtsrv.model;
+package io.renthell.scoringmgmtsrv.web.dto;
 
+import io.renthell.scoringmgmtsrv.persistence.model.Scoring;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,17 +11,17 @@ import java.util.List;
 @Setter
 @Getter
 @ToString
-public class ScoringStats {
+public class ScoringStatsDto {
     private Scoring scoring;
 
     private Double average;
     private Double median;
 
     // dummy constructor for jackson
-    public ScoringStats() {
+    public ScoringStatsDto() {
     }
 
-    public ScoringStats(Scoring scoring) {
+    public ScoringStatsDto(Scoring scoring) {
         this.scoring = scoring;
 
         DescriptiveStatistics stats = new DescriptiveStatistics();

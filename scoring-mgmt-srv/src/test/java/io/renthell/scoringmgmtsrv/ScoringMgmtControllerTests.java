@@ -3,8 +3,8 @@ package io.renthell.scoringmgmtsrv;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.renthell.scoringmgmtsrv.config.ConfigServerWithFongoConfiguration;
-import io.renthell.scoringmgmtsrv.model.Scoring;
-import io.renthell.scoringmgmtsrv.model.ScoringStats;
+import io.renthell.scoringmgmtsrv.persistence.model.Scoring;
+import io.renthell.scoringmgmtsrv.web.dto.ScoringStatsDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,10 +82,10 @@ public class ScoringMgmtControllerTests {
         ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:8090/api/scoring-stats"));
         resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
         MvcResult result = resultAction.andReturn();
-        List<ScoringStats> scoringStatsList = jsonMapper.readValue(result.getResponse().getContentAsString(),
-                new TypeReference<List<ScoringStats>>(){});
+        List<ScoringStatsDto> scoringStatsDtoList = jsonMapper.readValue(result.getResponse().getContentAsString(),
+                new TypeReference<List<ScoringStatsDto>>(){});
 
-        assertThat(scoringStatsList.size()).isEqualTo(2);
+        assertThat(scoringStatsDtoList.size()).isEqualTo(2);
     }
 
 }

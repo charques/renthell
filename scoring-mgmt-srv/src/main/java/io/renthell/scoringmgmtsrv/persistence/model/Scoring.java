@@ -1,4 +1,4 @@
-package io.renthell.scoringmgmtsrv.model;
+package io.renthell.scoringmgmtsrv.persistence.model;
 
 import lombok.Getter;
 import lombok.Setter;

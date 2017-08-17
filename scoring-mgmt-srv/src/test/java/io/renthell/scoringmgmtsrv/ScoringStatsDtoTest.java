@@ -1,8 +1,8 @@
 package io.renthell.scoringmgmtsrv;
 
 import io.renthell.scoringmgmtsrv.config.SimpleConfiguration;
-import io.renthell.scoringmgmtsrv.model.Scoring;
-import io.renthell.scoringmgmtsrv.model.ScoringStats;
+import io.renthell.scoringmgmtsrv.persistence.model.Scoring;
+import io.renthell.scoringmgmtsrv.web.dto.ScoringStatsDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,9 +13,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SimpleConfiguration.class)
-public class ScoringStatsTest {
+public class ScoringStatsDtoTest {
 
-  ScoringStats stats = null;
+  ScoringStatsDto stats = null;
   @Before
   public void setUp() throws Exception {
     Scoring scoring = new Scoring();
@@ -25,7 +25,7 @@ public class ScoringStatsTest {
     scoring.addPrice(1200F);
     scoring.addPrice(1500F);
 
-    stats = new ScoringStats(scoring);
+    stats = new ScoringStatsDto(scoring);
   }
 
   @Test

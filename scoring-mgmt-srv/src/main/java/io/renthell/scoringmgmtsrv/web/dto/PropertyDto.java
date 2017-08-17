@@ -1,4 +1,4 @@
-package io.renthell.scoringmgmtsrv.model;
+package io.renthell.scoringmgmtsrv.web.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class Property {
+public class PropertyDto {
 
     private String transactionId;
 

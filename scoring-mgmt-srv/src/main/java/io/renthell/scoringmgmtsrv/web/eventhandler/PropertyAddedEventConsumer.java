@@ -1,4 +1,4 @@
-package io.renthell.scoringmgmtsrv.eventhandler;
+package io.renthell.scoringmgmtsrv.web.eventhandler;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -10,10 +10,10 @@ import java.util.concurrent.CountDownLatch;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.TextNode;
+import io.renthell.scoringmgmtsrv.web.dto.PropertyDto;
 import io.renthell.scoringmgmtsrv.exception.ScoringMgmtException;
-import io.renthell.scoringmgmtsrv.model.Property;
-import io.renthell.scoringmgmtsrv.model.Scoring;
 import io.renthell.scoringmgmtsrv.service.ScoringService;
+import io.renthell.scoringmgmtsrv.web.dto.ScoringStatsDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -42,16 +42,16 @@ public class PropertyAddedEventConsumer {
   public void consumeEvent(String payload) {
     log.info("Event consumed. Event payload='{}'", payload);
 
-    Property property = null;
+    PropertyDto propertyDto = null;
     try {
       JsonNode payloadJson = objectMapper.readTree(payload);
       TextNode eventPayloadString = (TextNode) payloadJson.get("payload");
       JsonNode eventPayloadJson = objectMapper.readTree(eventPayloadString.textValue());
 
       if(PROPERTY_TRANSACTION_ADDED_EVENT.equals(payloadJson.get("type").textValue())) {
-        property = buildProperty(eventPayloadJson);
-        Scoring scoring = scoringService.addPropertyToScoring(property);
-        log.info("Property transaction added event processed. Scoring updated: {}", scoring.toString());
+        propertyDto = buildPropertyDto(eventPayloadJson);
+        ScoringStatsDto scoringStatsDto = scoringService.addPropertyToScoring(propertyDto);
+        log.info("Property transaction added event processed. Scoring updated: {}", scoringStatsDto.toString());
       }
 
     } catch (IOException | ParseException e) {
@@ -61,7 +61,7 @@ public class PropertyAddedEventConsumer {
     latch.countDown();
   }
 
-  private Property buildProperty(JsonNode eventPayloadJson) throws ParseException {
+  private PropertyDto buildPropertyDto(JsonNode eventPayloadJson) throws ParseException {
     String transactionId = eventPayloadJson.get("transactionId").textValue();
     String publishDateString = eventPayloadJson.get("publishDate").textValue();
     Date date = new Date();
@@ -76,16 +76,16 @@ public class PropertyAddedEventConsumer {
     int rooms = Integer.parseInt(eventPayloadJson.get("rooms").textValue());
     Float price = Float.parseFloat(eventPayloadJson.get("price").textValue());
 
-    Property property = new Property();
-    property.setTransactionId(transactionId);
-    property.setDate(date);
-    property.setRegion(region);
-    property.setPostalCode(postalCode);
-    property.setDistrict(district);
-    property.setCity(city);
-    property.setRooms(rooms);
-    property.setPrice(price);
+    PropertyDto propertyDto = new PropertyDto();
+    propertyDto.setTransactionId(transactionId);
+    propertyDto.setDate(date);
+    propertyDto.setRegion(region);
+    propertyDto.setPostalCode(postalCode);
+    propertyDto.setDistrict(district);
+    propertyDto.setCity(city);
+    propertyDto.setRooms(rooms);
+    propertyDto.setPrice(price);
 
-    return property;
+    return propertyDto;
   }
 }

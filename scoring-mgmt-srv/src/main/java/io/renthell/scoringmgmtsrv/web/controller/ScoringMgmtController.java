@@ -1,7 +1,6 @@
-package io.renthell.scoringmgmtsrv.web;
+package io.renthell.scoringmgmtsrv.web.controller;
 
-import io.renthell.scoringmgmtsrv.model.Scoring;
-import io.renthell.scoringmgmtsrv.model.ScoringStats;
+import io.renthell.scoringmgmtsrv.web.dto.ScoringStatsDto;
 import io.renthell.scoringmgmtsrv.service.ScoringService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +20,10 @@ public class ScoringMgmtController {
 
     @RequestMapping(value = "/scoring-stats", method = RequestMethod.GET)
     public @ResponseBody
-    ResponseEntity<Collection<ScoringStats>> getAllProperties() {
-        log.info("Get all Properties");
+    ResponseEntity<Collection<ScoringStatsDto>> getAllScoringStats() {
+        log.info("Get all Scoring Stats");
 
-        return new ResponseEntity<>((Collection<ScoringStats>) scoringService.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>((Collection<ScoringStatsDto>) scoringService.findAll(), HttpStatus.OK);
     }
 
 }

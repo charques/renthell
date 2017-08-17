@@ -1,15 +1,15 @@
 package io.renthell.scoringmgmtsrv.service;
 
-import io.renthell.scoringmgmtsrv.model.Property;
-import io.renthell.scoringmgmtsrv.model.Scoring;
-import io.renthell.scoringmgmtsrv.model.ScoringStats;
+import io.renthell.scoringmgmtsrv.web.dto.PropertyDto;
+
+import io.renthell.scoringmgmtsrv.web.dto.ScoringStatsDto;
 
 import java.util.List;
 
 public interface ScoringService {
 
-    public Scoring addPropertyToScoring(Property property);
+    public ScoringStatsDto addPropertyToScoring(PropertyDto propertyDto);
 
-    public List<ScoringStats> findAll();
+    public List<ScoringStatsDto> findAll();
 
 }
