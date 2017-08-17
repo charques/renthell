@@ -18,8 +18,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import io.renthell.scoringmgmtsrv.exception.ScoringMgmtException.ErrorCode;
+import org.springframework.stereotype.Component;
 
 @Slf4j
+@Component
 public class PropertyAddedEventConsumer {
 
   @Autowired
@@ -28,13 +30,13 @@ public class PropertyAddedEventConsumer {
   @Autowired
   private ObjectMapper objectMapper;
 
+  private final String PROPERTY_TRANSACTION_ADDED_EVENT = "io.renthell.eventstoresrv.events.PropertyTransactionAddedEvent";
+
   private CountDownLatch latch = new CountDownLatch(1);
 
   public CountDownLatch getLatch() {
     return latch;
   }
-
-  private final String PROPERTY_TRANSACTION_ADDED_EVENT = "io.renthell.eventstoresrv.events.PropertyTransactionAddedEvent";
 
   @KafkaListener(topics = "${kafka.topic.events}")
   public void consumeEvent(String payload) {
