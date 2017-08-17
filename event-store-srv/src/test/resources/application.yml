@@ -3,11 +3,8 @@ spring:
     mongodb:
       uri: mongodb://mongodb:27017/testdb
 
-server:
-  port: 8090
-
 kafka:
-  bootstrap-servers: kafka:9092
+  bootstrap-servers: ${spring.embedded.kafka.brokers}
   groupid:
     events: events-group
   topic:

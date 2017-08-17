@@ -15,13 +15,13 @@ import com.mongodb.MongoClientURI;
 public class MongoConfiguration {
 
 	@Value("${spring.data.mongodb.uri}")
-	private String mongoDBUri;
+	private String MONGO_DB_URI;
 	
 	@Bean
 	public MongoTemplate mongoTemplate() throws UnknownHostException {
 			
 		MongoClientOptions.Builder mcoBuilder = MongoClientOptions.builder();
-		MongoClientURI mongoClientUri = new MongoClientURI(mongoDBUri, mcoBuilder);
+		MongoClientURI mongoClientUri = new MongoClientURI(MONGO_DB_URI, mcoBuilder);
 		SimpleMongoDbFactory simpleMongoDbFactory = new SimpleMongoDbFactory(mongoClientUri);
 		return new MongoTemplate(simpleMongoDbFactory);
 	}

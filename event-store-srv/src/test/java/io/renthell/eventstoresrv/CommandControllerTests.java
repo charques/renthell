@@ -6,14 +6,20 @@ import io.renthell.eventstoresrv.common.persistence.event.RawEvent;
 import io.renthell.eventstoresrv.config.ConfigServerWithFongoConfiguration;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.MediaType;
+import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
+import org.springframework.kafka.listener.MessageListenerContainer;
+import org.springframework.kafka.test.rule.KafkaEmbedded;
+import org.springframework.kafka.test.utils.ContainerTestUtils;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -33,6 +39,8 @@ import java.util.UUID;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class CommandControllerTests {
 
+    private static String EVENTS_TOPIC = "test";
+
     @Autowired
     private MongoTemplate mongoTemplate;
 
@@ -42,8 +50,21 @@ public class CommandControllerTests {
     @Autowired
     private ObjectMapper jsonMapper;
 
+    @Autowired
+    private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
+
+    @ClassRule
+    public static KafkaEmbedded embeddedKafka = new KafkaEmbedded(1, true, EVENTS_TOPIC);
+
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
+        // wait until the partitions are assigned
+        for (MessageListenerContainer messageListenerContainer : kafkaListenerEndpointRegistry
+                .getListenerContainers()) {
+            ContainerTestUtils.waitForAssignment(messageListenerContainer,
+                    embeddedKafka.getPartitionsPerTopic());
+        }
+        embeddedKafka.restart(0);
     }
 
     @Test

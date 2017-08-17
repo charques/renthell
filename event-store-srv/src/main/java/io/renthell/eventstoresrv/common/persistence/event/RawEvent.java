@@ -5,10 +5,10 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
-import java.time.Instant;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -20,12 +20,11 @@ import java.util.UUID;
 @ToString
 public class RawEvent  implements Serializable {
 
-    /**
-     * Global unique identifier
-     */
     @Id
     private String id;
-    private Instant transactionTime;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private Date eventDate;
 
     /**
      * This ID is the same for all events committed in the same transaction.
@@ -37,17 +36,15 @@ public class RawEvent  implements Serializable {
     public RawEvent() {
         super();
 
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         this.id = UUID.randomUUID().toString();
-        this.transactionTime = timestamp.toInstant();
+        this.eventDate = new Date();
     }
 
     public RawEvent(final String correlationId, final String payload, final String type) {
         super();
 
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         this.id = UUID.randomUUID().toString();
-        this.transactionTime = timestamp.toInstant();
+        this.eventDate = new Date();
         this.correlationId = correlationId;
         this.payload = payload;
         this.type = type;
