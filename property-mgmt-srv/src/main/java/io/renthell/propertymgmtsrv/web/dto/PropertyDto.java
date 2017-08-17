@@ -4,20 +4,22 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by cfhernandez on 28/7/17.
  */
 @Getter
 @Setter
-public class PropertyTransactionDto {
+public class PropertyDto {
 
     private String identifier;
 
-    private String publishDate;
+    private Date publishDate;
 
     private String region;
-    private String regionId;
+    private String regionCode;
     private String city;
     private String district;
     private String neighbourhood;
@@ -41,12 +43,7 @@ public class PropertyTransactionDto {
     private String lng;
     private String feed;
 
-    private String transactionId;
-    private String transaction;
-    private String price;
-    private String priceMin;
-    private String priceMax;
-    private String priceRange;
+    private List<TransactionDto> transactions;
 
     private Boolean updated;
 }

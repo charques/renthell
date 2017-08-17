@@ -3,10 +3,11 @@ package io.renthell.propertymgmtsrv;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.renthell.propertymgmtsrv.config.ConfigServerWithFongoConfiguration;
-import io.renthell.propertymgmtsrv.model.Property;
-import io.renthell.propertymgmtsrv.model.Transaction;
+import io.renthell.propertymgmtsrv.persistence.model.Property;
+import io.renthell.propertymgmtsrv.persistence.model.Transaction;
 import io.renthell.propertymgmtsrv.configuration.EventStoreConfiguration;
-import io.renthell.propertymgmtsrv.web.dto.PropertyTransactionDto;
+import io.renthell.propertymgmtsrv.web.dto.PropertyDto;
+import io.renthell.propertymgmtsrv.web.dto.TransactionDto;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -29,6 +29,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
@@ -70,7 +71,7 @@ public class PropertyMgmtControllerTests {
         mockServer.expect(requestTo(EVENT_STORE_URI)).andRespond(withCreatedEntity(new URI("/commands/get-raw-event/0")));
 
         // add property transaction
-        PropertyTransactionDto property = getTestPropertyTransactionDto();
+        PropertyDto property = getTestPropertyTransactionDto();
         String body = jsonMapper.writeValueAsString(property);
 
         mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:8090/api/property-transaction")
@@ -88,7 +89,7 @@ public class PropertyMgmtControllerTests {
         mockServer.expect(requestTo(EVENT_STORE_URI)).andRespond(withBadRequest());
 
         // add property transaction
-        PropertyTransactionDto property = new PropertyTransactionDto();
+        PropertyDto property = new PropertyDto();
         property.setIdentifier("142550444");
 
         String body = jsonMapper.writeValueAsString(property);
@@ -109,8 +110,8 @@ public class PropertyMgmtControllerTests {
         ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:8090/api/property-transaction/" + propertyFongo.getIdentifier()));
         resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
         MvcResult result = resultAction.andReturn();
-        Property propertyResponse = jsonMapper.readValue(result.getResponse().getContentAsString(), Property.class);
-        Transaction transactionResponse = propertyResponse.getTransactions().get(0);
+        PropertyDto propertyResponse = jsonMapper.readValue(result.getResponse().getContentAsString(), PropertyDto.class);
+        TransactionDto transactionResponse = propertyResponse.getTransactions().get(0);
 
         Assert.assertEquals(propertyFongo.getIdentifier(), propertyResponse.getIdentifier());
         Assert.assertEquals(transactionFongo.getTransactionId(), transactionResponse.getTransactionId());
@@ -135,17 +136,17 @@ public class PropertyMgmtControllerTests {
         ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:8090/api/property-transaction"));
         resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
         MvcResult result = resultAction.andReturn();
-        List<Property> propertyResponseList = jsonMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<Property>>(){});
-        Property propertyResponse = propertyResponseList.get(0);
-        Transaction transactionResponse = propertyResponse.getTransactions().get(0);
+        List<PropertyDto> propertyResponseList = jsonMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<PropertyDto>>(){});
+        PropertyDto propertyResponse = propertyResponseList.get(0);
+        TransactionDto transactionResponse = propertyResponse.getTransactions().get(0);
 
         Assert.assertTrue(propertyResponseList.size() == 2);
         Assert.assertEquals(propertyFongo1.getIdentifier(), propertyResponse.getIdentifier());
         Assert.assertEquals(transactionFongo1.getTransactionId(), transactionResponse.getTransactionId());
     }
 
-    private PropertyTransactionDto getTestPropertyTransactionDto() {
-        PropertyTransactionDto property = new PropertyTransactionDto();
+    private PropertyDto getTestPropertyTransactionDto() {
+        PropertyDto property = new PropertyDto();
         property.setIdentifier("142550444");
         property.setRegion("Madrid");
         property.setCity("Madrid Capital");
@@ -166,18 +167,25 @@ public class PropertyMgmtControllerTests {
         property.setLat("40.4138");
         property.setLng("-3.68511");
         property.setFeed("https://www.fotocasa.es/vivienda/madrid-capital/aire-acondicionado-calefaccion-parking-ascensor-alfonso-xii-142550444?RowGrid=11&tti=3&opi=300");
-        property.setTransactionId("3");
-        property.setTransaction("alquiler");
-        property.setPrice("1890");
-        property.setPriceMin("");
-        property.setPriceMax("");
-        property.setPriceRange("1501-2000");
+
+        TransactionDto transaction = new TransactionDto();
+        transaction.setTransactionId("3");
+        transaction.setTransaction("alquiler");
+        transaction.setPrice("1890");
+        transaction.setPriceMin("");
+        transaction.setPriceMax("");
+        transaction.setPriceRange("1501-2000");
+        List<TransactionDto> transactionDtos = new ArrayList<>();
+        transactionDtos.add(transaction);
+        property.setTransactions(transactionDtos);
+
         return property;
     }
 
-    private PropertyTransactionDto getTestPropertyUpdateTransactionDto() {
-        PropertyTransactionDto property = new PropertyTransactionDto();
+    private PropertyDto getTestPropertyUpdateTransactionDto() {
+        PropertyDto property = new PropertyDto();
         property.setIdentifier("142550444");
+        property.setPublishDate(new Date());
         property.setRegion("Madrid");
         property.setCity("Madrid Capital");
         property.setDistrict("Retiro");
@@ -197,18 +205,25 @@ public class PropertyMgmtControllerTests {
         property.setLat("40.4138");
         property.setLng("-3.68511");
         property.setFeed("https://www.fotocasa.es/vivienda/madrid-capital/aire-acondicionado-calefaccion-parking-ascensor-alfonso-xii-142550444?RowGrid=11&tti=3&opi=300");
-        property.setTransactionId("1");
-        property.setTransaction("venta");
-        property.setPrice("23000000");
-        property.setPriceMin("");
-        property.setPriceMax("");
-        property.setPriceRange("8000000");
+
+        TransactionDto transaction = new TransactionDto();
+        transaction.setTransactionId("1");
+        transaction.setTransaction("venta");
+        transaction.setPrice("23000000");
+        transaction.setPriceMin("");
+        transaction.setPriceMax("");
+        transaction.setPriceRange("8000000");
+        List<TransactionDto> transactionDtos = new ArrayList<>();
+        transactionDtos.add(transaction);
+        property.setTransactions(transactionDtos);
+
         return property;
     }
 
     private Property getTestProperty(String identifier) {
         Property property = new Property();
         property.setIdentifier(identifier);
+        property.setPublishDate(new Date());
         property.setRegion("Madrid");
         property.setCity("Madrid Capital");
         property.setDistrict("Retiro");

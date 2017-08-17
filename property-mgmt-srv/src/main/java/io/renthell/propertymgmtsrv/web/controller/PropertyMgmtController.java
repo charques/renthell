@@ -1,8 +1,8 @@
-package io.renthell.propertymgmtsrv.web;
+package io.renthell.propertymgmtsrv.web.controller;
 
-import io.renthell.propertymgmtsrv.web.dto.PropertyTransactionDto;
-import io.renthell.propertymgmtsrv.exception.PropertyMgmtException;
-import io.renthell.propertymgmtsrv.model.Property;
+import io.renthell.propertymgmtsrv.web.dto.PropertyDto;
+import io.renthell.propertymgmtsrv.web.exception.PropertyMgmtException;
+import io.renthell.propertymgmtsrv.persistence.model.Property;
 import io.renthell.propertymgmtsrv.service.EventStoreService;
 import io.renthell.propertymgmtsrv.service.PropertyService;
 import io.renthell.propertymgmtsrv.util.CustomErrorType;
@@ -28,8 +28,8 @@ public class PropertyMgmtController {
 
     @RequestMapping(value = "/property-transaction", method = RequestMethod.POST)
     public @ResponseBody
-    ResponseEntity<?> createPropertyTransaction(final @Valid @RequestBody PropertyTransactionDto property) {
-        log.info("Creating PropertyTransactionDto : {}", property);
+    ResponseEntity<?> createPropertyTransaction(final @Valid @RequestBody PropertyDto property) {
+        log.info("Creating PropertyDto : {}", property);
 
         try {
             eventStoreService.addPropertyTransaction(property);
@@ -46,18 +46,18 @@ public class PropertyMgmtController {
 
     @RequestMapping(value = "/property-transaction", method = RequestMethod.GET)
     public @ResponseBody
-    ResponseEntity<Collection<Property>> getAllProperties() {
+    ResponseEntity<Collection<PropertyDto>> getAllProperties() {
         log.info("Get all Properties");
 
-        return new ResponseEntity<>((Collection<Property>) propertyService.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>((Collection<PropertyDto>) propertyService.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/property-transaction/{id}", method = RequestMethod.GET)
     public @ResponseBody
-    ResponseEntity<Property> getPropertyWithId(@PathVariable String id) {
-        Property property = propertyService.findOne(id);
-        if(property != null) {
-            return new ResponseEntity<>(property, HttpStatus.OK);
+    ResponseEntity<PropertyDto> getPropertyWithId(@PathVariable String id) {
+        PropertyDto propertyDto = propertyService.findOne(id);
+        if(propertyDto != null) {
+            return new ResponseEntity<>(propertyDto, HttpStatus.OK);
         }
         else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

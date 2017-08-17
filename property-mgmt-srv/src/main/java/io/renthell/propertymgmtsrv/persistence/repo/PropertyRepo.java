@@ -1,6 +1,7 @@
-package io.renthell.propertymgmtsrv.persistence;
+package io.renthell.propertymgmtsrv.persistence.repo;
 
-import io.renthell.propertymgmtsrv.model.Property;
+
+import io.renthell.propertymgmtsrv.persistence.model.Property;
 
 import java.util.List;
 

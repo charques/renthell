@@ -1,15 +1,15 @@
 package io.renthell.propertymgmtsrv.service;
 
-import io.renthell.propertymgmtsrv.exception.PropertyMgmtException;
-import io.renthell.propertymgmtsrv.model.Property;
+import io.renthell.propertymgmtsrv.web.dto.PropertyDto;
 
+import java.text.ParseException;
 import java.util.List;
 
 public interface PropertyService {
 
-    public Property save(Property propertyToSave) throws PropertyMgmtException;
+    public PropertyDto save(PropertyDto property) throws ParseException;
 
-    public List<Property> findAll();
+    public List<PropertyDto> findAll();
 
-    public Property findOne(String uuid);
+    public PropertyDto findOne(String uuid);
 }

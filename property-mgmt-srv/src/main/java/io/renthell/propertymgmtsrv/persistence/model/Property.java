@@ -1,4 +1,4 @@
-package io.renthell.propertymgmtsrv.model;
+package io.renthell.propertymgmtsrv.persistence.model;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -30,7 +30,7 @@ public class Property {
     private Date publishDate;
 
     private String region;
-    private String regionId;
+    private String regionCode;
     private String city;
     private String district;
     private String neighbourhood;

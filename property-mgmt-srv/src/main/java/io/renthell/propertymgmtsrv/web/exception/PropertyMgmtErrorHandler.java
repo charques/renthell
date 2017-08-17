@@ -1,4 +1,4 @@
-package io.renthell.propertymgmtsrv.exception;
+package io.renthell.propertymgmtsrv.web.exception;
 
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.DefaultResponseErrorHandler;

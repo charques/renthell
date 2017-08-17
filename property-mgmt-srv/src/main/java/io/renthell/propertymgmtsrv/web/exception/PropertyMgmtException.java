@@ -1,4 +1,4 @@
-package io.renthell.propertymgmtsrv.exception;
+package io.renthell.propertymgmtsrv.web.exception;
 
 import lombok.Getter;
 import lombok.Setter;

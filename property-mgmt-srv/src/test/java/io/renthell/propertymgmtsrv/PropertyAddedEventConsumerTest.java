@@ -2,11 +2,10 @@ package io.renthell.propertymgmtsrv;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.renthell.propertymgmtsrv.config.ConfigServerWithFongoConfiguration;
-import io.renthell.propertymgmtsrv.eventhandler.PropertyAddedEventConsumer;
-import io.renthell.propertymgmtsrv.model.Property;
+import io.renthell.propertymgmtsrv.web.eventhandler.PropertyAddedEventConsumer;
+import io.renthell.propertymgmtsrv.persistence.model.Property;
 import io.renthell.propertymgmtsrv.producer.Sender;
 import org.junit.Assert;
 import org.junit.Before;
@@ -32,7 +31,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @RunWith(SpringJUnit4ClassRunner.class)
