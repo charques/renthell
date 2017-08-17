@@ -1,4 +1,4 @@
-package io.renthell.scoringmgmtsrv.exception;
+package io.renthell.scoringmgmtsrv.web.exception;
 
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.DefaultResponseErrorHandler;

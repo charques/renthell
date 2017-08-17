@@ -11,13 +11,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.TextNode;
 import io.renthell.scoringmgmtsrv.web.dto.PropertyDto;
-import io.renthell.scoringmgmtsrv.exception.ScoringMgmtException;
 import io.renthell.scoringmgmtsrv.service.ScoringService;
 import io.renthell.scoringmgmtsrv.web.dto.ScoringStatsDto;
+import io.renthell.scoringmgmtsrv.web.exception.ScoringMgmtException;
+import io.renthell.scoringmgmtsrv.web.exception.ScoringMgmtException.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
-import io.renthell.scoringmgmtsrv.exception.ScoringMgmtException.ErrorCode;
 import org.springframework.stereotype.Component;
 
 @Slf4j
