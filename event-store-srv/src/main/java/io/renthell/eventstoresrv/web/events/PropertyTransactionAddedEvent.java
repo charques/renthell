@@ -1,25 +1,22 @@
-package io.renthell.eventstoresrv.commands;
+package io.renthell.eventstoresrv.web.events;
 
-import io.renthell.eventstoresrv.common.command.Command;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 /**
  * Created by cfhernandez on 10/7/17.
  */
 @Getter
 @Setter
-public class AddPropertyTransactionCmd extends Command {
+public class PropertyTransactionAddedEvent extends BaseEvent {
 
-    @NotNull
     private String identifier;
-
-    private String publishDate;
+    private Date publishDate;
 
     private String region;
-    private String regionId;
+    private String regionCode;
     private String city;
     private String district;
     private String neighbourhood;
@@ -50,5 +47,12 @@ public class AddPropertyTransactionCmd extends Command {
     private String priceMax;
     private String priceRange;
 
-    private Boolean updated;
+    public PropertyTransactionAddedEvent() {
+        super();
+    }
+
+    public PropertyTransactionAddedEvent(final String correlationId) {
+        super(correlationId);
+    }
+
 }

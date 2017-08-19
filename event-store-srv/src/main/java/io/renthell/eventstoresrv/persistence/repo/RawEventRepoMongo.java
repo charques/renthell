@@ -1,7 +1,6 @@
-package io.renthell.eventstoresrv.persistence.impl;
+package io.renthell.eventstoresrv.persistence.repo;
 
-import io.renthell.eventstoresrv.common.persistence.event.RawEvent;
-import io.renthell.eventstoresrv.persistence.RawEventRepo;
+import io.renthell.eventstoresrv.persistence.model.RawEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;

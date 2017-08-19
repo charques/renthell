@@ -1,6 +1,6 @@
-package io.renthell.eventstoresrv.persistence;
+package io.renthell.eventstoresrv.persistence.repo;
 
-import io.renthell.eventstoresrv.common.persistence.event.RawEvent;
+import io.renthell.eventstoresrv.persistence.model.RawEvent;
 
 /**
  * Created by cfhernandez on 10/7/17.

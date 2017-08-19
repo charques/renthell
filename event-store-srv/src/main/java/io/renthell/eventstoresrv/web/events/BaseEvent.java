@@ -1,4 +1,4 @@
-package io.renthell.eventstoresrv.common.events;
+package io.renthell.eventstoresrv.web.events;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +13,11 @@ import java.io.Serializable;
 public abstract class BaseEvent  implements Serializable {
 
     private static final long serialVersionUID = 1;
+
+    /**
+     * Unique id.
+     */
+    private String id;
 
     /**
      * This ID is the same for all events committed in the same transaction.

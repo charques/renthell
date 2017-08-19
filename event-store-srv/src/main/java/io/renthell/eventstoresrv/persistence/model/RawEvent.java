@@ -1,4 +1,4 @@
-package io.renthell.eventstoresrv.common.persistence.event;
+package io.renthell.eventstoresrv.persistence.model;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -24,7 +24,7 @@ public class RawEvent  implements Serializable {
     private String id;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Date eventDate;
+    private Date creationDate;
 
     /**
      * This ID is the same for all events committed in the same transaction.
@@ -37,14 +37,14 @@ public class RawEvent  implements Serializable {
         super();
 
         this.id = UUID.randomUUID().toString();
-        this.eventDate = new Date();
+        this.creationDate = new Date();
     }
 
     public RawEvent(final String correlationId, final String payload, final String type) {
         super();
 
         this.id = UUID.randomUUID().toString();
-        this.eventDate = new Date();
+        this.creationDate = new Date();
         this.correlationId = correlationId;
         this.payload = payload;
         this.type = type;

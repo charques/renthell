@@ -1,4 +1,4 @@
-package io.renthell.eventstoresrv.common.command;
+package io.renthell.eventstoresrv.web.command;
 
 /**
  * Created by cfhernandez on 10/7/17.

@@ -1,13 +1,13 @@
 package io.renthell.eventstoresrv.service;
 
 
-import io.renthell.eventstoresrv.common.events.BaseEvent;
-import io.renthell.eventstoresrv.common.persistence.event.RawEvent;
-import io.renthell.eventstoresrv.exceptions.EventStoreException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import io.renthell.eventstoresrv.service.exception.EventRetrievingException;
+import io.renthell.eventstoresrv.web.events.BaseEvent;
 
 public interface EventStoreService {
 
-    public RawEvent save(final BaseEvent event) throws EventStoreException;
+    public String saveAndPublish(final BaseEvent event) throws JsonProcessingException;
 
-    public RawEvent findById(final String id);
+    public BaseEvent findById(final String id) throws EventRetrievingException;
 }
