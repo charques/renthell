@@ -49,7 +49,7 @@ public class PropertyMgmtServiceDefault implements PropertyMgmtService {
         request.put("identifier", item.getId());
         request.put("publishDate", item.getPublishDate());
         request.put("region", item.getRegionLevel2());
-        request.put("regionId", item.getRegionLevel2Id());
+        request.put("regionCode", item.getRegionLevel2Id());
         request.put("city", item.getCityStr());
         request.put("district", item.getDistrict());
         request.put("neighbourhood", item.getNeighbourhood());
