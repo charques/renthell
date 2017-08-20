@@ -1,7 +1,26 @@
+# ------------------------------------------------------------------------------
+#
+# docker-compose -p local_renthell down
+# docker-compose -p local_renthell up -d
+# docker-compose -p local_renthell logs
+#
+# ------------------------------------------------------------------------------
 version: '3'
 services:
+    nginx:
+       build: ./nginx
+       container_name: "renthell-nginx"
+       #image: nginx-lb
+       ports:
+           - 80:80
+       links:
+           - property-mgmt-srv
+           - scoring-mgmt-srv
+       depends_on:
+           - property-mgmt-srv
+           - scoring-mgmt-srv
+
     event-store-srv:
-        build: .
         image: renthell/event-store-srv:latest
         container_name: "event-store-srv"
         ports:
@@ -12,11 +31,14 @@ services:
         depends_on:
             - mongodb
             - kafka
+
     property-mgmt-srv:
         image: renthell/property-mgmt-srv:latest
         container_name: "property-mgmt-srv"
         ports:
             - 8091:8091
+        expose:
+            - 8091
         links:
             - mongodb
             - event-store-srv
@@ -25,17 +47,21 @@ services:
             - mongodb
             - event-store-srv
             - kafka
+
     scoring-mgmt-srv:
         image: renthell/scoring-mgmt-srv:latest
         container_name: "scoring-mgmt-srv"
         ports:
             - 8092:8092
+        expose:
+            - 8092
         links:
             - mongodb
             - kafka
         depends_on:
             - mongodb
             - kafka
+
     mongodb:
         image: mongo:latest
         container_name: "renthell-mongo"
@@ -47,15 +73,21 @@ services:
         ports:
             - 27017:27017
         command: mongod --smallfiles
+
     kafka:
-        image: spotify/kafka
+        build:
+          context: ./docker-kafka/kafka
+        #image: spotify/kafka
         container_name: "renthell-kafka"
         hostname: kafka
         environment:
             - ADVERTISED_PORT=9092
             - ADVERTISED_HOST=kafka
+            - NUM_PARTITIONS=2
+            - AUTO_CREATE_TOPICS=true
         ports:
             - 2181:2181
             - 9092:9092
+
 volumes:
   db-data:

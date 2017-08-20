@@ -1,14 +1,19 @@
-https://sookocheff.com/post/kafka/kafka-quick-start/
+#### docker maven plugin
+https://github.com/spotify/docker-maven-plugin#use-a-dockerfile
 
-software
+#### volumes
+https://docs.docker.com/engine/admin/volumes/volumes/
+https://docs.docker.com/engine/reference/commandline/export/
+
+#### mongodb, docker and robomongo
+https://codehangar.io/mongodb-image-instance-with-docker-toolbox-tutorial/
+
+#### docker install
  - docker for mac
- - kitematic
  - virtual box
- - docker-machine create default   
- - brew install kafkacat
- 
- 
-#### Crear maquina por defecto
+ - docker-machine create default
+
+#### useful commands
 `docker-machine create default` - crear maquina por defecto
 
 `docker-machine start default` - iniciar la maquina por defecto
@@ -27,13 +32,4 @@ export DOCKER_HOST=tcp://192.168.99.100:2376 -- la maquina asociada al docker_ho
 
 `eval $(docker-machine env)` - configurar el shell
 
-docker run -p 2181:2181 -p 9092:9092 
---env ADVERTISED_HOST=`docker-machine ip \`docker-machine active\`` 
---env ADVERTISED_PORT=9092 spotify/kafka
-
-
-kafkacat -P -b 192.168.99.100:9092 -t test
-kafkacat -C -b 192.168.99.100:9092 -t test
-
-
-docker run -p 2181:2181 -p 9092:9092 --env ADVERTISED_HOST=`docker-machine ip \`docker-machine active\`` --env ADVERTISED_PORT=9092 spotify/kafka
+`docker rmi $(docker images -f "dangling=true" -q)` - eliminar imagenes <none>
