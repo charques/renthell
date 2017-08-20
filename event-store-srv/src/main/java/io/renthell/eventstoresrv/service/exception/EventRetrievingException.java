@@ -10,9 +10,9 @@ public class EventRetrievingException extends RuntimeException {
     private String id;
     private Throwable throwable;
 
-    public EventRetrievingException(String id, Throwable e) {
+    public EventRetrievingException(String id, Throwable throwable) {
         super();
         this.id = id;
-        this.throwable = e;
+        this.throwable = throwable;
     }
 }

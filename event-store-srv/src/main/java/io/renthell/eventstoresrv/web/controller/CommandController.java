@@ -50,7 +50,7 @@ public class CommandController {
             return new ResponseEntity<String>(headers, HttpStatus.CREATED);
 
         } catch (JsonProcessingException e) {
-            throw new BadRequestException();
+            throw new BadRequestException(e);
         }
     }
 

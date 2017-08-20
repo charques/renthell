@@ -36,9 +36,10 @@ public class EventStoreErrorHandler extends ResponseEntityExceptionHandler {
         return response;
     }
 
-    @ExceptionHandler({BadRequestException.class})
+    @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<Object> handleBadRequestException(HttpServletRequest req, BadRequestException ex) {
         Map<String, String> map = new HashMap<String, String>();
+        map.put("message", ex.getThrowable().getLocalizedMessage());
         map.put("reason", "Event can not be created");
         map.put("url", req.getRequestURI());
         ResponseEntity.BodyBuilder responseBudiler = ResponseEntity.status(HttpStatus.BAD_REQUEST);

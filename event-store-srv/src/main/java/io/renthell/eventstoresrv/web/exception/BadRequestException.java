@@ -7,7 +7,10 @@ import lombok.Setter;
 @Setter
 public class BadRequestException extends RuntimeException {
 
-    public BadRequestException() {
+    private Throwable throwable;
+
+    public BadRequestException(Throwable throwable) {
         super();
+        this.throwable = throwable;
     }
 }
