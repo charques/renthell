@@ -57,7 +57,7 @@ public class PropertyAddedEventConsumer {
 
     } catch (IOException | ParseException e) {
       log.error("Error parsing event payload {}", e.getLocalizedMessage());
-      throw new EventProcesingException("", e);
+      throw new EventProcesingException(e);
     }
 
     latch.countDown();

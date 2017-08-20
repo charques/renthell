@@ -13,8 +13,7 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import io.renthell.scoringmgmtsrv.web.dto.PropertyDto;
 import io.renthell.scoringmgmtsrv.service.ScoringService;
 import io.renthell.scoringmgmtsrv.web.dto.ScoringStatsDto;
-import io.renthell.scoringmgmtsrv.web.exception.ScoringMgmtException;
-import io.renthell.scoringmgmtsrv.web.exception.ScoringMgmtException.ErrorCode;
+import io.renthell.scoringmgmtsrv.web.exception.EventProcesingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -55,7 +54,7 @@ public class PropertyAddedEventConsumer {
       }
 
     } catch (IOException | ParseException e) {
-      throw new ScoringMgmtException(ErrorCode.PARSE_ERROR, "Error parsing event payload", e);
+      throw new EventProcesingException(e);
     }
 
     latch.countDown();
