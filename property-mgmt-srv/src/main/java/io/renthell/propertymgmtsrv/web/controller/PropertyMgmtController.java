@@ -1,11 +1,12 @@
 package io.renthell.propertymgmtsrv.web.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.renthell.propertymgmtsrv.web.dto.PropertyDto;
-import io.renthell.propertymgmtsrv.web.exception.PropertyMgmtException;
-import io.renthell.propertymgmtsrv.persistence.model.Property;
 import io.renthell.propertymgmtsrv.service.EventStoreService;
 import io.renthell.propertymgmtsrv.service.PropertyService;
 import io.renthell.propertymgmtsrv.util.CustomErrorType;
+import io.renthell.propertymgmtsrv.web.exception.BadRequestException;
+import io.renthell.propertymgmtsrv.web.exception.PropertyNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,19 +30,17 @@ public class PropertyMgmtController {
     @RequestMapping(value = "/property-transaction", method = RequestMethod.POST)
     public @ResponseBody
     ResponseEntity<?> createPropertyTransaction(final @Valid @RequestBody PropertyDto property) {
-        log.info("Creating PropertyDto : {}", property);
+        log.info("Creating Property : {}", property);
 
         try {
             eventStoreService.addPropertyTransaction(property);
-        } catch (PropertyMgmtException e) {
-            log.error("Unable to add property transaction {}: {}", property.getIdentifier(), e.getErrorCode().getValue());
+            log.info("Property transaction added: OK");
+            return new ResponseEntity<String>(HttpStatus.OK);
 
-            return new ResponseEntity<>(new CustomErrorType("Unable to add property transaction " +
-                    property.getIdentifier(), e.getErrorCode().getValue()), HttpStatus.BAD_REQUEST);
+        } catch (JsonProcessingException e) {
+            log.error("Unable to add property transaction {}: {}", property.getIdentifier(), e.getMessage());
+            throw new BadRequestException(e);
         }
-
-        log.info("Property transaction added: OK");
-        return new ResponseEntity<String>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/property-transaction", method = RequestMethod.GET)
@@ -59,8 +58,7 @@ public class PropertyMgmtController {
         if(propertyDto != null) {
             return new ResponseEntity<>(propertyDto, HttpStatus.OK);
         }
-        else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+
+        throw new PropertyNotFoundException(id);
     }
 }

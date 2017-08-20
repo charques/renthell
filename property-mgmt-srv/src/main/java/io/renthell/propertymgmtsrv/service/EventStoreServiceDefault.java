@@ -3,7 +3,6 @@ package io.renthell.propertymgmtsrv.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.renthell.propertymgmtsrv.web.dto.PropertyDto;
-import io.renthell.propertymgmtsrv.web.exception.PropertyMgmtException;
 import io.renthell.propertymgmtsrv.configuration.EventStoreConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,19 +29,11 @@ public class EventStoreServiceDefault implements EventStoreService {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public Boolean addPropertyTransaction(PropertyDto item) throws PropertyMgmtException {
+    public Boolean addPropertyTransaction(PropertyDto item) throws JsonProcessingException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        String body = null;
-        try {
-            body = objectMapper.writeValueAsString(item);
-        } catch (JsonProcessingException e) {
-            log.error("Parsing property transaction {}", item);
-            throw new PropertyMgmtException(PropertyMgmtException.ErrorCode.PARSE_ERROR,
-                    "Error parsing property transaction", e);
-        }
-
+        String body = objectMapper.writeValueAsString(item);
         HttpEntity<String> entity = new HttpEntity<String>(body, headers);
 
         restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));

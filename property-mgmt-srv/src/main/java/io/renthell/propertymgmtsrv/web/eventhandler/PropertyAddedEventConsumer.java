@@ -5,9 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.TextNode;
 import io.renthell.propertymgmtsrv.web.dto.PropertyDto;
 import io.renthell.propertymgmtsrv.web.dto.TransactionDto;
-import io.renthell.propertymgmtsrv.web.exception.PropertyMgmtException;
-import io.renthell.propertymgmtsrv.web.exception.PropertyMgmtException.ErrorCode;
-import io.renthell.propertymgmtsrv.persistence.model.Property;
+import io.renthell.propertymgmtsrv.web.exception.EventProcesingException;
 import io.renthell.propertymgmtsrv.service.PropertyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +56,8 @@ public class PropertyAddedEventConsumer {
       }
 
     } catch (IOException | ParseException e) {
-      throw new PropertyMgmtException(ErrorCode.PARSE_ERROR, "Error parsing event payload", e);
+      log.error("Error parsing event payload {}", e.getLocalizedMessage());
+      throw new EventProcesingException("", e);
     }
 
     latch.countDown();
