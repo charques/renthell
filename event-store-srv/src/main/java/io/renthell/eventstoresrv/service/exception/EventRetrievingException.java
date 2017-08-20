@@ -7,10 +7,12 @@ import lombok.Setter;
 @Setter
 public class EventRetrievingException extends RuntimeException {
 
+    private String id;
     private Throwable throwable;
 
-    public EventRetrievingException(Throwable e) {
+    public EventRetrievingException(String id, Throwable e) {
         super();
+        this.id = id;
         this.throwable = e;
     }
 }

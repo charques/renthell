@@ -43,17 +43,16 @@ public class EventStoreServiceDefault implements EventStoreService {
         RawEvent rawEvent = eventRepo.findOne(uuid);
 
         if(rawEvent != null) {
-            BaseEvent baseEvent = null;
             try {
                 Class c = Class.forName(rawEvent.getType());
-                baseEvent = (BaseEvent) c.newInstance();
+                BaseEvent baseEvent = (BaseEvent) c.newInstance();
                 String payload = rawEvent.getPayload();
                 baseEvent = jsonMapper.readValue(payload, baseEvent.getClass());
                 baseEvent.setId(rawEvent.getId());
                 return baseEvent;
 
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IOException e) {
-                throw new EventRetrievingException(e);
+                throw new EventRetrievingException(uuid, e);
             }
         }
         return null;
