@@ -38,7 +38,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = { ConfigServerWithFongoConfiguration.class }, properties = {
-        "server.port=8981" }, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+        "server.port=8091" }, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
 @TestPropertySource(properties = {
         "spring.data.mongodb.database=test",
@@ -74,7 +74,7 @@ public class PropertyMgmtControllerTests {
         PropertyDto property = getTestPropertyTransactionDto();
         String body = jsonMapper.writeValueAsString(property);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:8090/api/property-transaction")
+        mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:8091/api/property-transaction")
                 .contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
     }
@@ -94,7 +94,7 @@ public class PropertyMgmtControllerTests {
 
         String body = jsonMapper.writeValueAsString(property);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:8090/api/property-transaction")
+        mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:8091/api/property-transaction")
                 .contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError());
     }
@@ -107,7 +107,7 @@ public class PropertyMgmtControllerTests {
         mongoTemplate.createCollection("property");
         mongoTemplate.insert(propertyFongo);
 
-        ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:8090/api/property-transaction/" + propertyFongo.getIdentifier()));
+        ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:8091/api/property-transaction/" + propertyFongo.getIdentifier()));
         resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
         MvcResult result = resultAction.andReturn();
         PropertyDto propertyResponse = jsonMapper.readValue(result.getResponse().getContentAsString(), PropertyDto.class);
@@ -119,7 +119,7 @@ public class PropertyMgmtControllerTests {
 
     @Test
     public void testGetPropertyTransactionNoResult() throws Exception {
-        ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:8090/api/property-transaction/0" ));
+        ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:8091/api/property-transaction/0" ));
         resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError());
     }
 
@@ -133,7 +133,7 @@ public class PropertyMgmtControllerTests {
         mongoTemplate.insert(propertyFongo1);
         mongoTemplate.insert(propertyFongo2);
 
-        ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:8090/api/property-transaction"));
+        ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:8091/api/property-transaction"));
         resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
         MvcResult result = resultAction.andReturn();
         List<PropertyDto> propertyResponseList = jsonMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<PropertyDto>>(){});

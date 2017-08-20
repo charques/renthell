@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = { ConfigServerWithFongoConfiguration.class }, properties = {
-        "server.port=8981" }, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+        "server.port=8090" }, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
 @TestPropertySource(properties = {
         "spring.data.mongodb.database=test",

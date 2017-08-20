@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = { ConfigServerWithFongoConfiguration.class }, properties = {
-        "server.port=8980" }, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+        "server.port=8090" }, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
 @TestPropertySource(properties = { "spring.data.mongodb.database=test" })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)

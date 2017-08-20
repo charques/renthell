@@ -26,8 +26,8 @@ import io.renthell.scoringmgmtsrv.web.eventhandler.PropertyAddedEventConsumer;
 import io.renthell.scoringmgmtsrv.producer.Sender;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = { ConfigServerWithFongoConfiguration.class }, properties = {
-        "server.port=8980" }, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(classes = { ConfigServerWithFongoConfiguration.class },
+        webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(properties = { "spring.data.mongodb.database=test" })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class PropertyAddedEventConsumerTest {
