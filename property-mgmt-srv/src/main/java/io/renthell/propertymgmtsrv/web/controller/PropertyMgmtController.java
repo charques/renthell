@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.renthell.propertymgmtsrv.web.dto.PropertyDto;
 import io.renthell.propertymgmtsrv.service.EventStoreService;
 import io.renthell.propertymgmtsrv.service.PropertyService;
-import io.renthell.propertymgmtsrv.util.CustomErrorType;
+import io.renthell.propertymgmtsrv.web.dto.PropertyInputDto;
 import io.renthell.propertymgmtsrv.web.exception.BadRequestException;
 import io.renthell.propertymgmtsrv.web.exception.PropertyNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +29,7 @@ public class PropertyMgmtController {
 
     @RequestMapping(value = "/property-transaction", method = RequestMethod.POST)
     public @ResponseBody
-    ResponseEntity<?> createPropertyTransaction(final @Valid @RequestBody PropertyDto property) {
+    ResponseEntity<?> createPropertyTransaction(final @Valid @RequestBody PropertyInputDto property) {
         log.info("Creating Property : {}", property);
 
         try {

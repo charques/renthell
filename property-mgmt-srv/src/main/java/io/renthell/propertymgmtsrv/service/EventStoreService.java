@@ -1,9 +1,9 @@
 package io.renthell.propertymgmtsrv.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.renthell.propertymgmtsrv.web.dto.PropertyDto;
+import io.renthell.propertymgmtsrv.web.dto.PropertyInputDto;
 
 public interface EventStoreService {
 
-    public Boolean addPropertyTransaction(PropertyDto item) throws JsonProcessingException;
+    public Boolean addPropertyTransaction(PropertyInputDto item) throws JsonProcessingException;
 }

@@ -2,8 +2,8 @@ package io.renthell.propertymgmtsrv.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.renthell.propertymgmtsrv.web.dto.PropertyDto;
 import io.renthell.propertymgmtsrv.configuration.EventStoreConfiguration;
+import io.renthell.propertymgmtsrv.web.dto.PropertyInputDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -29,7 +29,7 @@ public class EventStoreServiceDefault implements EventStoreService {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public Boolean addPropertyTransaction(PropertyDto item) throws JsonProcessingException {
+    public Boolean addPropertyTransaction(PropertyInputDto item) throws JsonProcessingException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 

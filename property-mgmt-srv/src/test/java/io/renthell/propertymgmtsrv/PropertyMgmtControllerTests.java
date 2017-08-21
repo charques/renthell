@@ -7,6 +7,7 @@ import io.renthell.propertymgmtsrv.persistence.model.Property;
 import io.renthell.propertymgmtsrv.persistence.model.Transaction;
 import io.renthell.propertymgmtsrv.configuration.EventStoreConfiguration;
 import io.renthell.propertymgmtsrv.web.dto.PropertyDto;
+import io.renthell.propertymgmtsrv.web.dto.PropertyInputDto;
 import io.renthell.propertymgmtsrv.web.dto.TransactionDto;
 import org.junit.Assert;
 import org.junit.Test;
@@ -71,7 +72,7 @@ public class PropertyMgmtControllerTests {
         mockServer.expect(requestTo(EVENT_STORE_URI)).andRespond(withCreatedEntity(new URI("/commands/get-raw-event/0")));
 
         // add property transaction
-        PropertyDto property = getTestPropertyTransactionDto();
+        PropertyInputDto property = getTestPropertyInputDto();
         String body = jsonMapper.writeValueAsString(property);
 
         mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:8091/api/property-transaction")
@@ -145,45 +146,8 @@ public class PropertyMgmtControllerTests {
         Assert.assertEquals(transactionFongo1.getTransactionId(), transactionResponse.getTransactionId());
     }
 
-    private PropertyDto getTestPropertyTransactionDto() {
-        PropertyDto property = new PropertyDto();
-        property.setIdentifier("142550444");
-        property.setRegion("Madrid");
-        property.setCity("Madrid Capital");
-        property.setDistrict("Retiro");
-        property.setNeighbourhood("Jerónimos");
-        property.setStreet("Alfonso XII");
-        property.setPostalCode("28014");
-        property.setProperty("Flat");
-        property.setPropertySub("Flat");
-        property.setPropertyState("VeryGood");
-        property.setPropertyType("Vivienda");
-        property.setMts2("140");
-        property.setRooms("4");
-        property.setBathrooms("3");
-        property.setHeating("0");
-        property.setEnergeticCert("0");
-        property.setFeatures("aire-acondicionado|||calefaccion|||garaje-privado|||ascensor");
-        property.setLat("40.4138");
-        property.setLng("-3.68511");
-        property.setFeed("https://www.fotocasa.es/vivienda/madrid-capital/aire-acondicionado-calefaccion-parking-ascensor-alfonso-xii-142550444?RowGrid=11&tti=3&opi=300");
-
-        TransactionDto transaction = new TransactionDto();
-        transaction.setTransactionId("3");
-        transaction.setTransaction("alquiler");
-        transaction.setPrice("1890");
-        transaction.setPriceMin("");
-        transaction.setPriceMax("");
-        transaction.setPriceRange("1501-2000");
-        List<TransactionDto> transactionDtos = new ArrayList<>();
-        transactionDtos.add(transaction);
-        property.setTransactions(transactionDtos);
-
-        return property;
-    }
-
-    private PropertyDto getTestPropertyUpdateTransactionDto() {
-        PropertyDto property = new PropertyDto();
+    private PropertyInputDto getTestPropertyInputDto() {
+        PropertyInputDto property = new PropertyInputDto();
         property.setIdentifier("142550444");
         property.setPublishDate(new Date());
         property.setRegion("Madrid");
@@ -206,16 +170,12 @@ public class PropertyMgmtControllerTests {
         property.setLng("-3.68511");
         property.setFeed("https://www.fotocasa.es/vivienda/madrid-capital/aire-acondicionado-calefaccion-parking-ascensor-alfonso-xii-142550444?RowGrid=11&tti=3&opi=300");
 
-        TransactionDto transaction = new TransactionDto();
-        transaction.setTransactionId("1");
-        transaction.setTransaction("venta");
-        transaction.setPrice("23000000");
-        transaction.setPriceMin("");
-        transaction.setPriceMax("");
-        transaction.setPriceRange("8000000");
-        List<TransactionDto> transactionDtos = new ArrayList<>();
-        transactionDtos.add(transaction);
-        property.setTransactions(transactionDtos);
+        property.setTransactionId("3");
+        property.setTransaction("alquiler");
+        property.setPrice("1890");
+        property.setPriceMin("");
+        property.setPriceMax("");
+        property.setPriceRange("1501-2000");
 
         return property;
     }
