@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = { ConfigServerWithFongoConfiguration.class }, properties = {
-        "server.port=8090" }, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+        "server.port=8091" }, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
 @TestPropertySource(properties = {
         "spring.data.mongodb.database=test",
@@ -71,7 +71,7 @@ public class ScoringMgmtControllerTests {
         mongoTemplate.insert(scoringFongo1);
         mongoTemplate.insert(scoringFongo2);
 
-        ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:8090/api/scoring-stats"));
+        ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:8091/api/scoring-stats"));
         resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
         MvcResult result = resultAction.andReturn();
         List<ScoringStatsDto> scoringStatsDtoList = jsonMapper.readValue(result.getResponse().getContentAsString(),
@@ -97,7 +97,7 @@ public class ScoringMgmtControllerTests {
         mongoTemplate.createCollection("scoring");
         mongoTemplate.insert(scoringFongo1);
 
-        String url = "http://localhost:8090/api/scoring-stats?" +
+        String url = "http://localhost:8091/api/scoring-stats?" +
                 "transactionId=3" + "&" +
                 "postalCode=28041" + "&" +
                 "year=2018" + "&" +
@@ -116,7 +116,7 @@ public class ScoringMgmtControllerTests {
     @Test
     public void testGetOneScoringStatsNoResult() throws Exception {
 
-        String url = "http://localhost:8090/api/scoring-stats?" +
+        String url = "http://localhost:8091/api/scoring-stats?" +
                 "transactionId=3" + "&" +
                 "postalCode=28041" + "&" +
                 "year=2018" + "&" +
