@@ -27,12 +27,16 @@ public class ScoringServiceDefault implements ScoringService {
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(propertyDto.getDate());
-        int month = cal.get(Calendar.MONTH);
+        int month = cal.get(Calendar.MONTH) + 1;
         int year = cal.get(Calendar.YEAR);
 
-        Scoring scoringRetrieved = scoringRepo.findOne(propertyDto.getTransactionId(),
-                month, year, propertyDto.getPostalCode(),
-                propertyDto.getDistrict(), propertyDto.getCity(), propertyDto.getRooms());
+        List<Scoring> scoringList = scoringRepo.find(propertyDto.getTransactionId(),
+                month, year, propertyDto.getPostalCode(), propertyDto.getRooms());
+
+        Scoring scoringRetrieved = null;
+        if(scoringList.size() > 0) {
+            scoringRetrieved = scoringList.get(0);
+        }
 
         Scoring scoringSaved = null;
         if (scoringRetrieved == null) {
@@ -40,11 +44,7 @@ public class ScoringServiceDefault implements ScoringService {
             scoring.setTransactionId(propertyDto.getTransactionId());
             scoring.setMonth(month);
             scoring.setYear(year);
-            scoring.setRegion(propertyDto.getRegion());
-            scoring.setRegionCode(propertyDto.getPostalCode().substring(0,2));
             scoring.setPostalCode(propertyDto.getPostalCode());
-            scoring.setDistrict(propertyDto.getDistrict());
-            scoring.setCity(propertyDto.getCity());
             scoring.setRooms(propertyDto.getRooms());
             scoring.addPrice(propertyDto.getPrice());
 
@@ -65,6 +65,20 @@ public class ScoringServiceDefault implements ScoringService {
     @Override
     public List<ScoringStatsDto> findAll() {
         List<Scoring> scoringList = scoringRepo.findAll();
+        List<ScoringStatsDto> statsList = new ArrayList<>();
+        for (Scoring aScoringList : scoringList) {
+            ScoringStatsDto stats = new ScoringStatsDto(aScoringList);
+            statsList.add(stats);
+        }
+        return statsList;
+    }
+
+    @Override
+    public List<ScoringStatsDto> find(String transactionId, Integer year, Integer month, String postalCode, Integer rooms) {
+        List<Scoring> scoringList = scoringRepo.find(transactionId, month, year, postalCode, rooms);
+
+        // TODO agregate!!
+
         List<ScoringStatsDto> statsList = new ArrayList<>();
         for (Scoring aScoringList : scoringList) {
             ScoringStatsDto stats = new ScoringStatsDto(aScoringList);

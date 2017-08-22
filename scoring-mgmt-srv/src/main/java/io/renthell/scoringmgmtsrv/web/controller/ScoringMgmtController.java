@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -20,10 +21,18 @@ public class ScoringMgmtController {
 
     @RequestMapping(value = "/scoring-stats", method = RequestMethod.GET)
     public @ResponseBody
-    ResponseEntity<Collection<ScoringStatsDto>> getAllScoringStats() {
+    ResponseEntity<Collection<ScoringStatsDto>> getScoringStatsWithRequestParams(
+            @RequestParam(value="transactionId", defaultValue = "3", required = false) String transactionId,
+            @RequestParam(value="month", required = false) Integer month,
+            @RequestParam(value="year", required = false) Integer year,
+            @RequestParam(value="postalCode", required = false) String postalCode,
+            @RequestParam(value="rooms", required = false) Integer rooms
+            ) {
         log.info("Get all Scoring Stats");
 
-        return new ResponseEntity<>((Collection<ScoringStatsDto>) scoringService.findAll(), HttpStatus.OK);
+        List<ScoringStatsDto> stats = scoringService.find(transactionId, year, month, postalCode, rooms);
+
+        return new ResponseEntity<>((Collection<ScoringStatsDto>) stats, HttpStatus.OK);
     }
 
 }

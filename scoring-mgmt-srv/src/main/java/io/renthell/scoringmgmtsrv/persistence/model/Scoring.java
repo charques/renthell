@@ -24,15 +24,9 @@ public class Scoring {
     private String id;
 
     private String transactionId;
-
     private Integer month;
     private Integer year;
-
-    private String region;
-    private String regionCode;
     private String postalCode;
-    private String district;
-    private String city;
     private Integer rooms;
 
     //private Float medianPrice;

@@ -44,14 +44,10 @@ public class ScoringMgmtControllerTests {
     private ObjectMapper jsonMapper;
 
     @Test
-    public void testGetScoringStatsSuccess() throws Exception {
+    public void testGetAllScoringStatsSuccess() throws Exception {
         Scoring scoringFongo1 = new Scoring();
         scoringFongo1.setTransactionId("3");
-        scoringFongo1.setRegion("madrid");
-        scoringFongo1.setRegionCode("28");
-        scoringFongo1.setCity("madrid capital");
         scoringFongo1.setPostalCode("28041");
-        scoringFongo1.setDistrict("villaverde");
         scoringFongo1.setMonth(7);
         scoringFongo1.setYear(2018);
         scoringFongo1.setRooms(3);
@@ -63,11 +59,7 @@ public class ScoringMgmtControllerTests {
 
         Scoring scoringFongo2 = new Scoring();
         scoringFongo2.setTransactionId("3");
-        scoringFongo2.setRegion("madrid");
-        scoringFongo2.setRegionCode("28");
-        scoringFongo2.setCity("madrid capital");
         scoringFongo2.setPostalCode("28041");
-        scoringFongo2.setDistrict("villaverde");
         scoringFongo2.setMonth(7);
         scoringFongo2.setYear(2018);
         scoringFongo2.setRooms(3);
@@ -88,4 +80,55 @@ public class ScoringMgmtControllerTests {
         assertThat(scoringStatsDtoList.size()).isEqualTo(2);
     }
 
+    @Test
+    public void testGetOneScoringStatsSuccess() throws Exception {
+        Scoring scoringFongo1 = new Scoring();
+        scoringFongo1.setTransactionId("3");
+        scoringFongo1.setPostalCode("28041");
+        scoringFongo1.setMonth(7);
+        scoringFongo1.setYear(2018);
+        scoringFongo1.setRooms(3);
+        scoringFongo1.addPrice(850F);
+        scoringFongo1.addPrice(900F);
+        scoringFongo1.addPrice(1000F);
+        scoringFongo1.addPrice(1200F);
+        scoringFongo1.addPrice(1500F);
+
+        mongoTemplate.createCollection("scoring");
+        mongoTemplate.insert(scoringFongo1);
+
+        String url = "http://localhost:8090/api/scoring-stats?" +
+                "transactionId=3" + "&" +
+                "postalCode=28041" + "&" +
+                "year=2018" + "&" +
+                "month=7" + "&" +
+                "rooms=3";
+
+        ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get(url));
+        resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
+        MvcResult result = resultAction.andReturn();
+        List<ScoringStatsDto> scoringStatsDtoList = jsonMapper.readValue(result.getResponse().getContentAsString(),
+                new TypeReference<List<ScoringStatsDto>>(){});
+
+        assertThat(scoringStatsDtoList.size()).isEqualTo(1);
+    }
+
+    @Test
+    public void testGetOneScoringStatsNoResult() throws Exception {
+
+        String url = "http://localhost:8090/api/scoring-stats?" +
+                "transactionId=3" + "&" +
+                "postalCode=28041" + "&" +
+                "year=2018" + "&" +
+                "month=7" + "&" +
+                "rooms=3";
+
+        ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get(url));
+        resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
+        MvcResult result = resultAction.andReturn();
+        List<ScoringStatsDto> scoringStatsDtoList = jsonMapper.readValue(result.getResponse().getContentAsString(),
+                new TypeReference<List<ScoringStatsDto>>(){});
+
+        assertThat(scoringStatsDtoList.size()).isEqualTo(0);
+    }
 }

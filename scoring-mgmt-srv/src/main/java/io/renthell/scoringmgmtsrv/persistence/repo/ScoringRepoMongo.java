@@ -1,7 +1,6 @@
 package io.renthell.scoringmgmtsrv.persistence.repo;
 
 import io.renthell.scoringmgmtsrv.persistence.model.Scoring;
-import io.renthell.scoringmgmtsrv.persistence.repo.ScoringRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -21,21 +20,24 @@ public class ScoringRepoMongo implements ScoringRepo {
         this.mongoOperations = mongoOperations;
     }
 
-    @Override
-    public Scoring findOne(String transactionId, int month, int year, String postalCode,
-                           String district, String city, Integer rooms) {
+    public List<Scoring> find(String transactionId, Integer month, Integer year, String postalCode, Integer rooms) {
         Query query = new Query();
-        query.addCriteria(Criteria.where("transactionId").is(transactionId)
-                .and("month").is(month)
-                .and("year").is(year)
-                .and("postalCode").is(postalCode)
-                .and("district").is(district)
-                .and("city").is(city)
-                .and("rooms").is(rooms));
+        Criteria criteria = Criteria.where("transactionId").is(transactionId);
+        if(month != null) {
+            criteria.and("month").is(month);
+        }
+        if(year != null) {
+            criteria.and("year").is(year);
+        }
+        if(postalCode != null) {
+            criteria.and("postalCode").is(postalCode);
+        }
+        if(rooms != null) {
+            criteria.and("rooms").is(rooms);
+        }
+        query.addCriteria(criteria);
 
-        List<Scoring> list = mongoOperations.findAll(Scoring.class);
-
-        return mongoOperations.findOne(query, Scoring.class);
+        return mongoOperations.find(query, Scoring.class);
     }
 
     @Override
