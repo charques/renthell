@@ -58,9 +58,37 @@ public class Property {
 
     private Boolean updated;
 
+    private Double grossReturn;
+    private Double per;
+
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Date createdDate;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Date modifiedDate;
+
+    public void updateRentCalculations() {
+        final String SALE = "1";
+        final String RENT = "3";
+
+        if(this.transactions != null && this.transactions.size() > 1) {
+            Transaction saleTransaction = null;
+            Transaction rentTransaction = null;
+            for (Transaction transaction : this.transactions) {
+                if(SALE.equals(transaction.getTransactionId())) {
+                    saleTransaction = transaction;
+                }
+                else if(RENT.equals(transaction.getTransactionId())) {
+                    rentTransaction = transaction;
+                }
+
+                if(saleTransaction != null && rentTransaction != null) {
+                    this.grossReturn = rentTransaction.getPrice() / saleTransaction.getPrice();
+                    this.per = saleTransaction.getPrice() / rentTransaction.getPrice();
+                    break;
+                }
+            }
+
+        }
+    }
 }

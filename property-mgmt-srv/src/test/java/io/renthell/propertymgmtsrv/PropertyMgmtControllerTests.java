@@ -208,9 +208,9 @@ public class PropertyMgmtControllerTests {
         Transaction transactionFongo = new Transaction();
         transactionFongo.setTransactionId("3");
         transactionFongo.setTransaction("alquiler");
-        transactionFongo.setPrice("1890");
-        transactionFongo.setPriceMin("");
-        transactionFongo.setPriceMax("");
+        transactionFongo.setPrice(1890D);
+        transactionFongo.setPriceMin(0D);
+        transactionFongo.setPriceMax(0D);
         transactionFongo.setPriceRange("1501-2000");
         transactionsFongo.add(transactionFongo);
 

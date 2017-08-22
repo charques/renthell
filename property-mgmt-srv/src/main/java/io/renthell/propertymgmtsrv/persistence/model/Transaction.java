@@ -17,8 +17,8 @@ public class Transaction {
     @NotNull
     private String transactionId;
     private String transaction;
-    private String price;
-    private String priceMin;
-    private String priceMax;
+    private Double price;
+    private Double priceMin;
+    private Double priceMax;
     private String priceRange;
 }
