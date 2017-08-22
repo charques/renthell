@@ -38,17 +38,21 @@ public class EventStoreErrorHandler extends ResponseEntityExceptionHandler {
             error = objectError.getObjectName() + ", " + objectError.getDefaultMessage();
             errors.add(error);
         }
-        return new ResponseEntity(errors, headers, status);
+
+        ResponseEntity.BodyBuilder responseBuilder = ResponseEntity.status(status);
+        responseBuilder.headers(headers);
+        return responseBuilder.body(errors);
     }
 
     @Override
     protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        String unsupported = "Unsupported content type: " + ex.getContentType();
-        String supported = "Supported content types: " + MediaType.toString(ex.getSupportedMediaTypes());
         List<String> errors = new ArrayList<>();
-        errors.add(unsupported);
-        errors.add(supported);
-        return new ResponseEntity(errors, headers, status);
+        errors.add("Unsupported content type: " + ex.getContentType());
+        errors.add("Supported content types: " + MediaType.toString(ex.getSupportedMediaTypes()));
+
+        ResponseEntity.BodyBuilder responseBuilder = ResponseEntity.status(status);
+        responseBuilder.headers(headers);
+        return responseBuilder.body(errors);
     }
 
     @Override
@@ -62,7 +66,10 @@ public class EventStoreErrorHandler extends ResponseEntityExceptionHandler {
         } else {
             errors.add(ex.getMessage());
         }
-        return new ResponseEntity(errors, headers, status);
+
+        ResponseEntity.BodyBuilder responseBuilder = ResponseEntity.status(status);
+        responseBuilder.headers(headers);
+        return responseBuilder.body(errors);
     }
 
     @ExceptionHandler(EventNotFoundException.class)
@@ -71,9 +78,9 @@ public class EventStoreErrorHandler extends ResponseEntityExceptionHandler {
         map.put("id", ex.getId());
         map.put("reason", "Event can not be found");
         map.put("url", req.getRequestURI());
+
         ResponseEntity.BodyBuilder responseBudiler = ResponseEntity.status(HttpStatus.NOT_FOUND);
-        ResponseEntity<Object> response = responseBudiler.body(map);
-        return response;
+        return responseBudiler.body(map);
     }
 
     @ExceptionHandler(EventRetrievingException.class)
@@ -82,9 +89,9 @@ public class EventStoreErrorHandler extends ResponseEntityExceptionHandler {
         map.put("id", ex.getId());
         map.put("reason", "Event can not be retrieved");
         map.put("url", req.getRequestURI());
+
         ResponseEntity.BodyBuilder responseBudiler = ResponseEntity.status(HttpStatus.BAD_REQUEST);
-        ResponseEntity<Object> response = responseBudiler.body(map);
-        return response;
+        return responseBudiler.body(map);
     }
 
     @ExceptionHandler(BadRequestException.class)
@@ -93,8 +100,8 @@ public class EventStoreErrorHandler extends ResponseEntityExceptionHandler {
         map.put("message", ex.getThrowable().getLocalizedMessage());
         map.put("reason", "Event can not be created");
         map.put("url", req.getRequestURI());
+
         ResponseEntity.BodyBuilder responseBudiler = ResponseEntity.status(HttpStatus.BAD_REQUEST);
-        ResponseEntity<Object> response = responseBudiler.body(map);
-        return response;
+        return responseBudiler.body(map);
     }
 }

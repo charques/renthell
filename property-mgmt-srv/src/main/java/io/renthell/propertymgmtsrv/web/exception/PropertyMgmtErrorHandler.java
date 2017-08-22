@@ -37,17 +37,21 @@ public class PropertyMgmtErrorHandler extends ResponseEntityExceptionHandler {
             error = objectError.getObjectName() + ", " + objectError.getDefaultMessage();
             errors.add(error);
         }
-        return new ResponseEntity(errors, headers, status);
+
+        ResponseEntity.BodyBuilder responseBuilder = ResponseEntity.status(status);
+        responseBuilder.headers(headers);
+        return responseBuilder.body(errors);
     }
 
     @Override
     protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        String unsupported = "Unsupported content type: " + ex.getContentType();
-        String supported = "Supported content types: " + MediaType.toString(ex.getSupportedMediaTypes());
         List<String> errors = new ArrayList<>();
-        errors.add(unsupported);
-        errors.add(supported);
-        return new ResponseEntity(errors, headers, status);
+        errors.add("Unsupported content type: " + ex.getContentType());
+        errors.add("Supported content types: " + MediaType.toString(ex.getSupportedMediaTypes()));
+
+        ResponseEntity.BodyBuilder responseBuilder = ResponseEntity.status(status);
+        responseBuilder.headers(headers);
+        return responseBuilder.body(errors);
     }
 
     @Override
@@ -61,7 +65,10 @@ public class PropertyMgmtErrorHandler extends ResponseEntityExceptionHandler {
         } else {
             errors.add(ex.getMessage());
         }
-        return new ResponseEntity(errors, headers, status);
+
+        ResponseEntity.BodyBuilder responseBuilder = ResponseEntity.status(status);
+        responseBuilder.headers(headers);
+        return responseBuilder.body(errors);
     }
 
     @ExceptionHandler(PropertyNotFoundException.class)
@@ -70,9 +77,9 @@ public class PropertyMgmtErrorHandler extends ResponseEntityExceptionHandler {
         map.put("id", ex.getId());
         map.put("reason", "Property can not be found");
         map.put("url", req.getRequestURI());
+
         ResponseEntity.BodyBuilder responseBudiler = ResponseEntity.status(HttpStatus.NOT_FOUND);
-        ResponseEntity<Object> response = responseBudiler.body(map);
-        return response;
+        return responseBudiler.body(map);
     }
 
     @ExceptionHandler(EventProcesingException.class)
@@ -81,9 +88,9 @@ public class PropertyMgmtErrorHandler extends ResponseEntityExceptionHandler {
         map.put("message", ex.getThrowable().getLocalizedMessage());
         map.put("reason", "Event can not be procesed");
         map.put("url", req.getRequestURI());
+
         ResponseEntity.BodyBuilder responseBudiler = ResponseEntity.status(HttpStatus.BAD_REQUEST);
-        ResponseEntity<Object> response = responseBudiler.body(map);
-        return response;
+        return responseBudiler.body(map);
     }
 
     @ExceptionHandler(BadRequestException.class)
@@ -92,9 +99,9 @@ public class PropertyMgmtErrorHandler extends ResponseEntityExceptionHandler {
         map.put("message", ex.getThrowable().getLocalizedMessage());
         map.put("reason", "Property can not be created");
         map.put("url", req.getRequestURI());
+
         ResponseEntity.BodyBuilder responseBudiler = ResponseEntity.status(HttpStatus.BAD_REQUEST);
-        ResponseEntity<Object> response = responseBudiler.body(map);
-        return response;
+        return responseBudiler.body(map);
     }
 
     @ExceptionHandler(PostEventException.class)
@@ -104,8 +111,8 @@ public class PropertyMgmtErrorHandler extends ResponseEntityExceptionHandler {
         map.put("message", ex.getMessage());
         map.put("reason", "Property can not be created");
         map.put("url", req.getRequestURI());
+
         ResponseEntity.BodyBuilder responseBudiler = ResponseEntity.status(HttpStatus.BAD_REQUEST);
-        ResponseEntity<Object> response = responseBudiler.body(map);
-        return response;
+        return responseBudiler.body(map);
     }
 }

@@ -31,7 +31,7 @@ public class PropertyAddedEventConsumer {
   @Autowired
   private ObjectMapper objectMapper;
 
-  private final String PROPERTY_TRANSACTION_ADDED_EVENT = "io.renthell.eventstoresrv.events.PropertyTransactionAddedEvent";
+  private final String PROPERTY_TRANSACTION_ADDED_EVENT = "io.renthell.eventstoresrv.web.events.PropertyTransactionAddedEvent";
 
   private CountDownLatch latch = new CountDownLatch(1);
 
@@ -52,7 +52,7 @@ public class PropertyAddedEventConsumer {
       if(PROPERTY_TRANSACTION_ADDED_EVENT.equals(payloadJson.get("type").textValue())) {
         propertyDto = buildProperty(eventPayloadJson);
         PropertyDto propertySaved = propertyService.save(propertyDto);
-        log.info("Property transaction added event processed. Scoring updated: {}", propertySaved.toString());
+        log.info("Property transaction added event processed. Property saved: {}", propertySaved.toString());
       }
 
     } catch (IOException | ParseException e) {

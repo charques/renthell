@@ -41,7 +41,7 @@ public class PropertyServiceDefault implements PropertyService {
             // save new item
             Property propertyToSave = buildProperty(propertyDto);
             propertySaved = propertyRepo.save(propertyToSave);
-            log.info("Saved: " + propertySaved.toString());
+            log.info("Property saved: " + propertySaved.toString());
 
         } else {
             TransactionDto transactionDto = propertyDto.getTransactions().get(0);
@@ -62,7 +62,7 @@ public class PropertyServiceDefault implements PropertyService {
             }
             // update item
             propertySaved = propertyRepo.save(propertyRetrieved);
-            log.info("Updated: " + propertySaved.toString());
+            log.info("Property updated: " + propertySaved.toString());
         }
 
         return buildPropertyDto(propertySaved);

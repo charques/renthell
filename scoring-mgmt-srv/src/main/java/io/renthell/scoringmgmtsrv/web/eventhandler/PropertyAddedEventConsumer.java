@@ -29,7 +29,7 @@ public class PropertyAddedEventConsumer {
   @Autowired
   private ObjectMapper objectMapper;
 
-  private final String PROPERTY_TRANSACTION_ADDED_EVENT = "io.renthell.eventstoresrv.events.PropertyTransactionAddedEvent";
+  private final String PROPERTY_TRANSACTION_ADDED_EVENT = "io.renthell.eventstoresrv.web.events.PropertyTransactionAddedEvent";
 
   private CountDownLatch latch = new CountDownLatch(1);
 
@@ -54,6 +54,7 @@ public class PropertyAddedEventConsumer {
       }
 
     } catch (IOException | ParseException e) {
+      log.error("Error parsing event payload {}", e.getLocalizedMessage());
       throw new EventProcesingException(e);
     }
 

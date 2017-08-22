@@ -50,6 +50,7 @@ public class CommandController {
             return new ResponseEntity<String>(headers, HttpStatus.CREATED);
 
         } catch (JsonProcessingException e) {
+            log.error("Bad request exception: {}", e.getMessage());
             throw new BadRequestException(e);
         }
     }
@@ -64,6 +65,7 @@ public class CommandController {
             }
         }
         catch (EventRetrievingException e) {
+            log.error("Event retrieving exception: {}", e.getId());
             throw e;
         }
 
