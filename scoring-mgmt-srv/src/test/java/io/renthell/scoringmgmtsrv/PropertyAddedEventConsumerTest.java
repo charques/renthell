@@ -37,10 +37,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = { ConfigServerWithFongoConfiguration.class }, properties = {
-        "server.port=8090" }, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+        "server.port=8093" }, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
 @TestPropertySource(properties = { "spring.data.mongodb.database=test" })
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class PropertyAddedEventConsumerTest {
 
   private static String EVENTS_TOPIC = "test";
@@ -83,7 +83,7 @@ public class PropertyAddedEventConsumerTest {
     assertThat(propertyAddedEventConsumer.getLatch().getCount()).isEqualTo(0);
 
     // get scoring stats related with the property added
-    String url = "http://localhost:8090/api/scoring-stats?" +
+    String url = "http://localhost:8093/api/scoring-stats?" +
             "transactionId=3" + "&" +
             "postalCode=28014" + "&" +
             "year=2017" + "&" +
@@ -101,6 +101,8 @@ public class PropertyAddedEventConsumerTest {
 
   @Test
   public void testConsumeAddPropertyEvent_Update() throws Exception {
+    propertyAddedEventConsumer.setLatch(2);
+
     // add property event - alquiler
     String addPropertyEventString1 = "{\"id\":\"7e32b1a0-7b56-4690-8456-69154092ea02\",\"creationDate\":\"Tue Aug 22 06:18:22 GMT 2017\",\"correlationId\":\"7360ee14-7cdb-458b-ac23-27084bfcb147\",\"payload\":\"{\\\"correlationId\\\":\\\"7360ee14-7cdb-458b-ac23-27084bfcb147\\\",\\\"identifier\\\":\\\"142550444\\\",\\\"publishDate\\\":\\\"01/07/2017 12:00:00\\\",\\\"region\\\":\\\"Madrid\\\",\\\"city\\\":\\\"Madrid Capital\\\",\\\"district\\\":\\\"Retiro\\\",\\\"neighbourhood\\\":\\\"Jerónimos\\\",\\\"street\\\":\\\"Alfonso XII\\\",\\\"postalCode\\\":\\\"28014\\\",\\\"property\\\":\\\"Flat\\\",\\\"propertySub\\\":\\\"Flat\\\",\\\"propertyState\\\":\\\"VeryGood\\\",\\\"propertyType\\\":\\\"Vivienda\\\",\\\"mts2\\\":\\\"140\\\",\\\"rooms\\\":\\\"4\\\",\\\"bathrooms\\\":\\\"3\\\",\\\"heating\\\":\\\"0\\\",\\\"energeticCert\\\":\\\"0\\\",\\\"features\\\":\\\"aire-acondicionado|||calefaccion|||garaje-privado|||ascensor\\\",\\\"lat\\\":\\\"40.4138\\\",\\\"lng\\\":\\\"-3.68511\\\",\\\"feed\\\":\\\"https://www.fotocasa.es/vivienda/madrid-capital/aire-acondicionado-calefaccion-parking-ascensor-alfonso-xii-142550444?RowGrid=11&tti=3&opi=300\\\",\\\"transactionId\\\":\\\"3\\\",\\\"transaction\\\":\\\"alquiler\\\",\\\"price\\\":\\\"1891\\\",\\\"priceMin\\\":\\\"\\\",\\\"priceMax\\\":\\\"\\\",\\\"priceRange\\\":\\\"1502-2000\\\"}\",\"type\":\"io.renthell.eventstoresrv.web.events.PropertyTransactionAddedEvent\"}";
     sender.send(EVENTS_TOPIC, addPropertyEventString1);
@@ -113,7 +115,7 @@ public class PropertyAddedEventConsumerTest {
     assertThat(propertyAddedEventConsumer.getLatch().getCount()).isEqualTo(0);
 
     // get scoring stats related with the property added
-    String url = "http://localhost:8090/api/scoring-stats?" +
+    String url = "http://localhost:8093/api/scoring-stats?" +
             "transactionId=3" + "&" +
             "postalCode=28014" + "&" +
             "year=2017" + "&" +

@@ -39,6 +39,11 @@ public class PropertyAddedEventConsumer {
     return latch;
   }
 
+  public CountDownLatch setLatch(int counter) {
+    latch = new CountDownLatch(counter);
+    return latch;
+  }
+
   @KafkaListener(topics = "${kafka.topic.events}")
   public void consumeEvent(String payload) {
     log.info("Event consumed. Event payload='{}'", payload);
