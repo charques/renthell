@@ -60,8 +60,8 @@ public class PropertyServiceDefault implements PropertyService {
                 transactions.set(transactionIndex, transaction);
                 propertyRetrieved.setTransactions(transactions);
             }
-            // update rent calculations
-            propertyRetrieved.updateRentCalculations();
+            // update calculations
+            propertyRetrieved.updateCalculations();
 
             // update item
             propertySaved = propertyRepo.save(propertyRetrieved);

@@ -42,7 +42,7 @@ public class Property {
     private String propertyState;
     private String propertyType;
 
-    private String mts2;
+    private int mts2;
     private String rooms;
     private String bathrooms;
     private String heating;
@@ -58,8 +58,7 @@ public class Property {
 
     private Boolean updated;
 
-    private Double grossReturn;
-    private Double per;
+    private Calculations calculations;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Date createdDate;
@@ -67,24 +66,32 @@ public class Property {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Date modifiedDate;
 
-    public void updateRentCalculations() {
+    public void updateCalculations() {
         final String SALE = "1";
         final String RENT = "3";
 
-        if(this.transactions != null && this.transactions.size() > 1) {
+        if(this.calculations == null) {
+            this.calculations = new Calculations();
+        }
+
+        if(this.transactions != null && this.transactions.size() > 0) {
             Transaction saleTransaction = null;
             Transaction rentTransaction = null;
             for (Transaction transaction : this.transactions) {
                 if(SALE.equals(transaction.getTransactionId())) {
                     saleTransaction = transaction;
+
+                    this.calculations.setSaleMt2Price(saleTransaction.getPrice() / this.mts2);
                 }
                 else if(RENT.equals(transaction.getTransactionId())) {
                     rentTransaction = transaction;
+
+                    this.calculations.setRentMt2Price(rentTransaction.getPrice() / this.mts2);
                 }
 
                 if(saleTransaction != null && rentTransaction != null) {
-                    this.grossReturn = rentTransaction.getPrice() / saleTransaction.getPrice();
-                    this.per = saleTransaction.getPrice() / rentTransaction.getPrice();
+                    this.calculations.setRentGrossReturn(rentTransaction.getPrice() / saleTransaction.getPrice());
+                    this.calculations.setRentPer(saleTransaction.getPrice() / rentTransaction.getPrice());
                     break;
                 }
             }

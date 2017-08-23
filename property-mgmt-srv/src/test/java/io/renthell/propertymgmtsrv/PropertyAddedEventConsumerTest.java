@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.renthell.propertymgmtsrv.config.ConfigServerWithFongoConfiguration;
 import io.renthell.propertymgmtsrv.web.dto.PropertyDto;
 import io.renthell.propertymgmtsrv.web.eventhandler.PropertyAddedEventConsumer;
-import io.renthell.propertymgmtsrv.persistence.model.Property;
 import io.renthell.propertymgmtsrv.producer.Sender;
 import org.junit.Assert;
 import org.junit.Before;
@@ -108,8 +107,11 @@ public class PropertyAddedEventConsumerTest {
     MvcResult result = resultAction.andReturn();
     PropertyDto propertyResponse = jsonMapper.readValue(result.getResponse().getContentAsString(), PropertyDto.class);
 
-    Assert.assertNotNull(propertyResponse.getPer());
-    Assert.assertNotNull(propertyResponse.getGrossReturn());
+    Assert.assertNotNull(propertyResponse.getCalculations());
+    Assert.assertNotNull(propertyResponse.getCalculations().getRentGrossReturn());
+    Assert.assertNotNull(propertyResponse.getCalculations().getRentPer());
+    Assert.assertNotNull(propertyResponse.getCalculations().getRentMt2Price());
+    Assert.assertNotNull(propertyResponse.getCalculations().getSaleMt2Price());
     Assert.assertEquals(propertyResponse.getTransactions().size(), 2);
   }
 }

@@ -45,8 +45,7 @@ public class PropertyDto {
 
     private List<TransactionDto> transactions;
 
-    private Double grossReturn;
-    private Double per;
+    private CalculationsDTO calculations;
 
     private Boolean updated;
 }

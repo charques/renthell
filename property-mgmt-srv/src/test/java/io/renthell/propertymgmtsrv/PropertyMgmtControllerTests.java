@@ -3,6 +3,7 @@ package io.renthell.propertymgmtsrv;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.renthell.propertymgmtsrv.config.ConfigServerWithFongoConfiguration;
+import io.renthell.propertymgmtsrv.persistence.model.Calculations;
 import io.renthell.propertymgmtsrv.persistence.model.Property;
 import io.renthell.propertymgmtsrv.persistence.model.Transaction;
 import io.renthell.propertymgmtsrv.configuration.EventStoreConfiguration;
@@ -194,7 +195,7 @@ public class PropertyMgmtControllerTests {
         property.setPropertySub("Flat");
         property.setPropertyState("VeryGood");
         property.setPropertyType("Vivienda");
-        property.setMts2("140");
+        property.setMts2(140);
         property.setRooms("4");
         property.setBathrooms("3");
         property.setHeating("0");
@@ -208,11 +209,13 @@ public class PropertyMgmtControllerTests {
         Transaction transactionFongo = new Transaction();
         transactionFongo.setTransactionId("3");
         transactionFongo.setTransaction("alquiler");
-        transactionFongo.setPrice(1890D);
-        transactionFongo.setPriceMin(0D);
-        transactionFongo.setPriceMax(0D);
+        transactionFongo.setPrice(1890F);
+        transactionFongo.setPriceMin(0F);
+        transactionFongo.setPriceMax(0F);
         transactionFongo.setPriceRange("1501-2000");
         transactionsFongo.add(transactionFongo);
+
+        property.updateCalculations();
 
         property.setTransactions(transactionsFongo);
 
