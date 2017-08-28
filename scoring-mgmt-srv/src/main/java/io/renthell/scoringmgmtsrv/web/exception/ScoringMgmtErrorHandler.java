@@ -70,15 +70,4 @@ public class ScoringMgmtErrorHandler extends ResponseEntityExceptionHandler {
         responseBuilder.headers(headers);
         return responseBuilder.body(errors);
     }
-
-    @ExceptionHandler(EventProcesingException.class)
-    public ResponseEntity<Object> handleEventProcesingException(HttpServletRequest req, EventProcesingException ex) {
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("message", ex.getThrowable().getLocalizedMessage());
-        map.put("reason", "Event can not be procesed");
-        map.put("url", req.getRequestURI());
-
-        ResponseEntity.BodyBuilder responseBudiler = ResponseEntity.status(HttpStatus.BAD_REQUEST);
-        return responseBudiler.body(map);
-    }
 }

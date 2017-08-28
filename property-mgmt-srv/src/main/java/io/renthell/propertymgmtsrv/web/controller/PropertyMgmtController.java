@@ -33,7 +33,7 @@ public class PropertyMgmtController {
         log.info("Creating Property : {}", property);
 
         try {
-            eventStoreService.addPropertyTransaction(property);
+            eventStoreService.produceAddPropertyTransactionEvent(property);
             log.info("Property transaction added: OK");
             return new ResponseEntity<String>(HttpStatus.OK);
 

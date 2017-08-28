@@ -31,6 +31,9 @@ public class PropertyServiceDefault implements PropertyService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private EventStoreService eventStoreService;
+
     @Override
     public PropertyDto save(PropertyDto propertyDto) throws ParseException {
         log.info("Saving property");
@@ -68,7 +71,12 @@ public class PropertyServiceDefault implements PropertyService {
             log.info("Property updated: " + propertySaved.toString());
         }
 
-        return buildPropertyDto(propertySaved);
+        PropertyDto result = buildPropertyDto(propertySaved);
+
+        // produce confirm event
+        eventStoreService.produceConfirmPropertyTransactionEvent(result.getIdentifier());
+
+        return result;
     }
 
     @Override

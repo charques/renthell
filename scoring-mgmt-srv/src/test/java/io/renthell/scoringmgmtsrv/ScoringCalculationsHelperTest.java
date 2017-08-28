@@ -6,6 +6,7 @@ import io.renthell.scoringmgmtsrv.persistence.model.ScoringData;
 import io.renthell.scoringmgmtsrv.service.ScoringCalculationsHelper;
 import io.renthell.scoringmgmtsrv.web.dto.ScoringStatsDto;
 import org.assertj.core.data.Offset;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

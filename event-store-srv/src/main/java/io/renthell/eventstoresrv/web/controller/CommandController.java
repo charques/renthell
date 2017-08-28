@@ -3,9 +3,11 @@ package io.renthell.eventstoresrv.web.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.renthell.eventstoresrv.service.exception.EventRetrievingException;
 import io.renthell.eventstoresrv.web.command.AddPropertyTransactionCmd;
+import io.renthell.eventstoresrv.web.command.ConfirmPropertyTransactionCmd;
 import io.renthell.eventstoresrv.web.events.BaseEvent;
 import io.renthell.eventstoresrv.web.events.PropertyTransactionAddEvent;
 import io.renthell.eventstoresrv.service.EventStoreService;
+import io.renthell.eventstoresrv.web.events.PropertyTransactionConfirmEvent;
 import io.renthell.eventstoresrv.web.exception.BadRequestException;
 import io.renthell.eventstoresrv.web.exception.EventNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -38,21 +40,24 @@ public class CommandController {
     public @ResponseBody
     ResponseEntity<?> addPropertyTransaction(final @Valid @RequestBody AddPropertyTransactionCmd addPropertyCommand,
                                              UriComponentsBuilder ucBuilder) {
-        log.info("Adding property transaction {}", addPropertyCommand);
+        log.info("Adding property transaction {}", addPropertyCommand.toString());
         PropertyTransactionAddEvent event = modelMapper.map(addPropertyCommand, PropertyTransactionAddEvent.class);
         String correlationId = UUID.randomUUID().toString();
         event.setCorrelationId(correlationId);
 
-        try {
-            String eventId = eventStoreService.saveAndPublish(event);
-            HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(ucBuilder.path("/command/get-event/{id}").buildAndExpand(eventId).toUri());
-            return new ResponseEntity<String>(headers, HttpStatus.CREATED);
+        return produceEvent(event, ucBuilder);
+    }
 
-        } catch (JsonProcessingException e) {
-            log.error("Bad request exception: {}", e.getMessage());
-            throw new BadRequestException(e);
-        }
+    @RequestMapping(value = "/confirm-property-transaction", method = RequestMethod.POST)
+    public @ResponseBody
+    ResponseEntity<?> confirmPropertyTransaction(final @Valid @RequestBody ConfirmPropertyTransactionCmd confirmPropertyCommand,
+                                             UriComponentsBuilder ucBuilder) {
+        log.info("Confirming property transaction {}", confirmPropertyCommand.toString());
+        PropertyTransactionConfirmEvent event = modelMapper.map(confirmPropertyCommand, PropertyTransactionConfirmEvent.class);
+        String correlationId = UUID.randomUUID().toString();
+        event.setCorrelationId(correlationId);
+
+        return produceEvent(event, ucBuilder);
     }
 
     @RequestMapping(value = "/get-event/{uuid}", method = RequestMethod.GET)
@@ -71,6 +76,19 @@ public class CommandController {
 
         log.error("Event with uuid {} not found.", uuid);
         throw new EventNotFoundException(uuid);
+    }
+
+    private ResponseEntity<?> produceEvent(BaseEvent event, UriComponentsBuilder ucBuilder) {
+        try {
+            String eventId = eventStoreService.saveAndPublish(event);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setLocation(ucBuilder.path("/command/get-event/{id}").buildAndExpand(eventId).toUri());
+            return new ResponseEntity<String>(headers, HttpStatus.CREATED);
+
+        } catch (JsonProcessingException e) {
+            log.error("Bad request exception: {}", e.getMessage());
+            throw new BadRequestException(e);
+        }
     }
 
 }

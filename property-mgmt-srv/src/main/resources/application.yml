@@ -10,6 +10,7 @@ endpoints:
   event-store:
     uri-base: http://event-store-srv:8090
     add-property-command: /commands/add-property-transaction
+    confirm-property-command: /commands/confirm-property-transaction
 
 kafka:
   bootstrap-servers: kafka:9092

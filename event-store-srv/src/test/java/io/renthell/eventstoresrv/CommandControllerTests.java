@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.renthell.eventstoresrv.web.command.AddPropertyTransactionCmd;
 import io.renthell.eventstoresrv.persistence.model.RawEvent;
 import io.renthell.eventstoresrv.config.ConfigServerWithFongoConfiguration;
+import io.renthell.eventstoresrv.web.command.ConfirmPropertyTransactionCmd;
 import io.renthell.eventstoresrv.web.events.BaseEvent;
 import io.renthell.eventstoresrv.web.events.PropertyTransactionAddEvent;
 import org.junit.Assert;
@@ -132,5 +133,22 @@ public class CommandControllerTests {
         mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:8980/commands/add-property-transaction")
                 .contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
+
+        // TODO: verificar
+    }
+
+    @Test
+    public void testConfirmPropertyTransaction() throws Exception {
+
+        ConfirmPropertyTransactionCmd confirmPropertyCmd = new ConfirmPropertyTransactionCmd();
+        confirmPropertyCmd.setIdentifier("142550444");
+
+        String body = jsonMapper.writeValueAsString(confirmPropertyCmd);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:8980/commands/confirm-property-transaction")
+                .contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(MockMvcResultMatchers.status().isCreated());
+
+        // TODO: verificar
     }
 }

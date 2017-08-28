@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import io.renthell.scoringmgmtsrv.web.dto.PropertyDto;
 import io.renthell.scoringmgmtsrv.service.ScoringService;
 import io.renthell.scoringmgmtsrv.web.dto.ScoringStatsDto;
-import io.renthell.scoringmgmtsrv.web.exception.EventProcesingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -46,27 +45,29 @@ public class EventConsumer {
   public void consumeEvent(String payload) {
     log.info("Event consumed. Event payload='{}'", payload);
 
-    PropertyDto propertyDto = null;
     try {
       JsonNode payloadJson = objectMapper.readTree(payload);
-      TextNode eventPayloadString = (TextNode) payloadJson.get("payload");
-      JsonNode eventPayloadJson = objectMapper.readTree(eventPayloadString.textValue());
 
       if(PROPERTY_TRANSACTION_ADD_EVENT.equals(payloadJson.get("type").textValue())) {
-        propertyDto = buildPropertyDto(eventPayloadJson);
+        PropertyDto propertyDto = buildPropertyDto(payload);
         ScoringStatsDto scoringStatsDto = scoringService.addPropertyToScoring(propertyDto);
-        log.info("Property transaction added event processed. Scoring updated: {}", scoringStatsDto.toString());
+
+        log.info("Scoring updated: {}", scoringStatsDto.toString());
       }
 
-    } catch (IOException | ParseException e) {
+      latch.countDown();
+
+    } catch (IOException | ParseException | NumberFormatException e) {
       log.error("Error parsing event payload {}", e.getLocalizedMessage());
-      throw new EventProcesingException(e);
     }
 
-    latch.countDown();
   }
 
-  private PropertyDto buildPropertyDto(JsonNode eventPayloadJson) throws ParseException {
+  private PropertyDto buildPropertyDto(String payload) throws IOException, ParseException, NumberFormatException {
+    JsonNode payloadJson = objectMapper.readTree(payload);
+    TextNode eventPayloadString = (TextNode) payloadJson.get("payload");
+    JsonNode eventPayloadJson = objectMapper.readTree(eventPayloadString.textValue());
+
     String transactionId = eventPayloadJson.get("transactionId").textValue();
     String publishDateString = eventPayloadJson.get("publishDate").textValue();
     Date date = new Date();
@@ -88,5 +89,7 @@ public class EventConsumer {
     propertyDto.setMts2(mts2);
 
     return propertyDto;
+
   }
+
 }

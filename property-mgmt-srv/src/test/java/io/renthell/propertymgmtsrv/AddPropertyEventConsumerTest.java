@@ -1,9 +1,12 @@
 package io.renthell.propertymgmtsrv;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withCreatedEntity;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.renthell.propertymgmtsrv.config.ConfigServerWithFongoConfiguration;
+import io.renthell.propertymgmtsrv.configuration.EventStoreConfiguration;
 import io.renthell.propertymgmtsrv.web.dto.PropertyDto;
 import io.renthell.propertymgmtsrv.web.eventhandler.EventConsumer;
 import io.renthell.propertymgmtsrv.producer.Sender;
@@ -22,12 +25,16 @@ import org.springframework.kafka.test.utils.ContainerTestUtils;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.web.client.ExpectedCount;
+import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -61,6 +68,12 @@ public class AddPropertyEventConsumerTest {
   @ClassRule
   public static KafkaEmbedded embeddedKafka = new KafkaEmbedded(1, true, EVENTS_TOPIC);
 
+  @Autowired
+  private EventStoreConfiguration eventStoreConfiguration;
+
+  @Autowired
+  private RestTemplate restTemplate;
+
   @Before
   public void setUp() throws Exception {
     // wait until the partitions are assigned
@@ -74,6 +87,11 @@ public class AddPropertyEventConsumerTest {
 
   @Test
   public void testConsumeAddPropertyEvent_Add() throws Exception {
+    // mock event store rest api
+    MockRestServiceServer mockServer = MockRestServiceServer.bindTo(restTemplate).build();
+    final String EVENT_STORE_URI = eventStoreConfiguration.confirmPropertyCommandUri();
+    mockServer.expect(requestTo(EVENT_STORE_URI)).andRespond(withCreatedEntity(new URI("/commands/get-raw-event/0")));
+
     // add property event
     String addPropertyEventString = "{\"id\":\"7e32b1a0-7b56-4690-8456-69154092ea02\",\"creationDate\":\"Tue Aug 22 06:18:22 GMT 2017\",\"correlationId\":\"7360ee14-7cdb-458b-ac23-27084bfcb147\",\"payload\":\"{\\\"correlationId\\\":\\\"7360ee14-7cdb-458b-ac23-27084bfcb147\\\",\\\"identifier\\\":\\\"142550444\\\",\\\"publishDate\\\":null,\\\"region\\\":\\\"Madrid\\\",\\\"city\\\":\\\"Madrid Capital\\\",\\\"district\\\":\\\"Retiro\\\",\\\"neighbourhood\\\":\\\"Jerónimos\\\",\\\"street\\\":\\\"Alfonso XII\\\",\\\"postalCode\\\":\\\"28014\\\",\\\"property\\\":\\\"Flat\\\",\\\"propertySub\\\":\\\"Flat\\\",\\\"propertyState\\\":\\\"VeryGood\\\",\\\"propertyType\\\":\\\"Vivienda\\\",\\\"mts2\\\":\\\"140\\\",\\\"rooms\\\":\\\"4\\\",\\\"bathrooms\\\":\\\"3\\\",\\\"heating\\\":\\\"0\\\",\\\"energeticCert\\\":\\\"0\\\",\\\"features\\\":\\\"aire-acondicionado|||calefaccion|||garaje-privado|||ascensor\\\",\\\"lat\\\":\\\"40.4138\\\",\\\"lng\\\":\\\"-3.68511\\\",\\\"feed\\\":\\\"https://www.fotocasa.es/vivienda/madrid-capital/aire-acondicionado-calefaccion-parking-ascensor-alfonso-xii-142550444?RowGrid=11&tti=3&opi=300\\\",\\\"transactionId\\\":\\\"3\\\",\\\"transaction\\\":\\\"alquiler\\\",\\\"price\\\":\\\"1890\\\",\\\"priceMin\\\":\\\"\\\",\\\"priceMax\\\":\\\"\\\",\\\"priceRange\\\":\\\"1501-2000\\\"}\",\"type\":\"io.renthell.eventstoresrv.web.events.PropertyTransactionAddEvent\"}";
     sender.send(EVENTS_TOPIC, addPropertyEventString);
@@ -85,6 +103,11 @@ public class AddPropertyEventConsumerTest {
   @Test
   public void testConsumeAddPropertyEvent_Update() throws Exception {
     eventConsumer.setLatch(2);
+
+    // mock event store rest api
+    MockRestServiceServer mockServer = MockRestServiceServer.bindTo(restTemplate).build();
+    final String EVENT_STORE_URI = eventStoreConfiguration.confirmPropertyCommandUri();
+    mockServer.expect(ExpectedCount.times(2), requestTo(EVENT_STORE_URI)).andRespond(withCreatedEntity(new URI("/commands/get-raw-event/0")));
 
     // add property event - alquiler
     String addPropertyEventString1 = "{\"id\":\"7e32b1a0-7b56-4690-8456-69154092ea02\",\"creationDate\":\"Tue Aug 22 06:18:22 GMT 2017\",\"correlationId\":\"7360ee14-7cdb-458b-ac23-27084bfcb147\",\"payload\":\"{\\\"correlationId\\\":\\\"7360ee14-7cdb-458b-ac23-27084bfcb147\\\",\\\"identifier\\\":\\\"142550444\\\",\\\"publishDate\\\":null,\\\"region\\\":\\\"Madrid\\\",\\\"city\\\":\\\"Madrid Capital\\\",\\\"district\\\":\\\"Retiro\\\",\\\"neighbourhood\\\":\\\"Jerónimos\\\",\\\"street\\\":\\\"Alfonso XII\\\",\\\"postalCode\\\":\\\"28014\\\",\\\"property\\\":\\\"Flat\\\",\\\"propertySub\\\":\\\"Flat\\\",\\\"propertyState\\\":\\\"VeryGood\\\",\\\"propertyType\\\":\\\"Vivienda\\\",\\\"mts2\\\":\\\"140\\\",\\\"rooms\\\":\\\"4\\\",\\\"bathrooms\\\":\\\"3\\\",\\\"heating\\\":\\\"0\\\",\\\"energeticCert\\\":\\\"0\\\",\\\"features\\\":\\\"aire-acondicionado|||calefaccion|||garaje-privado|||ascensor\\\",\\\"lat\\\":\\\"40.4138\\\",\\\"lng\\\":\\\"-3.68511\\\",\\\"feed\\\":\\\"https://www.fotocasa.es/vivienda/madrid-capital/aire-acondicionado-calefaccion-parking-ascensor-alfonso-xii-142550444?RowGrid=11&tti=3&opi=300\\\",\\\"transactionId\\\":\\\"3\\\",\\\"transaction\\\":\\\"alquiler\\\",\\\"price\\\":\\\"1891\\\",\\\"priceMin\\\":\\\"\\\",\\\"priceMax\\\":\\\"\\\",\\\"priceRange\\\":\\\"1502-2000\\\"}\",\"type\":\"io.renthell.eventstoresrv.web.events.PropertyTransactionAddEvent\"}";

@@ -12,7 +12,14 @@ public class EventStoreConfiguration {
     @Value("${endpoints.event-store.add-property-command}")
     private String ADD_PROPERTY_COMMAND_PATH;
 
+    @Value("${endpoints.event-store.confirm-property-command}")
+    private String CONFIRM_PROPERTY_COMMAND_PATH;
+
     public String addPropertyCommandUri() {
         return EVENT_STORE_URI_BASE + ADD_PROPERTY_COMMAND_PATH;
+    }
+
+    public String confirmPropertyCommandUri() {
+        return EVENT_STORE_URI_BASE + CONFIRM_PROPERTY_COMMAND_PATH;
     }
 }

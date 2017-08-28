@@ -71,6 +71,8 @@ public class AddPropertyEventConsumerTest {
     embeddedKafka.restart(0);
   }
 
+
+
   @Test
   public void testConsumeAddPropertyEvent_Add() throws Exception {
     String addPropertyEventString = "{\"id\":\"7e32b1a0-7b56-4690-8456-69154092ea02\",\"creationDate\":\"Tue Aug 22 06:18:22 GMT 2017\",\"correlationId\":\"7360ee14-7cdb-458b-ac23-27084bfcb147\",\"payload\":\"{\\\"correlationId\\\":\\\"7360ee14-7cdb-458b-ac23-27084bfcb147\\\",\\\"identifier\\\":\\\"142550444\\\",\\\"publishDate\\\":\\\"01/07/2017 10:00:00\\\",\\\"region\\\":\\\"Madrid\\\",\\\"city\\\":\\\"Madrid Capital\\\",\\\"district\\\":\\\"Retiro\\\",\\\"neighbourhood\\\":\\\"Jerónimos\\\",\\\"street\\\":\\\"Alfonso XII\\\",\\\"postalCode\\\":\\\"28014\\\",\\\"property\\\":\\\"Flat\\\",\\\"propertySub\\\":\\\"Flat\\\",\\\"propertyState\\\":\\\"VeryGood\\\",\\\"propertyType\\\":\\\"Vivienda\\\",\\\"mts2\\\":\\\"140\\\",\\\"rooms\\\":\\\"3\\\",\\\"bathrooms\\\":\\\"3\\\",\\\"heating\\\":\\\"0\\\",\\\"energeticCert\\\":\\\"0\\\",\\\"features\\\":\\\"aire-acondicionado|||calefaccion|||garaje-privado|||ascensor\\\",\\\"lat\\\":\\\"40.4138\\\",\\\"lng\\\":\\\"-3.68511\\\",\\\"feed\\\":\\\"https://www.fotocasa.es/vivienda/madrid-capital/aire-acondicionado-calefaccion-parking-ascensor-alfonso-xii-142550444?RowGrid=11&tti=3&opi=300\\\",\\\"transactionId\\\":\\\"3\\\",\\\"transaction\\\":\\\"alquiler\\\",\\\"price\\\":\\\"1890\\\",\\\"priceMin\\\":\\\"\\\",\\\"priceMax\\\":\\\"\\\",\\\"priceRange\\\":\\\"1501-2000\\\"}\",\"type\":\"io.renthell.eventstoresrv.web.events.PropertyTransactionAddEvent\"}";
@@ -93,6 +95,15 @@ public class AddPropertyEventConsumerTest {
             new TypeReference<List<ScoringStatsDto>>(){});
 
     assertThat(scoringStatsDtoList.size()).isEqualTo(1);
+  }
+
+  @Test
+  public void testConsumeAddPropertyEvent_Error() throws Exception {
+    String addPropertyEventString = "{\"id\":\"981633b1-8d85-49b7-a072-6e2bfd5d615f\",\"creationDate\":\"28/08/2017 07:09:07\",\"correlationId\":\"de174fdb-2713-49e5-84aa-d27316edc64f\",\"payload\":\"{\\\"id\\\":null,\\\"correlationId\\\":\\\"de174fdb-2713-49e5-84aa-d27316edc64f\\\",\\\"identifier\\\":\\\"142463151\\\",\\\"publishDate\\\":\\\"10/05/2017 23:48:05\\\",\\\"region\\\":\\\"Madrid\\\",\\\"regionCode\\\":\\\"28\\\",\\\"city\\\":\\\"Pozuelo de Alarcón\\\",\\\"district\\\":\\\"Somosaguas\\\",\\\"neighbourhood\\\":\\\"\\\",\\\"street\\\":\\\"ARROYO\\\",\\\"postalCode\\\":\\\"28223\\\",\\\"property\\\":\\\"Flat\\\",\\\"propertySub\\\":\\\"House\\\",\\\"propertyState\\\":\\\"Good\\\",\\\"propertyType\\\":\\\"Vivienda\\\",\\\"mts2\\\":\\\"\\\",\\\"rooms\\\":\\\"5\\\",\\\"bathrooms\\\":\\\"6\\\",\\\"heating\\\":\\\"0\\\",\\\"energeticCert\\\":\\\"0\\\",\\\"features\\\":\\\"piscina\\\",\\\"lat\\\":\\\"40.422638417726176\\\",\\\"lng\\\":\\\"-3.791138022704397\\\",\\\"feed\\\":\\\"https://www.fotocasa.es/vivienda/pozuelo-de-alarcon/piscina-somosaguas-142463151?RowGrid=28&tti=3&opi=300\\\",\\\"transactionId\\\":\\\"3\\\",\\\"transaction\\\":\\\"alquiler\\\",\\\"price\\\":\\\"6000\\\",\\\"priceMin\\\":\\\"\\\",\\\"priceMax\\\":\\\"\\\",\\\"priceRange\\\":\\\"5001-10000\\\"}\",\"type\":\"io.renthell.eventstoresrv.web.events.PropertyTransactionAddEvent\"}";
+    sender.send(EVENTS_TOPIC, addPropertyEventString);
+
+    eventConsumer.getLatch().await(10000, TimeUnit.MILLISECONDS);
+    assertThat(eventConsumer.getLatch().getCount()).isEqualTo(1);
   }
 
   @Test

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.TextNode;
 import io.renthell.propertymgmtsrv.web.dto.PropertyDto;
 import io.renthell.propertymgmtsrv.web.dto.TransactionDto;
-import io.renthell.propertymgmtsrv.web.exception.EventProcesingException;
 import io.renthell.propertymgmtsrv.service.PropertyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,27 +47,27 @@ public class EventConsumer {
   public void consumeEvent(String payload) {
     log.info("Event consumed. Event payload='{}'", payload);
 
-    PropertyDto propertyDto = null;
     try {
       JsonNode payloadJson = objectMapper.readTree(payload);
-      TextNode eventPayloadString = (TextNode) payloadJson.get("payload");
-      JsonNode eventPayloadJson = objectMapper.readTree(eventPayloadString.textValue());
 
       if(PROPERTY_TRANSACTION_ADD_EVENT.equals(payloadJson.get("type").textValue())) {
-        propertyDto = buildProperty(eventPayloadJson);
+        PropertyDto propertyDto = buildPropertyDto(payload);
         PropertyDto propertySaved = propertyService.save(propertyDto);
         log.info("Property transaction added event processed. Property saved: {}", propertySaved.toString());
       }
 
+      latch.countDown();
+
     } catch (IOException | ParseException e) {
       log.error("Error parsing event payload {}", e.getLocalizedMessage());
-      throw new EventProcesingException(e);
     }
 
-    latch.countDown();
   }
 
-  private PropertyDto buildProperty(JsonNode eventPayloadJson) throws ParseException {
+  private PropertyDto buildPropertyDto(String payload) throws ParseException, IOException {
+    JsonNode payloadJson = objectMapper.readTree(payload);
+    TextNode eventPayloadString = (TextNode) payloadJson.get("payload");
+    JsonNode eventPayloadJson = objectMapper.readTree(eventPayloadString.textValue());
 
     final PropertyDto propertyDto = new PropertyDto();
     propertyDto.setIdentifier(eventPayloadJson.get("identifier").textValue());
