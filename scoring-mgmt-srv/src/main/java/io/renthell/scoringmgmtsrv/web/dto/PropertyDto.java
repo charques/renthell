@@ -16,15 +16,11 @@ import java.util.List;
 public class PropertyDto {
 
     private String transactionId;
-
     private Date date;
-
-    private String region;
     private String postalCode;
-    private String district;
-    private String city;
-    private Integer rooms;
 
+    private Integer mts2;
+    private Integer rooms;
     private Float price;
 
 }

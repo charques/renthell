@@ -27,16 +27,8 @@ public class Scoring {
     private Integer month;
     private Integer year;
     private String postalCode;
-    private Integer rooms;
 
-    //private Float medianPrice;
-    //private Float averagePrice;
-    //private Float averageMts2Price;
-
-    //private String range80;
-    //private String range60;
-
-    private List<Float> priceList;
+    private List<ScoringData> scoringDataList;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Date createdDate;
@@ -44,11 +36,11 @@ public class Scoring {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Date modifiedDate;
 
-    public Scoring addPrice(Float price) {
-        if(this.priceList == null) {
-            this.priceList = new ArrayList<>();
+    public Scoring addScoringDataItem(ScoringData data) {
+        if(this.scoringDataList == null) {
+            this.scoringDataList = new ArrayList<>();
         }
-        this.priceList.add(price);
+        this.scoringDataList.add(data);
         return this;
     }
 

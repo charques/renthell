@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface ScoringRepo {
 
-    List<Scoring> find(String transactionId, Integer month, Integer year, String postalCode, Integer rooms);
+    List<Scoring> find(String transactionId, Integer month, Integer year, String postalCode);
 
     List<Scoring> findAll();
 

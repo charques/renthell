@@ -12,6 +12,6 @@ public interface ScoringService {
 
     public List<ScoringStatsDto> findAll();
 
-    public List<ScoringStatsDto> find(String transactionId, Integer year, Integer month, String postalCode, Integer rooms);
+    public List<ScoringStatsDto> find(Boolean aggregate, String transactionId, Integer year, Integer month, String postalCode);
 
 }

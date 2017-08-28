@@ -74,22 +74,18 @@ public class PropertyAddedEventConsumer {
       DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
       date = format.parse(publishDateString);
     }
-    String region = eventPayloadJson.get("region").textValue().toLowerCase();
     String postalCode = eventPayloadJson.get("postalCode").textValue();
-    String district = eventPayloadJson.get("district").textValue().toLowerCase();
-    String city = eventPayloadJson.get("city").textValue().toLowerCase();
     int rooms = Integer.parseInt(eventPayloadJson.get("rooms").textValue());
     Float price = Float.parseFloat(eventPayloadJson.get("price").textValue());
+    int mts2 = Integer.parseInt(eventPayloadJson.get("mts2").textValue());
 
     PropertyDto propertyDto = new PropertyDto();
     propertyDto.setTransactionId(transactionId);
     propertyDto.setDate(date);
-    propertyDto.setRegion(region);
     propertyDto.setPostalCode(postalCode);
-    propertyDto.setDistrict(district);
-    propertyDto.setCity(city);
     propertyDto.setRooms(rooms);
     propertyDto.setPrice(price);
+    propertyDto.setMts2(mts2);
 
     return propertyDto;
   }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.renthell.scoringmgmtsrv.config.ConfigServerWithFongoConfiguration;
 import io.renthell.scoringmgmtsrv.persistence.model.Scoring;
+import io.renthell.scoringmgmtsrv.persistence.model.ScoringData;
 import io.renthell.scoringmgmtsrv.web.dto.ScoringStatsDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,31 +46,9 @@ public class ScoringMgmtControllerTests {
 
     @Test
     public void testGetAllScoringStatsSuccess() throws Exception {
-        Scoring scoringFongo1 = new Scoring();
-        scoringFongo1.setTransactionId("3");
-        scoringFongo1.setPostalCode("28041");
-        scoringFongo1.setMonth(7);
-        scoringFongo1.setYear(2018);
-        scoringFongo1.setRooms(3);
-        scoringFongo1.addPrice(850F);
-        scoringFongo1.addPrice(900F);
-        scoringFongo1.addPrice(1000F);
-        scoringFongo1.addPrice(1200F);
-        scoringFongo1.addPrice(1500F);
-
-        Scoring scoringFongo2 = new Scoring();
-        scoringFongo2.setTransactionId("3");
-        scoringFongo2.setPostalCode("28041");
-        scoringFongo2.setMonth(7);
-        scoringFongo2.setYear(2018);
-        scoringFongo2.setRooms(3);
-        scoringFongo2.addPrice(850F);
-        scoringFongo2.addPrice(900F);
-        scoringFongo2.addPrice(1500F);
-
         mongoTemplate.createCollection("scoring");
-        mongoTemplate.insert(scoringFongo1);
-        mongoTemplate.insert(scoringFongo2);
+        mongoTemplate.insert(getScoring1());
+        mongoTemplate.insert(getScoring2());
 
         ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:8094/api/scoring-stats"));
         resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
@@ -82,27 +61,56 @@ public class ScoringMgmtControllerTests {
 
     @Test
     public void testGetOneScoringStatsSuccess() throws Exception {
-        Scoring scoringFongo1 = new Scoring();
-        scoringFongo1.setTransactionId("3");
-        scoringFongo1.setPostalCode("28041");
-        scoringFongo1.setMonth(7);
-        scoringFongo1.setYear(2018);
-        scoringFongo1.setRooms(3);
-        scoringFongo1.addPrice(850F);
-        scoringFongo1.addPrice(900F);
-        scoringFongo1.addPrice(1000F);
-        scoringFongo1.addPrice(1200F);
-        scoringFongo1.addPrice(1500F);
-
         mongoTemplate.createCollection("scoring");
-        mongoTemplate.insert(scoringFongo1);
+        mongoTemplate.insert(getScoring1());
 
         String url = "http://localhost:8094/api/scoring-stats?" +
                 "transactionId=3" + "&" +
                 "postalCode=28041" + "&" +
                 "year=2018" + "&" +
-                "month=7" + "&" +
-                "rooms=3";
+                "month=7";
+
+        ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get(url));
+        resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
+        MvcResult result = resultAction.andReturn();
+        List<ScoringStatsDto> scoringStatsDtoList = jsonMapper.readValue(result.getResponse().getContentAsString(),
+                new TypeReference<List<ScoringStatsDto>>(){});
+
+        assertThat(scoringStatsDtoList.size()).isEqualTo(1);
+    }
+
+    @Test
+    public void testGetMultipleScoringStatsSuccess() throws Exception {
+        mongoTemplate.createCollection("scoring");
+        mongoTemplate.insert(getScoring1());
+        mongoTemplate.insert(getScoring2());
+
+        String url = "http://localhost:8094/api/scoring-stats?" +
+                "transactionId=3" + "&" +
+                "postalCode=28041" + "&" +
+                "year=2018" + "&" +
+                "month=7";
+
+        ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get(url));
+        resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
+        MvcResult result = resultAction.andReturn();
+        List<ScoringStatsDto> scoringStatsDtoList = jsonMapper.readValue(result.getResponse().getContentAsString(),
+                new TypeReference<List<ScoringStatsDto>>(){});
+
+        assertThat(scoringStatsDtoList.size()).isEqualTo(2);
+    }
+
+    @Test
+    public void testGetAggregatedScoringStatsSuccess() throws Exception {
+        mongoTemplate.createCollection("scoring");
+        mongoTemplate.insert(getScoring1());
+        mongoTemplate.insert(getScoring2());
+
+        String url = "http://localhost:8094/api/scoring-stats?" +
+                "aggregate=true" + "&" +
+                "transactionId=3" + "&" +
+                "postalCode=28041" + "&" +
+                "year=2018";
 
         ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get(url));
         resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
@@ -120,8 +128,7 @@ public class ScoringMgmtControllerTests {
                 "transactionId=3" + "&" +
                 "postalCode=28041" + "&" +
                 "year=2018" + "&" +
-                "month=7" + "&" +
-                "rooms=3";
+                "month=7";
 
         ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get(url));
         resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
@@ -130,5 +137,37 @@ public class ScoringMgmtControllerTests {
                 new TypeReference<List<ScoringStatsDto>>(){});
 
         assertThat(scoringStatsDtoList.size()).isEqualTo(0);
+    }
+
+    private Scoring getScoring1() {
+        Scoring scoring = new Scoring();
+        scoring.setTransactionId("3");
+        scoring.setPostalCode("28041");
+        scoring.setMonth(7);
+        scoring.setYear(2018);
+        scoring.addScoringDataItem(new ScoringData(800F, 140, 4));
+        scoring.addScoringDataItem(new ScoringData(850F, 140, 4));
+        scoring.addScoringDataItem(new ScoringData(1000F, 140, 4));
+        scoring.addScoringDataItem(new ScoringData(1001F, 140, 4));
+        scoring.addScoringDataItem(new ScoringData(1200F, 140, 4));
+        scoring.addScoringDataItem(new ScoringData(1500F, 140, 4));
+        return scoring;
+    }
+
+    private Scoring getScoring2() {
+        Scoring scoring = new Scoring();
+        scoring.setTransactionId("3");
+        scoring.setPostalCode("28041");
+        scoring.setMonth(7);
+        scoring.setYear(2018);
+        scoring.addScoringDataItem(new ScoringData(755F, 120, 3));
+        scoring.addScoringDataItem(new ScoringData(850F, 120, 3));
+        scoring.addScoringDataItem(new ScoringData(950F, 120, 3));
+        scoring.addScoringDataItem(new ScoringData(1015F, 120, 3));
+        scoring.addScoringDataItem(new ScoringData(1130F, 120, 3));
+        scoring.addScoringDataItem(new ScoringData(1130F, 120, 3));
+        scoring.addScoringDataItem(new ScoringData(1130F, 120, 3));
+        scoring.addScoringDataItem(new ScoringData(1700F, 120, 3));
+        return scoring;
     }
 }

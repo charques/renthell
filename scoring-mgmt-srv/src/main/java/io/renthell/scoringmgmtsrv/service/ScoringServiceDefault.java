@@ -1,5 +1,6 @@
 package io.renthell.scoringmgmtsrv.service;
 
+import io.renthell.scoringmgmtsrv.persistence.model.ScoringData;
 import io.renthell.scoringmgmtsrv.web.dto.PropertyDto;
 import io.renthell.scoringmgmtsrv.persistence.model.Scoring;
 import io.renthell.scoringmgmtsrv.web.dto.ScoringStatsDto;
@@ -8,9 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by cfhernandez on 6/8/17.
@@ -31,7 +30,7 @@ public class ScoringServiceDefault implements ScoringService {
         int year = cal.get(Calendar.YEAR);
 
         List<Scoring> scoringList = scoringRepo.find(propertyDto.getTransactionId(),
-                month, year, propertyDto.getPostalCode(), propertyDto.getRooms());
+                month, year, propertyDto.getPostalCode());
 
         Scoring scoringRetrieved = null;
         if(scoringList.size() > 0) {
@@ -45,15 +44,18 @@ public class ScoringServiceDefault implements ScoringService {
             scoring.setMonth(month);
             scoring.setYear(year);
             scoring.setPostalCode(propertyDto.getPostalCode());
-            scoring.setRooms(propertyDto.getRooms());
-            scoring.addPrice(propertyDto.getPrice());
+
+            ScoringData scoringData = new ScoringData(propertyDto.getPrice(), propertyDto.getMts2(), propertyDto.getRooms());
+            scoring.addScoringDataItem(scoringData);
 
             // save new item
             scoringSaved = scoringRepo.save(scoring);
             log.info("Saved: " + scoringSaved.toString());
 
         } else {
-            scoringRetrieved.addPrice(propertyDto.getPrice());
+            ScoringData scoringData = new ScoringData(propertyDto.getPrice(), propertyDto.getMts2(), propertyDto.getRooms());
+            scoringRetrieved.addScoringDataItem(scoringData);
+
             // save updated item
             scoringSaved = scoringRepo.save(scoringRetrieved);
             log.info("Updated: " + scoringSaved.toString());
@@ -74,17 +76,10 @@ public class ScoringServiceDefault implements ScoringService {
     }
 
     @Override
-    public List<ScoringStatsDto> find(String transactionId, Integer year, Integer month, String postalCode, Integer rooms) {
-        List<Scoring> scoringList = scoringRepo.find(transactionId, month, year, postalCode, rooms);
+    public List<ScoringStatsDto> find(Boolean aggregate, String transactionId, Integer year, Integer month, String postalCode) {
+        List<Scoring> scoringList = scoringRepo.find(transactionId, month, year, postalCode);
 
-        // TODO agregate!!
-
-        List<ScoringStatsDto> statsList = new ArrayList<>();
-        for (Scoring aScoringList : scoringList) {
-            ScoringStatsDto stats = new ScoringStatsDto(aScoringList);
-            statsList.add(stats);
-        }
-        return statsList;
+        return ScoringCalculationsHelper.generateScoringStatsList(aggregate, transactionId, year, month, postalCode, scoringList);
     }
 
 }

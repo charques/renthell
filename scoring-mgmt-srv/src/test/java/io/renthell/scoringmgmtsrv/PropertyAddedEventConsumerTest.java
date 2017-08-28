@@ -87,8 +87,7 @@ public class PropertyAddedEventConsumerTest {
             "transactionId=3" + "&" +
             "postalCode=28014" + "&" +
             "year=2017" + "&" +
-            "month=7" + "&" +
-            "rooms=3";
+            "month=7";
 
     ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get(url));
     resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
@@ -119,8 +118,7 @@ public class PropertyAddedEventConsumerTest {
             "transactionId=3" + "&" +
             "postalCode=28014" + "&" +
             "year=2017" + "&" +
-            "month=7" + "&" +
-            "rooms=4";
+            "month=7";
 
     ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get(url));
     resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
@@ -129,6 +127,6 @@ public class PropertyAddedEventConsumerTest {
             new TypeReference<List<ScoringStatsDto>>(){});
 
     assertThat(scoringStatsDtoList.size()).isEqualTo(1);
-    assertThat(scoringStatsDtoList.get(0).getScoring().getPriceList().size()).isEqualTo(2);
+    assertThat(scoringStatsDtoList.get(0).getScoring().getScoringDataList().size()).isEqualTo(2);
   }
 }
