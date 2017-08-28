@@ -10,7 +10,7 @@ import java.util.Date;
  */
 @Getter
 @Setter
-public class PropertyTransactionAddedEvent extends BaseEvent {
+public class PropertyTransactionAddEvent extends BaseEvent {
 
     private String identifier;
     private Date publishDate;
@@ -47,11 +47,11 @@ public class PropertyTransactionAddedEvent extends BaseEvent {
     private String priceMax;
     private String priceRange;
 
-    public PropertyTransactionAddedEvent() {
+    public PropertyTransactionAddEvent() {
         super();
     }
 
-    public PropertyTransactionAddedEvent(final String correlationId) {
+    public PropertyTransactionAddEvent(final String correlationId) {
         super(correlationId);
     }
 

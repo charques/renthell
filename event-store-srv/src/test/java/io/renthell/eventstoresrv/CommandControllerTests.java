@@ -5,7 +5,7 @@ import io.renthell.eventstoresrv.web.command.AddPropertyTransactionCmd;
 import io.renthell.eventstoresrv.persistence.model.RawEvent;
 import io.renthell.eventstoresrv.config.ConfigServerWithFongoConfiguration;
 import io.renthell.eventstoresrv.web.events.BaseEvent;
-import io.renthell.eventstoresrv.web.events.PropertyTransactionAddedEvent;
+import io.renthell.eventstoresrv.web.events.PropertyTransactionAddEvent;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -74,7 +74,7 @@ public class CommandControllerTests {
         String correlationId = UUID.randomUUID().toString();
         //01/07/2017 10:00:00
         String payload = "{\"correlationId\":\"7360ee14-7cdb-458b-ac23-27084bfcb147\",\"identifier\":\"142550444\",\"publishDate\":\"01/07/2017 10:00:00\",\"region\":\"Madrid\",\"regionCode\":\"28\",\"city\":\"Madrid Capital\",\"district\":\"Retiro\",\"neighbourhood\":\"Jerónimos\",\"street\":\"Alfonso XII\",\"postalCode\":\"28014\",\"property\":\"Flat\",\"propertySub\":\"Flat\",\"propertyState\":\"VeryGood\",\"propertyType\":\"Vivienda\",\"mts2\":\"140\",\"rooms\":\"4\",\"bathrooms\":\"3\",\"heating\":\"0\",\"energeticCert\":\"0\",\"features\":\"aire-acondicionado|||calefaccion|||garaje-privado|||ascensor\",\"lat\":\"40.4138\",\"lng\":\"-3.68511\",\"feed\":\"https://www.fotocasa.es/vivienda/madrid-capital/aire-acondicionado-calefaccion-parking-ascensor-alfonso-xii-142550444?RowGrid=11&tti=3&opi=300\",\"transactionId\":\"3\",\"transaction\":\"alquiler\",\"price\":\"1890\",\"priceMin\":\"\",\"priceMax\":\"\",\"priceRange\":\"1501-2000\"}";
-        String type = "io.renthell.eventstoresrv.web.events.PropertyTransactionAddedEvent";
+        String type = "io.renthell.eventstoresrv.web.events.PropertyTransactionAddEvent";
         RawEvent rawEventFongo = new RawEvent(correlationId, payload, type);
 
         mongoTemplate.createCollection("rawevent");
@@ -83,7 +83,7 @@ public class CommandControllerTests {
         ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:8980/commands/get-event/" + rawEventFongo.getId()));
         resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
         MvcResult result = resultAction.andReturn();
-        BaseEvent baseEventResponse = jsonMapper.readValue(result.getResponse().getContentAsString(), PropertyTransactionAddedEvent.class);
+        BaseEvent baseEventResponse = jsonMapper.readValue(result.getResponse().getContentAsString(), PropertyTransactionAddEvent.class);
         Assert.assertEquals(rawEventFongo.getId(), baseEventResponse.getId());
     }
 

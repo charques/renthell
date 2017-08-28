@@ -23,7 +23,7 @@ import java.util.concurrent.CountDownLatch;
 
 @Slf4j
 @Component
-public class PropertyAddedEventConsumer {
+public class EventConsumer {
 
   @Autowired
   private PropertyService propertyService;
@@ -31,7 +31,7 @@ public class PropertyAddedEventConsumer {
   @Autowired
   private ObjectMapper objectMapper;
 
-  private final String PROPERTY_TRANSACTION_ADDED_EVENT = "io.renthell.eventstoresrv.web.events.PropertyTransactionAddedEvent";
+  private final String PROPERTY_TRANSACTION_ADD_EVENT = "io.renthell.eventstoresrv.web.events.PropertyTransactionAddEvent";
 
   private CountDownLatch latch = new CountDownLatch(1);
 
@@ -54,7 +54,7 @@ public class PropertyAddedEventConsumer {
       TextNode eventPayloadString = (TextNode) payloadJson.get("payload");
       JsonNode eventPayloadJson = objectMapper.readTree(eventPayloadString.textValue());
 
-      if(PROPERTY_TRANSACTION_ADDED_EVENT.equals(payloadJson.get("type").textValue())) {
+      if(PROPERTY_TRANSACTION_ADD_EVENT.equals(payloadJson.get("type").textValue())) {
         propertyDto = buildProperty(eventPayloadJson);
         PropertyDto propertySaved = propertyService.save(propertyDto);
         log.info("Property transaction added event processed. Property saved: {}", propertySaved.toString());

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.renthell.eventstoresrv.service.exception.EventRetrievingException;
 import io.renthell.eventstoresrv.web.command.AddPropertyTransactionCmd;
 import io.renthell.eventstoresrv.web.events.BaseEvent;
-import io.renthell.eventstoresrv.web.events.PropertyTransactionAddedEvent;
+import io.renthell.eventstoresrv.web.events.PropertyTransactionAddEvent;
 import io.renthell.eventstoresrv.service.EventStoreService;
 import io.renthell.eventstoresrv.web.exception.BadRequestException;
 import io.renthell.eventstoresrv.web.exception.EventNotFoundException;
@@ -39,7 +39,7 @@ public class CommandController {
     ResponseEntity<?> addPropertyTransaction(final @Valid @RequestBody AddPropertyTransactionCmd addPropertyCommand,
                                              UriComponentsBuilder ucBuilder) {
         log.info("Adding property transaction {}", addPropertyCommand);
-        PropertyTransactionAddedEvent event = modelMapper.map(addPropertyCommand, PropertyTransactionAddedEvent.class);
+        PropertyTransactionAddEvent event = modelMapper.map(addPropertyCommand, PropertyTransactionAddEvent.class);
         String correlationId = UUID.randomUUID().toString();
         event.setCorrelationId(correlationId);
 
