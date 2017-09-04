@@ -4,24 +4,27 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Date;
-
 /**
  * Created by cfhernandez on 28/8/17.
  */
 @Getter
 @Setter
 @ToString
-public class PropertyTransactionConfirmEvent extends BaseEvent {
+public class AddAlertEvent extends BaseEvent {
 
-    private String identifier;
+    private String alertId;
+
+    private String propertyId;
     private String transactionId;
+    private String alertDescriptor;
 
-    public PropertyTransactionConfirmEvent() {
+    private String createdDate;
+
+    public AddAlertEvent() {
         super();
     }
 
-    public PropertyTransactionConfirmEvent(final String correlationId) {
+    public AddAlertEvent(final String correlationId) {
         super(correlationId);
     }
 

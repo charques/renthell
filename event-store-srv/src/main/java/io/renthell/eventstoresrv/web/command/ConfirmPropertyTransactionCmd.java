@@ -16,4 +16,5 @@ public class ConfirmPropertyTransactionCmd extends Command {
 
     @NotNull
     private String identifier;
+    private String transactionId;
 }

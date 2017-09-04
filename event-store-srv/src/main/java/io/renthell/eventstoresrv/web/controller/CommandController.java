@@ -2,8 +2,10 @@ package io.renthell.eventstoresrv.web.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.renthell.eventstoresrv.service.exception.EventRetrievingException;
+import io.renthell.eventstoresrv.web.command.AddAlertCmd;
 import io.renthell.eventstoresrv.web.command.AddPropertyTransactionCmd;
 import io.renthell.eventstoresrv.web.command.ConfirmPropertyTransactionCmd;
+import io.renthell.eventstoresrv.web.events.AddAlertEvent;
 import io.renthell.eventstoresrv.web.events.BaseEvent;
 import io.renthell.eventstoresrv.web.events.PropertyTransactionAddEvent;
 import io.renthell.eventstoresrv.service.EventStoreService;
@@ -54,6 +56,18 @@ public class CommandController {
                                              UriComponentsBuilder ucBuilder) {
         log.info("Confirming property transaction {}", confirmPropertyCommand.toString());
         PropertyTransactionConfirmEvent event = modelMapper.map(confirmPropertyCommand, PropertyTransactionConfirmEvent.class);
+        String correlationId = UUID.randomUUID().toString();
+        event.setCorrelationId(correlationId);
+
+        return produceEvent(event, ucBuilder);
+    }
+
+    @RequestMapping(value = "/add-alert", method = RequestMethod.POST)
+    public @ResponseBody
+    ResponseEntity<?> addAlert(final @Valid @RequestBody AddAlertCmd addAlertCommand,
+                                                 UriComponentsBuilder ucBuilder) {
+        log.info("Adding alert {}", addAlertCommand.toString());
+        AddAlertEvent event = modelMapper.map(addAlertCommand, AddAlertEvent.class);
         String correlationId = UUID.randomUUID().toString();
         event.setCorrelationId(correlationId);
 
