@@ -27,6 +27,7 @@ public class Scoring {
     private Integer month;
     private Integer year;
     private String postalCode;
+    private Integer rooms;
 
     private List<ScoringData> scoringDataList;
 

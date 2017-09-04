@@ -46,18 +46,19 @@ public class ScoringCalculationsHelperTest {
   public void testScoringStatsCalculationsWithoutAggregation() {
     Scoring scoring = new Scoring();
     scoring.setTransactionId(RENT_TRANSACTION); // rent
-    scoring.addScoringDataItem(new ScoringData(800F, 140, 4));
-    scoring.addScoringDataItem(new ScoringData(850F, 140, 4));
-    scoring.addScoringDataItem(new ScoringData(1000F, 140, 4));
-    scoring.addScoringDataItem(new ScoringData(1001F, 140, 4));
-    scoring.addScoringDataItem(new ScoringData(1200F, 140, 4));
-    scoring.addScoringDataItem(new ScoringData(1500F, 140, 4));
+    scoring.setRooms(3);
+    scoring.addScoringDataItem(new ScoringData(800F, 140));
+    scoring.addScoringDataItem(new ScoringData(850F, 140));
+    scoring.addScoringDataItem(new ScoringData(1000F, 140));
+    scoring.addScoringDataItem(new ScoringData(1001F, 140));
+    scoring.addScoringDataItem(new ScoringData(1200F, 140));
+    scoring.addScoringDataItem(new ScoringData(1500F, 140));
 
     List<Scoring> scoringList = new ArrayList<>();
     scoringList.add(scoring);
 
     List<ScoringStatsDto> stats = scoringCalculationsHelper.generateScoringStatsList(false,
-            RENT_TRANSACTION, 2018, 7, "28041", scoringList);
+            RENT_TRANSACTION, 2018, 7, "28041", 3, scoringList);
 
     assertThat(stats.size()).isEqualTo(1);
     assertThat(stats.get(0).getPriceAverage()).isCloseTo(1058.5F, Offset.offset(0.001));
@@ -76,23 +77,25 @@ public class ScoringCalculationsHelperTest {
   public void testScoringStatsCalculationsWithAggregation() {
     Scoring scoring1 = new Scoring();
     scoring1.setTransactionId(RENT_TRANSACTION); // rent
-    scoring1.addScoringDataItem(new ScoringData(800F, 140, 4));
-    scoring1.addScoringDataItem(new ScoringData(850F, 140, 4));
-    scoring1.addScoringDataItem(new ScoringData(1000F, 140, 4));
-    scoring1.addScoringDataItem(new ScoringData(1001F, 140, 4));
-    scoring1.addScoringDataItem(new ScoringData(1200F, 140, 4));
-    scoring1.addScoringDataItem(new ScoringData(1500F, 140, 4));
+    scoring1.setRooms(3);
+    scoring1.addScoringDataItem(new ScoringData(800F, 140));
+    scoring1.addScoringDataItem(new ScoringData(850F, 140));
+    scoring1.addScoringDataItem(new ScoringData(1000F, 140));
+    scoring1.addScoringDataItem(new ScoringData(1001F, 140));
+    scoring1.addScoringDataItem(new ScoringData(1200F, 140));
+    scoring1.addScoringDataItem(new ScoringData(1500F, 140));
 
     Scoring scoring2 = new Scoring();
     scoring2.setTransactionId(RENT_TRANSACTION); // rent
-    scoring2.addScoringDataItem(new ScoringData(755F, 120, 3));
-    scoring2.addScoringDataItem(new ScoringData(850F, 120, 3));
-    scoring2.addScoringDataItem(new ScoringData(950F, 120, 3));
-    scoring2.addScoringDataItem(new ScoringData(1015F, 120, 3));
-    scoring2.addScoringDataItem(new ScoringData(1130F, 120, 3));
-    scoring2.addScoringDataItem(new ScoringData(1130F, 120, 3));
-    scoring2.addScoringDataItem(new ScoringData(1130F, 120, 3));
-    scoring2.addScoringDataItem(new ScoringData(1700F, 120, 3));
+    scoring2.setRooms(3);
+    scoring2.addScoringDataItem(new ScoringData(755F, 120));
+    scoring2.addScoringDataItem(new ScoringData(850F, 120));
+    scoring2.addScoringDataItem(new ScoringData(950F, 120));
+    scoring2.addScoringDataItem(new ScoringData(1015F, 120));
+    scoring2.addScoringDataItem(new ScoringData(1130F, 120));
+    scoring2.addScoringDataItem(new ScoringData(1130F, 120));
+    scoring2.addScoringDataItem(new ScoringData(1130F, 120));
+    scoring2.addScoringDataItem(new ScoringData(1700F, 120));
 
 
     List<Scoring> scoringList = new ArrayList<>();
@@ -100,7 +103,7 @@ public class ScoringCalculationsHelperTest {
     scoringList.add(scoring2);
 
     List<ScoringStatsDto> stats = scoringCalculationsHelper.generateScoringStatsList(true,
-            RENT_TRANSACTION, 2018, 7, "28041", scoringList);
+            RENT_TRANSACTION, 2018, 7, "28041", 3, scoringList);
 
     assertThat(stats.size()).isEqualTo(1);
     assertThat(stats.get(0).getPriceAverage()).isCloseTo(1072.21F, Offset.offset(0.01));

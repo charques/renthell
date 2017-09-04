@@ -14,13 +14,11 @@ public class ScoringData {
 
     public ScoringData() {}
 
-    public ScoringData(Float price, Integer mts2, Integer rooms) {
+    public ScoringData(Float price, Integer mts2) {
         this.price = price;
         this.mts2 = mts2;
-        this.rooms = rooms;
     }
 
     private Float price;
     private Integer mts2;
-    private Integer rooms;
 }

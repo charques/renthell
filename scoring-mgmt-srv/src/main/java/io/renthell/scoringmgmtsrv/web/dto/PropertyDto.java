@@ -18,9 +18,9 @@ public class PropertyDto {
     private String transactionId;
     private Date date;
     private String postalCode;
+    private Integer rooms;
 
     private Integer mts2;
-    private Integer rooms;
     private Float price;
 
 }

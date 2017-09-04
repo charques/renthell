@@ -18,9 +18,11 @@ public class ScoringCalculationsHelper {
     @Autowired
     private ModelMapper modelMapper;
 
-    public List<ScoringStatsDto> generateScoringStatsList(Boolean aggregate, String transactionId, Integer year, Integer month, String postalCode, List<Scoring> scoringList) {
+    public List<ScoringStatsDto> generateScoringStatsList(Boolean aggregate, String transactionId, Integer year,
+                                                          Integer month, String postalCode, Integer rooms,
+                                                          List<Scoring> scoringList) {
         if(aggregate) {
-            Scoring aggregatedScoring = buildAggregateScoring(transactionId, month, year, postalCode, scoringList);
+            Scoring aggregatedScoring = buildAggregateScoring(transactionId, month, year, postalCode, rooms, scoringList);
             scoringList.clear();
             scoringList.add(aggregatedScoring);
         }
@@ -38,12 +40,13 @@ public class ScoringCalculationsHelper {
     }
 
     private Scoring buildAggregateScoring(String transactionId, Integer year, Integer month,
-                                          String postalCode, List<Scoring> scoringList) {
+                                          String postalCode, Integer rooms, List<Scoring> scoringList) {
         Scoring scoringResult = new Scoring();
         scoringResult.setTransactionId(transactionId);
         scoringResult.setYear(year);
         scoringResult.setMonth(month);
         scoringResult.setPostalCode(postalCode);
+        scoringResult.setRooms(rooms);
 
         List<ScoringData> aggegatedScoringDataList = new ArrayList<>();
         for (Scoring scoring : scoringList) {

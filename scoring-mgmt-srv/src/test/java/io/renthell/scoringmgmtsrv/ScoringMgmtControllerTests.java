@@ -68,7 +68,8 @@ public class ScoringMgmtControllerTests {
                 "transactionId=3" + "&" +
                 "postalCode=28041" + "&" +
                 "year=2018" + "&" +
-                "month=7";
+                "month=7" + "&" +
+                "rooms=4";
 
         ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get(url));
         resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
@@ -128,7 +129,8 @@ public class ScoringMgmtControllerTests {
                 "transactionId=3" + "&" +
                 "postalCode=28041" + "&" +
                 "year=2018" + "&" +
-                "month=7";
+                "month=7" + "&" +
+                "rooms=3";
 
         ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get(url));
         resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
@@ -145,12 +147,13 @@ public class ScoringMgmtControllerTests {
         scoring.setPostalCode("28041");
         scoring.setMonth(7);
         scoring.setYear(2018);
-        scoring.addScoringDataItem(new ScoringData(800F, 140, 4));
-        scoring.addScoringDataItem(new ScoringData(850F, 140, 4));
-        scoring.addScoringDataItem(new ScoringData(1000F, 140, 4));
-        scoring.addScoringDataItem(new ScoringData(1001F, 140, 4));
-        scoring.addScoringDataItem(new ScoringData(1200F, 140, 4));
-        scoring.addScoringDataItem(new ScoringData(1500F, 140, 4));
+        scoring.setRooms(4);
+        scoring.addScoringDataItem(new ScoringData(800F, 140));
+        scoring.addScoringDataItem(new ScoringData(850F, 140));
+        scoring.addScoringDataItem(new ScoringData(1000F, 140));
+        scoring.addScoringDataItem(new ScoringData(1001F, 140));
+        scoring.addScoringDataItem(new ScoringData(1200F, 140));
+        scoring.addScoringDataItem(new ScoringData(1500F, 140));
         return scoring;
     }
 
@@ -160,14 +163,15 @@ public class ScoringMgmtControllerTests {
         scoring.setPostalCode("28041");
         scoring.setMonth(7);
         scoring.setYear(2018);
-        scoring.addScoringDataItem(new ScoringData(755F, 120, 3));
-        scoring.addScoringDataItem(new ScoringData(850F, 120, 3));
-        scoring.addScoringDataItem(new ScoringData(950F, 120, 3));
-        scoring.addScoringDataItem(new ScoringData(1015F, 120, 3));
-        scoring.addScoringDataItem(new ScoringData(1130F, 120, 3));
-        scoring.addScoringDataItem(new ScoringData(1130F, 120, 3));
-        scoring.addScoringDataItem(new ScoringData(1130F, 120, 3));
-        scoring.addScoringDataItem(new ScoringData(1700F, 120, 3));
+        scoring.setRooms(3);
+        scoring.addScoringDataItem(new ScoringData(755F, 120));
+        scoring.addScoringDataItem(new ScoringData(850F, 120));
+        scoring.addScoringDataItem(new ScoringData(950F, 120));
+        scoring.addScoringDataItem(new ScoringData(1015F, 120));
+        scoring.addScoringDataItem(new ScoringData(1130F, 120));
+        scoring.addScoringDataItem(new ScoringData(1130F, 120));
+        scoring.addScoringDataItem(new ScoringData(1130F, 120));
+        scoring.addScoringDataItem(new ScoringData(1700F, 120));
         return scoring;
     }
 }

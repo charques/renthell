@@ -126,7 +126,8 @@ public class AddPropertyEventConsumerTest {
             "transactionId=3" + "&" +
             "postalCode=28014" + "&" +
             "year=2017" + "&" +
-            "month=7";
+            "month=7" + "&" +
+            "rooms=4";
 
     ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get(url));
     resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());

@@ -26,11 +26,12 @@ public class ScoringMgmtController {
             @RequestParam(value="transactionId", defaultValue = "3", required = false) String transactionId,
             @RequestParam(value="month", required = false) Integer month,
             @RequestParam(value="year", required = false) Integer year,
-            @RequestParam(value="postalCode", required = false) String postalCode
+            @RequestParam(value="postalCode", required = false) String postalCode,
+            @RequestParam(value="rooms", required = false) Integer rooms
             ) {
         log.info("Get all Scoring Stats");
 
-        List<ScoringStatsDto> stats = scoringService.find(aggregate, transactionId, year, month, postalCode);
+        List<ScoringStatsDto> stats = scoringService.find(aggregate, transactionId, year, month, postalCode, rooms);
 
         return new ResponseEntity<>((Collection<ScoringStatsDto>) stats, HttpStatus.OK);
     }

@@ -20,7 +20,7 @@ public class ScoringRepoMongo implements ScoringRepo {
         this.mongoOperations = mongoOperations;
     }
 
-    public List<Scoring> find(String transactionId, Integer month, Integer year, String postalCode) {
+    public List<Scoring> find(String transactionId, Integer month, Integer year, String postalCode, Integer rooms) {
         Query query = new Query();
         Criteria criteria = Criteria.where("transactionId").is(transactionId);
         if(month != null) {
@@ -31,6 +31,9 @@ public class ScoringRepoMongo implements ScoringRepo {
         }
         if(postalCode != null) {
             criteria.and("postalCode").is(postalCode);
+        }
+        if(rooms != null) {
+            criteria.and("rooms").is(rooms);
         }
         query.addCriteria(criteria);
 

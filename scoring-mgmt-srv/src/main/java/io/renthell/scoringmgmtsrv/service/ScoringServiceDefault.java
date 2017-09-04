@@ -38,7 +38,7 @@ public class ScoringServiceDefault implements ScoringService {
         int year = cal.get(Calendar.YEAR);
 
         List<Scoring> scoringList = scoringRepo.find(propertyDto.getTransactionId(),
-                month, year, propertyDto.getPostalCode());
+                month, year, propertyDto.getPostalCode(), propertyDto.getRooms());
 
         Scoring scoringRetrieved = null;
         if(scoringList.size() > 0) {
@@ -52,8 +52,9 @@ public class ScoringServiceDefault implements ScoringService {
             scoring.setMonth(month);
             scoring.setYear(year);
             scoring.setPostalCode(propertyDto.getPostalCode());
+            scoring.setRooms(propertyDto.getRooms());
 
-            ScoringData scoringData = new ScoringData(propertyDto.getPrice(), propertyDto.getMts2(), propertyDto.getRooms());
+            ScoringData scoringData = new ScoringData(propertyDto.getPrice(), propertyDto.getMts2());
             scoring.addScoringDataItem(scoringData);
 
             // save new item
@@ -61,7 +62,7 @@ public class ScoringServiceDefault implements ScoringService {
             log.info("Saved: " + scoringSaved.toString());
 
         } else {
-            ScoringData scoringData = new ScoringData(propertyDto.getPrice(), propertyDto.getMts2(), propertyDto.getRooms());
+            ScoringData scoringData = new ScoringData(propertyDto.getPrice(), propertyDto.getMts2());
             scoringRetrieved.addScoringDataItem(scoringData);
 
             // save updated item
@@ -88,10 +89,12 @@ public class ScoringServiceDefault implements ScoringService {
     }
 
     @Override
-    public List<ScoringStatsDto> find(Boolean aggregate, String transactionId, Integer year, Integer month, String postalCode) {
-        List<Scoring> scoringList = scoringRepo.find(transactionId, month, year, postalCode);
+    public List<ScoringStatsDto> find(Boolean aggregate, String transactionId, Integer year, Integer month,
+                                      String postalCode, Integer rooms) {
+        List<Scoring> scoringList = scoringRepo.find(transactionId, month, year, postalCode, rooms);
 
-        return scoringCalculationsHelper.generateScoringStatsList(aggregate, transactionId, year, month, postalCode, scoringList);
+        return scoringCalculationsHelper.generateScoringStatsList(aggregate, transactionId, year, month, postalCode,
+                rooms, scoringList);
     }
 
 }
