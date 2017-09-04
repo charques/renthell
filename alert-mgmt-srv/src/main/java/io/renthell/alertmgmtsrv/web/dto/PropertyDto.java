@@ -18,6 +18,7 @@ public class PropertyDto {
     private String identifier;
     private Date publishDate;
     private String postalCode;
+    private Integer rooms;
 
     private List<TransactionDto> transactions;
 

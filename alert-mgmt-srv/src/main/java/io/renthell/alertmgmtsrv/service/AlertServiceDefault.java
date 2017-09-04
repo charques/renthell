@@ -56,7 +56,7 @@ public class AlertServiceDefault implements AlertService {
         PropertyDto propertyDto = getPropertyDetails(propertyTransactionDto.getIdentifier());
 
         ScoringStatsDto scoringStatsDto = getScoringStats(propertyTransactionDto.getTransactionId(),
-                propertyDto.getPublishDate(), propertyDto.getPostalCode());
+                propertyDto.getPublishDate(), propertyDto.getPostalCode(), propertyDto.getRooms());
 
         // check rules
         String ruleEngineResult = propertyRulesEngine.evaluateRules(propertyDto, scoringStatsDto);
@@ -109,7 +109,7 @@ public class AlertServiceDefault implements AlertService {
         return property;
     }
 
-    private ScoringStatsDto getScoringStats(String transactionId, Date publishDate, String postalCode) {
+    private ScoringStatsDto getScoringStats(String transactionId, Date publishDate, String postalCode, Integer rooms) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(publishDate);
         int month = cal.get(Calendar.MONTH) + 1;
@@ -122,7 +122,8 @@ public class AlertServiceDefault implements AlertService {
                 .queryParam("transactionId", transactionId)
                 .queryParam("month", month)
                 .queryParam("year", year)
-                .queryParam("postalCode", postalCode);
+                .queryParam("postalCode", postalCode)
+                .queryParam("rooms", rooms);
 
         URI uri = builder.build().toUri();
 
