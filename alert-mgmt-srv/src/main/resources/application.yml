@@ -1,0 +1,25 @@
+server:
+  port: 8093
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://mongodb:27017/testdb
+
+endpoints:
+  event-store:
+    uri-base: http://event-store-srv:8090
+    add-alert-command: /commands/add-alert
+  property-mgmt:
+    uri-base: http://property-mgmt-srv:8091
+    get-property: /api/property-transaction/{id}
+  scoring-mgmt:
+    uri-base: http://scoring-mgmt-srv:8092
+    get-scoring: /api/scoring-stats
+
+kafka:
+  bootstrap-servers: kafka:9092
+  groupid:
+    events: events-group
+  topic:
+    events: test
