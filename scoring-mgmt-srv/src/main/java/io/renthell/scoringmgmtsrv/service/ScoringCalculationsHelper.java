@@ -3,14 +3,22 @@ package io.renthell.scoringmgmtsrv.service;
 import io.renthell.scoringmgmtsrv.persistence.model.Scoring;
 import io.renthell.scoringmgmtsrv.persistence.model.ScoringData;
 import io.renthell.scoringmgmtsrv.web.dto.RangeDataDto;
+import io.renthell.scoringmgmtsrv.web.dto.ScoringDto;
 import io.renthell.scoringmgmtsrv.web.dto.ScoringStatsDto;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+@Component
 public class ScoringCalculationsHelper {
 
-    static public List<ScoringStatsDto> generateScoringStatsList(Boolean aggregate, String transactionId, Integer year, Integer month, String postalCode, List<Scoring> scoringList) {
+    @Autowired
+    private ModelMapper modelMapper;
+
+    public List<ScoringStatsDto> generateScoringStatsList(Boolean aggregate, String transactionId, Integer year, Integer month, String postalCode, List<Scoring> scoringList) {
         if(aggregate) {
             Scoring aggregatedScoring = buildAggregateScoring(transactionId, month, year, postalCode, scoringList);
             scoringList.clear();
@@ -20,7 +28,7 @@ public class ScoringCalculationsHelper {
         return buildScoringStatsList(scoringList, aggregate);
     }
 
-    static private List<ScoringStatsDto> buildScoringStatsList(List<Scoring> scoringList, Boolean aggregate) {
+    private List<ScoringStatsDto> buildScoringStatsList(List<Scoring> scoringList, Boolean aggregate) {
         List<ScoringStatsDto> statsList = new ArrayList<>();
 
         for (Scoring scoring : scoringList) {
@@ -29,7 +37,7 @@ public class ScoringCalculationsHelper {
         return statsList;
     }
 
-    static private Scoring buildAggregateScoring(String transactionId, Integer year, Integer month,
+    private Scoring buildAggregateScoring(String transactionId, Integer year, Integer month,
                                           String postalCode, List<Scoring> scoringList) {
         Scoring scoringResult = new Scoring();
         scoringResult.setTransactionId(transactionId);
@@ -46,8 +54,9 @@ public class ScoringCalculationsHelper {
         return scoringResult;
     }
 
-    static private ScoringStatsDto buildScoringStatsDto(Scoring scoring, Boolean aggregated) {
-        ScoringStatsDto scoringStats = new ScoringStatsDto(scoring);
+    private ScoringStatsDto buildScoringStatsDto(Scoring scoring, Boolean aggregated) {
+        ScoringDto scoringDto = modelMapper.map(scoring, ScoringDto.class);
+        ScoringStatsDto scoringStats = new ScoringStatsDto(scoringDto);
         scoringStats.setAggregated(aggregated);
 
         // Prices x mts2 calculations
@@ -89,7 +98,7 @@ public class ScoringCalculationsHelper {
         return scoringStats;
     }
 
-    static private RangeDataDto buildRangeData(RangeTuple rangeTuple, int rangeStep, int numValues) {
+    private RangeDataDto buildRangeData(RangeTuple rangeTuple, int rangeStep, int numValues) {
         RangeDataDto rD = new RangeDataDto();
         int min = rangeStep * (rangeTuple.range-1) + 1;
         int max = rangeStep * rangeTuple.range;
@@ -98,7 +107,7 @@ public class ScoringCalculationsHelper {
         return rD;
     }
 
-    static class RangeTuple {
+    class RangeTuple {
         private Integer range;
         private Integer counter;
 
@@ -108,7 +117,7 @@ public class ScoringCalculationsHelper {
         }
     }
 
-    static class RangeTupleComparator implements Comparator<RangeTuple> {
+    class RangeTupleComparator implements Comparator<RangeTuple> {
         @Override
         public int compare(RangeTuple o1, RangeTuple o2) {
             if(o1.counter > o2.counter) {

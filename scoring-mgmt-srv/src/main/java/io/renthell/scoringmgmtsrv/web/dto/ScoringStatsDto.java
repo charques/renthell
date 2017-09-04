@@ -1,20 +1,18 @@
 package io.renthell.scoringmgmtsrv.web.dto;
 
 import io.renthell.scoringmgmtsrv.persistence.model.Scoring;
-import io.renthell.scoringmgmtsrv.persistence.model.ScoringData;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
-import java.text.DecimalFormat;
-import java.util.*;
-
+/**
+ * Created by cfhernandez on 24/8/17.
+ */
 @Setter
 @Getter
 @ToString
 public class ScoringStatsDto {
-    private Scoring scoring;
+    private ScoringDto scoring;
 
     private Double priceAverage;
     private Double priceMedian;
@@ -31,7 +29,7 @@ public class ScoringStatsDto {
     public ScoringStatsDto() {
     }
 
-    public ScoringStatsDto(Scoring scoring) {
+    public ScoringStatsDto(ScoringDto scoring) {
         this.scoring = scoring;
     }
 }

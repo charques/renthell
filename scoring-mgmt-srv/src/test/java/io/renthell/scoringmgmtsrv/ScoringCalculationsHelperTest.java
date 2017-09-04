@@ -1,6 +1,6 @@
 package io.renthell.scoringmgmtsrv;
 
-import io.renthell.scoringmgmtsrv.config.SimpleConfiguration;
+import io.renthell.scoringmgmtsrv.config.ConfigServerWithFongoConfiguration;
 import io.renthell.scoringmgmtsrv.persistence.model.Scoring;
 import io.renthell.scoringmgmtsrv.persistence.model.ScoringData;
 import io.renthell.scoringmgmtsrv.service.ScoringCalculationsHelper;
@@ -10,19 +10,33 @@ import org.assertj.core.data.Offset;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = SimpleConfiguration.class)
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringBootTest(classes = { ConfigServerWithFongoConfiguration.class }, properties = {
+        "server.port=8095" }, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@AutoConfigureMockMvc
+@TestPropertySource(properties = {
+        "spring.data.mongodb.database=test",
+        "spring.embedded.kafka.brokers=localhost:9092"
+})
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ScoringCalculationsHelperTest {
 
   final String RENT_TRANSACTION = "3";
+
+  @Autowired
+  private ScoringCalculationsHelper scoringCalculationsHelper;
 
   @Before
   public void setUp() throws Exception {
@@ -42,7 +56,7 @@ public class ScoringCalculationsHelperTest {
     List<Scoring> scoringList = new ArrayList<>();
     scoringList.add(scoring);
 
-    List<ScoringStatsDto> stats = ScoringCalculationsHelper.generateScoringStatsList(false,
+    List<ScoringStatsDto> stats = scoringCalculationsHelper.generateScoringStatsList(false,
             RENT_TRANSACTION, 2018, 7, "28041", scoringList);
 
     assertThat(stats.size()).isEqualTo(1);
@@ -85,7 +99,7 @@ public class ScoringCalculationsHelperTest {
     scoringList.add(scoring1);
     scoringList.add(scoring2);
 
-    List<ScoringStatsDto> stats = ScoringCalculationsHelper.generateScoringStatsList(true,
+    List<ScoringStatsDto> stats = scoringCalculationsHelper.generateScoringStatsList(true,
             RENT_TRANSACTION, 2018, 7, "28041", scoringList);
 
     assertThat(stats.size()).isEqualTo(1);

@@ -3,9 +3,11 @@ package io.renthell.scoringmgmtsrv.service;
 import io.renthell.scoringmgmtsrv.persistence.model.ScoringData;
 import io.renthell.scoringmgmtsrv.web.dto.PropertyDto;
 import io.renthell.scoringmgmtsrv.persistence.model.Scoring;
+import io.renthell.scoringmgmtsrv.web.dto.ScoringDto;
 import io.renthell.scoringmgmtsrv.web.dto.ScoringStatsDto;
 import io.renthell.scoringmgmtsrv.persistence.repo.ScoringRepo;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,12 @@ public class ScoringServiceDefault implements ScoringService {
 
     @Autowired
     private ScoringRepo scoringRepo;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
+    @Autowired
+    private ScoringCalculationsHelper scoringCalculationsHelper;
 
     @Override
     public ScoringStatsDto addPropertyToScoring(PropertyDto propertyDto) {
@@ -60,7 +68,9 @@ public class ScoringServiceDefault implements ScoringService {
             scoringSaved = scoringRepo.save(scoringRetrieved);
             log.info("Updated: " + scoringSaved.toString());
         }
-        ScoringStatsDto result = new ScoringStatsDto(scoringSaved);
+
+        ScoringDto scoringDto = modelMapper.map(scoringSaved, ScoringDto.class);
+        ScoringStatsDto result = new ScoringStatsDto(scoringDto);
         return result;
     }
 
@@ -68,8 +78,10 @@ public class ScoringServiceDefault implements ScoringService {
     public List<ScoringStatsDto> findAll() {
         List<Scoring> scoringList = scoringRepo.findAll();
         List<ScoringStatsDto> statsList = new ArrayList<>();
+        ScoringDto scoringDto = null;
         for (Scoring aScoringList : scoringList) {
-            ScoringStatsDto stats = new ScoringStatsDto(aScoringList);
+            scoringDto = modelMapper.map(aScoringList, ScoringDto.class);
+            ScoringStatsDto stats = new ScoringStatsDto(scoringDto);
             statsList.add(stats);
         }
         return statsList;
@@ -79,7 +91,7 @@ public class ScoringServiceDefault implements ScoringService {
     public List<ScoringStatsDto> find(Boolean aggregate, String transactionId, Integer year, Integer month, String postalCode) {
         List<Scoring> scoringList = scoringRepo.find(transactionId, month, year, postalCode);
 
-        return ScoringCalculationsHelper.generateScoringStatsList(aggregate, transactionId, year, month, postalCode, scoringList);
+        return scoringCalculationsHelper.generateScoringStatsList(aggregate, transactionId, year, month, postalCode, scoringList);
     }
 
 }
