@@ -1,4 +1,4 @@
-package io.renthell.scoringmgmtsrv;
+package io.renthell.alertmgmtsrv;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

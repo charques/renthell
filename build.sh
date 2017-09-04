@@ -20,6 +20,11 @@ cd ..
 cd scoring-mgmt-srv
 ./mvnw clean package docker:build
 STATUS_SCORING_MGMT=$?
+
+cd ..
+cd alert-mgmt-srv
+./mvnw clean package docker:build
+STATUS_ALERT_MGMT=$?
 echo
 echo "[${blu}INFO${end}] ------------------------------------------------------------------------"
 echo "[${blu}INFO${end}] ${mag}BUILD STATUS${end}"
@@ -41,5 +46,11 @@ if [ $STATUS_SCORING_MGMT -eq 0 ]; then
 echo "[${blu}INFO${end}] --- ${blu}scoring-mgmt-srv${end}  => docker image creation ${grn}SUCCESS${end}"
 else
 echo "[${blu}INFO${end}] --- ${blu}scoring-mgmt-srv${end}  => docker image creation ${red}FAILED${end}"
+fi
+
+if [ $STATUS_ALERT_MGMT -eq 0 ]; then
+echo "[${blu}INFO${end}] --- ${blu}alert-mgmt-srv${end}  => docker image creation ${grn}SUCCESS${end}"
+else
+echo "[${blu}INFO${end}] --- ${blu}alert-mgmt-srv${end}  => docker image creation ${red}FAILED${end}"
 fi
 echo

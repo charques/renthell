@@ -4,6 +4,9 @@
 # docker-compose -p local_renthell up -d
 # docker-compose -p local_renthell logs
 #
+## regenerate nginx and kafka
+# docker-compose -p local_renthell up --force-recreate --build
+#
 # ------------------------------------------------------------------------------
 version: '3.1'
 services:
@@ -16,9 +19,11 @@ services:
        links:
            - property-mgmt-srv
            - scoring-mgmt-srv
+           - alert-mgmt-srv
        depends_on:
            - property-mgmt-srv
            - scoring-mgmt-srv
+           - alert-mgmt-srv
 
     event-store-srv:
         image: renthell/event-store-srv:latest
@@ -62,6 +67,22 @@ services:
             - mongodb
             - kafka
 
+    alert-mgmt-srv:
+        image: renthell/alert-mgmt-srv:latest
+        container_name: "alert-mgmt-srv"
+        ports:
+            - 8093:8093
+        expose:
+            - 8093
+        links:
+            - mongodb
+            - event-store-srv
+            - kafka
+        depends_on:
+            - mongodb
+            - event-store-srv
+            - kafka
+
     mongodb:
         image: mongo:3.4
         container_name: "renthell-mongo"
@@ -83,7 +104,7 @@ services:
         environment:
             - ADVERTISED_PORT=9092
             - ADVERTISED_HOST=kafka
-            - NUM_PARTITIONS=2
+            - NUM_PARTITIONS=3
             - AUTO_CREATE_TOPICS=true
         ports:
             - 2181:2181
