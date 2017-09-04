@@ -1,5 +1,6 @@
 package io.renthell.propertymgmtsrv;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.renthell.propertymgmtsrv.config.ConfigServerWithFongoConfiguration;
@@ -116,6 +117,7 @@ public class PropertyMgmtControllerTests {
         TransactionDto transactionResponse = propertyResponse.getTransactions().get(0);
 
         Assert.assertEquals(propertyFongo.getIdentifier(), propertyResponse.getIdentifier());
+        Assert.assertNotNull(propertyResponse.getCalculations());
         Assert.assertEquals(transactionFongo.getTransactionId(), transactionResponse.getTransactionId());
     }
 
@@ -215,9 +217,8 @@ public class PropertyMgmtControllerTests {
         transactionFongo.setPriceRange("1501-2000");
         transactionsFongo.add(transactionFongo);
 
-        property.updateCalculations();
-
         property.setTransactions(transactionsFongo);
+        property.updateCalculations();
 
         return property;
     }

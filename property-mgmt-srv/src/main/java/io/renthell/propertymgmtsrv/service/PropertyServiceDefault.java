@@ -35,21 +35,23 @@ public class PropertyServiceDefault implements PropertyService {
     private EventStoreService eventStoreService;
 
     @Override
-    public PropertyDto save(PropertyDto propertyDto) throws ParseException {
+    public PropertyDto save(PropertyDto propertyDto) {
         log.info("Saving property");
 
+        Transaction transaction = null;
         Property propertyRetrieved = propertyRepo.findOne(propertyDto.getIdentifier());
         Property propertySaved = null;
         if (propertyRetrieved == null) {
             // save new item
             Property propertyToSave = buildProperty(propertyDto);
+            propertyToSave.updateCalculations();
+            transaction = propertyToSave.getTransactions().get(0);
             propertySaved = propertyRepo.save(propertyToSave);
             log.info("Property saved: " + propertySaved.toString());
-
         } else {
             TransactionDto transactionDto = propertyDto.getTransactions().get(0);
             Integer transactionIndex = getTransactionIndex(propertyRetrieved, transactionDto.getTransactionId());
-            Transaction transaction = buildTransaction(transactionDto);
+            transaction = buildTransaction(transactionDto);
 
             if(transactionIndex < 0) {
                 // new transaction
@@ -74,7 +76,7 @@ public class PropertyServiceDefault implements PropertyService {
         PropertyDto result = buildPropertyDto(propertySaved);
 
         // produce confirm event
-        eventStoreService.produceConfirmPropertyTransactionEvent(result.getIdentifier());
+        eventStoreService.produceConfirmPropertyTransactionEvent(result.getIdentifier(), transaction.getTransactionId());
 
         return result;
     }

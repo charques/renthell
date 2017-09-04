@@ -7,5 +7,5 @@ public interface EventStoreService {
 
     public Boolean produceAddPropertyTransactionEvent(PropertyInputDto item) throws JsonProcessingException;
 
-    public Boolean produceConfirmPropertyTransactionEvent(String id);
+    public Boolean produceConfirmPropertyTransactionEvent(String propertyId, String transactionId);
 }

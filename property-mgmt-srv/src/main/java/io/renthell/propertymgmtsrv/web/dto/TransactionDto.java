@@ -17,8 +17,8 @@ public class TransactionDto {
     @NotNull
     private String transactionId;
     private String transaction;
-    private String price;
-    private String priceMin;
-    private String priceMax;
+    private Float price;
+    private Float priceMin;
+    private Float priceMax;
     private String priceRange;
 }

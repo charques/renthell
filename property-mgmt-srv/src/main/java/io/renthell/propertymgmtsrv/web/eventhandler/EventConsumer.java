@@ -106,9 +106,9 @@ public class EventConsumer {
     final TransactionDto transactionDto = new TransactionDto();
     transactionDto.setTransactionId(eventPayloadJson.get("transactionId").textValue());
     transactionDto.setTransaction(eventPayloadJson.get("transaction").textValue());
-    transactionDto.setPrice(eventPayloadJson.get("price").textValue());
-    transactionDto.setPriceMin(eventPayloadJson.get("priceMin").textValue());
-    transactionDto.setPriceMax(eventPayloadJson.get("priceMax").textValue());
+    transactionDto.setPrice(eventPayloadJson.get("price").floatValue());
+    transactionDto.setPriceMin(eventPayloadJson.get("priceMin").floatValue());
+    transactionDto.setPriceMax(eventPayloadJson.get("priceMax").floatValue());
     transactionDto.setPriceRange(eventPayloadJson.get("priceRange").textValue());
 
     List<TransactionDto> transactions = new ArrayList<>();

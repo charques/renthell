@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface PropertyService {
 
-    public PropertyDto save(PropertyDto property) throws ParseException;
+    public PropertyDto save(PropertyDto property);
 
     public List<PropertyDto> findAll();
 

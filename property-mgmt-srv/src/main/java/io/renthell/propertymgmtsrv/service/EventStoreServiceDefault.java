@@ -48,12 +48,14 @@ public class EventStoreServiceDefault implements EventStoreService {
     }
 
     @Override
-    public Boolean produceConfirmPropertyTransactionEvent(String id) {
+    public Boolean produceConfirmPropertyTransactionEvent(String propertyId, String transactionId) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        String body = JsonNodeFactory.instance.objectNode().put("identifier", id).toString();
-        //String body = objectMapper.writeValueAsString(item);
+        String body = JsonNodeFactory.instance.objectNode()
+                .put("identifier", propertyId)
+                .put("transactionId", transactionId)
+                .toString();
         HttpEntity<String> entity = new HttpEntity<String>(body, headers);
 
         restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
