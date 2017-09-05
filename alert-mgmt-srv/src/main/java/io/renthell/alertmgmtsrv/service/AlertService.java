@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface AlertService {
 
-    AlertDto evaluateProperty(PropertyTransactionDto propertyDto) throws JsonProcessingException;
+    void evaluateProperty(PropertyTransactionDto propertyDto) throws JsonProcessingException;
 
     List<AlertDto> findAll();
 

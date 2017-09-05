@@ -6,6 +6,7 @@ import io.renthell.alertmgmtsrv.configuration.ScoringMgmtConfiguration;
 import io.renthell.alertmgmtsrv.persistence.model.Alert;
 import io.renthell.alertmgmtsrv.persistence.repo.AlertRepo;
 import io.renthell.alertmgmtsrv.service.rulesengine.PropertyRulesEngine;
+import io.renthell.alertmgmtsrv.service.rulesengine.rules.RuleResult;
 import io.renthell.alertmgmtsrv.web.dto.AlertDto;
 import io.renthell.alertmgmtsrv.web.dto.PropertyDto;
 import io.renthell.alertmgmtsrv.web.dto.PropertyTransactionDto;
@@ -52,25 +53,26 @@ public class AlertServiceDefault implements AlertService {
     private EventStoreService eventStoreService;
 
     @Override
-    public AlertDto evaluateProperty(PropertyTransactionDto propertyTransactionDto) throws JsonProcessingException {
+    public void evaluateProperty(PropertyTransactionDto propertyTransactionDto) throws JsonProcessingException {
         PropertyDto propertyDto = getPropertyDetails(propertyTransactionDto.getIdentifier());
 
         ScoringStatsDto scoringStatsDto = getScoringStats(propertyTransactionDto.getTransactionId(),
                 propertyDto.getPublishDate(), propertyDto.getPostalCode(), propertyDto.getRooms());
 
         // check rules
-        String ruleEngineResult = propertyRulesEngine.evaluateRules(propertyDto, scoringStatsDto);
+        List<RuleResult> ruleEngineResult = propertyRulesEngine.evaluateRules(propertyDto, scoringStatsDto);
 
-        if(ruleEngineResult != null) {
-            // save alert
-            Alert alertSaved = save(ruleEngineResult, propertyTransactionDto.getIdentifier(), propertyTransactionDto.getTransactionId());
+        if(!ruleEngineResult.isEmpty()) {
 
-            // add alert event
-            AlertDto alertDto = buildAlertDto(alertSaved);
-            eventStoreService.addAlertEvent(alertDto);
-            return alertDto;
+            for(RuleResult ruleResult : ruleEngineResult) {
+                // save alert
+                Alert alertSaved = save(ruleResult.getDescription(), propertyTransactionDto.getIdentifier(), propertyTransactionDto.getTransactionId());
+
+                // add alert event
+                AlertDto alertDto = buildAlertDto(alertSaved);
+                eventStoreService.addAlertEvent(alertDto);
+            }
         }
-        return null;
     }
 
     @Override

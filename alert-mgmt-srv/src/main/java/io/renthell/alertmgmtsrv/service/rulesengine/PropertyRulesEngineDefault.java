@@ -2,6 +2,7 @@ package io.renthell.alertmgmtsrv.service.rulesengine;
 
 import io.renthell.alertmgmtsrv.service.rulesengine.rules.OverPriceAverageRule;
 import io.renthell.alertmgmtsrv.service.rulesengine.rules.PropertyRule;
+import io.renthell.alertmgmtsrv.service.rulesengine.rules.RuleResult;
 import io.renthell.alertmgmtsrv.service.rulesengine.rules.UnderPriceAverageRule;
 import io.renthell.alertmgmtsrv.web.dto.PropertyDto;
 import io.renthell.alertmgmtsrv.web.dto.ScoringStatsDto;
@@ -21,15 +22,15 @@ public class PropertyRulesEngineDefault implements PropertyRulesEngine {
     }
 
     @Override
-    public String evaluateRules(PropertyDto propertyDto, ScoringStatsDto scoringStatsDto) {
-        Boolean ruleResult = null;
+    public List<RuleResult> evaluateRules(PropertyDto propertyDto, ScoringStatsDto scoringStatsDto) {
+        List<RuleResult> ruleResultList = new ArrayList<>();
         for (PropertyRule rule : rules) {
 
-            ruleResult = rule.evaluate(propertyDto, scoringStatsDto);
-            if(ruleResult) {
-                return rule.identifier();
+            RuleResult ruleResult = rule.evaluate(propertyDto, scoringStatsDto);
+            if(ruleResult != null) {
+                ruleResultList.add(ruleResult);
             }
         }
-        return null;
+        return ruleResultList;
     }
 }

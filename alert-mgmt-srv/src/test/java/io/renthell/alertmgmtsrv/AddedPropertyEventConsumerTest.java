@@ -146,7 +146,7 @@ public class AddedPropertyEventConsumerTest {
     AlertDto alert = alertResponseList.get(0);
 
     Assert.assertTrue(alertResponseList.size() == 1);
-    Assert.assertEquals(alert.getAlertDescriptor(), "OverPriceAverageRule");
+    Assert.assertEquals(alert.getAlertDescriptor(), "OverPriceAverageRule: [property id: 142550444], [transaction id: 3], [transaction price: 1890.0], [average price: 1058.5], [percentage: 15], [average price + percentage: 1217.275]");
   }
 
 }

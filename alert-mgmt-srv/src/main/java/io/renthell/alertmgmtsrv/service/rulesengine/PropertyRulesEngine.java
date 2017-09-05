@@ -1,9 +1,12 @@
 package io.renthell.alertmgmtsrv.service.rulesengine;
 
+import io.renthell.alertmgmtsrv.service.rulesengine.rules.RuleResult;
 import io.renthell.alertmgmtsrv.web.dto.PropertyDto;
 import io.renthell.alertmgmtsrv.web.dto.ScoringStatsDto;
 
+import java.util.List;
+
 public interface PropertyRulesEngine {
 
-    String evaluateRules(PropertyDto propertyDto, ScoringStatsDto scoringStatsDto);
+    List<RuleResult> evaluateRules(PropertyDto propertyDto, ScoringStatsDto scoringStatsDto);
 }
