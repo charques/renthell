@@ -1,11 +1,11 @@
 # ------------------------------------------------------------------------------
 #
-# docker-compose -p local_renthell down
-# docker-compose -p local_renthell up -d
-# docker-compose -p local_renthell logs
+# docker-compose down
+# docker-compose up -d
+# docker-compose logs
 #
 ## regenerate nginx and kafka
-# docker-compose -p local_renthell up --force-recreate --build
+# docker-compose up --force-recreate --build
 #
 # ------------------------------------------------------------------------------
 version: '3.1'
@@ -20,10 +20,18 @@ services:
            - property-mgmt-srv
            - scoring-mgmt-srv
            - alert-mgmt-srv
+           - web-app
        depends_on:
            - property-mgmt-srv
            - scoring-mgmt-srv
            - alert-mgmt-srv
+           - web-app
+
+    web-app:
+      build: ./web-app
+      container_name: "renthell-webapp"
+      ports:
+          - 7000:90
 
     event-store-srv:
         image: renthell/event-store-srv:latest
