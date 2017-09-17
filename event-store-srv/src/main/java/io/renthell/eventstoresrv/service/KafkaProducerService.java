@@ -6,5 +6,5 @@ import io.renthell.eventstoresrv.persistence.model.RawEvent;
 
 public interface KafkaProducerService {
 
-    public void publishEvent(final RawEvent rawEvent) throws JsonProcessingException;
+    void publishEvent(final RawEvent rawEvent) throws JsonProcessingException;
 }

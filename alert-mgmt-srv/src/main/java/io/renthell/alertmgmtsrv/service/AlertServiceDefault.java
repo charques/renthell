@@ -56,11 +56,11 @@ public class AlertServiceDefault implements AlertService {
     public void evaluateProperty(PropertyTransactionDto propertyTransactionDto) throws JsonProcessingException {
         PropertyDto propertyDto = getPropertyDetails(propertyTransactionDto.getIdentifier());
 
-        ScoringStatsDto scoringStatsDto = getScoringStats(propertyTransactionDto.getTransactionId(),
+        List<ScoringStatsDto> scoringStatsDtoList = getScoringStats(propertyTransactionDto.getTransactionId(),
                 propertyDto.getPublishDate(), propertyDto.getPostalCode(), propertyDto.getRooms());
 
         // check rules
-        List<RuleResult> ruleEngineResult = propertyRulesEngine.evaluateRules(propertyDto, scoringStatsDto);
+        List<RuleResult> ruleEngineResult = propertyRulesEngine.evaluateRules(propertyDto, scoringStatsDtoList);
 
         if(!ruleEngineResult.isEmpty()) {
 
@@ -106,12 +106,13 @@ public class AlertServiceDefault implements AlertService {
         URI uri = builder.buildAndExpand(uriParams).toUri();
 
         restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
+        log.info("Calling property API: {}", uri.toString());
         PropertyDto property = restTemplate.getForObject(uri, PropertyDto.class);
         log.info("Property retrieved: {}", property.toString());
         return property;
     }
 
-    private ScoringStatsDto getScoringStats(String transactionId, Date publishDate, String postalCode, Integer rooms) {
+    private List<ScoringStatsDto> getScoringStats(String transactionId, Date publishDate, String postalCode, Integer rooms) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(publishDate);
         int month = cal.get(Calendar.MONTH) + 1;
@@ -128,11 +129,16 @@ public class AlertServiceDefault implements AlertService {
                 .queryParam("rooms", rooms);
 
         URI uri = builder.build().toUri();
+        log.info("Calling scoring API: {}", uri.toString());
+        ScoringStatsDto[] scoringStatsDtoList = restTemplate.getForObject(uri, ScoringStatsDto[].class);
 
-        ScoringStatsDto scoringStatsDto = restTemplate.getForObject(uri, ScoringStatsDto.class);
-        log.info("Scoring stats retrieved: {}", scoringStatsDto.toString());
+        List<ScoringStatsDto> result = new ArrayList<>();
+        if (scoringStatsDtoList != null) {
+            log.info("Scoring stats retrieved: {}", scoringStatsDtoList.length);
+            result = Arrays.asList(scoringStatsDtoList);
+        }
 
-        return scoringStatsDto;
+        return result;
     }
 
     private List<AlertDto> buildAlertDtoList(List<Alert> alertlist) {

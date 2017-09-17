@@ -65,9 +65,12 @@ public class CrawlEngine {
 
         List<String> seeds = seedsConfig.getSeeds();
         for(int i = 0; i < seeds.size(); i++) {
-            controller.addSeed(seeds.get(i));
+            //controller.addSeed(seeds.get(i));
         }
-        //controller.addSeed("https://www.fotocasa.es/vivienda/madrid-capital/calefaccion-parking-jardin-trastero-piscina-valdemarin-142665093?tti=3");
+        controller.addSeed("https://www.fotocasa.es/vivienda/madrid-capital/aire-acondicionado-calefaccion-parking-terraza-trastero-zona-comunitaria-ascensor-piscina-no-amueblado-avenida-osa-mayor-142289767?RowGrid=4&tti=3&opi=300&RowGrid=4&tti=3&opi=300");
+        controller.addSeed("https://www.fotocasa.es/vivienda/madrid-capital/calefaccion-parking-jardin-trastero-piscina-valdemarin-142665093?tti=3");
+        controller.addSeed("https://www.fotocasa.es/vivienda/madrid-capital/aire-acondicionado-parking-terraza-zona-comunitaria-ascensor-amueblado-piscina-avenida-del-papa-negro-143340040?RowGrid=1&tti=3&opi=300");
+        //controller.addSeed("https://www.fotocasa.es/vivienda/madrid-capital/cortes-huertas-142056853?RowGrid=1&tti=3&opi=300");
         //controller.addSeed("https://www.fotocasa.es/vivienda/madrid-capital/calefaccion-parking-jardin-trastero-piscina-valdemarin-142665093?tti=1");
         //controller.addSeed("https://www.fotocasa.es/vivienda/madrid-capital/calefaccion-terraza-ascensor-castellana-138786116?RowGrid=10&tti=3&opi=300")
 

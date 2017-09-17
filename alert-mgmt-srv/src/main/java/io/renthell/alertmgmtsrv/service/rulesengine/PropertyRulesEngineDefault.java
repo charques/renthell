@@ -22,13 +22,15 @@ public class PropertyRulesEngineDefault implements PropertyRulesEngine {
     }
 
     @Override
-    public List<RuleResult> evaluateRules(PropertyDto propertyDto, ScoringStatsDto scoringStatsDto) {
+    public List<RuleResult> evaluateRules(PropertyDto propertyDto, List<ScoringStatsDto> scoringStatsDtoList) {
         List<RuleResult> ruleResultList = new ArrayList<>();
         for (PropertyRule rule : rules) {
 
-            RuleResult ruleResult = rule.evaluate(propertyDto, scoringStatsDto);
-            if(ruleResult != null) {
-                ruleResultList.add(ruleResult);
+            for(ScoringStatsDto scoringStatsDto : scoringStatsDtoList) {
+                RuleResult ruleResult = rule.evaluate(propertyDto, scoringStatsDto);
+                if (ruleResult != null) {
+                    ruleResultList.add(ruleResult);
+                }
             }
         }
         return ruleResultList;

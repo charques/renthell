@@ -9,12 +9,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.data.annotation.Id;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static org.springframework.util.Assert.notNull;
 
 /**
  * Created by cfhernandez on 5/7/17.
@@ -111,6 +110,21 @@ public class FotocasaItem {
 
     public static FotocasaItem build(WebURL weburl, JSONObject mainObj, JSONObject secondaryObj) {
         return new FotocasaItemBuilder(weburl, mainObj, secondaryObj).build();
+    }
+
+    public void validate() {
+        Assert.notNull(postalCode, "PostalCode can not be null. " + this.getWebUrl());
+        Assert.isTrue(postalCode.length() > 0, "PostalCode can not be empty. " + this.getWebUrl());
+        Assert.notNull(mts2, "Mts2 can not be null. " + this.getWebUrl());
+        Assert.isTrue(mts2.length() > 0, "Mts2 can not be empty. " + this.getWebUrl());
+        Assert.notNull(rooms, "Rooms can not be null. " + this.getWebUrl());
+        Assert.isTrue(rooms.length() > 0, "Rooms can not be empty. " + this.getWebUrl());
+
+        if(this.getTransactions() != null) {
+            for(FotocasaTransactionItem item : this.getTransactions()) {
+                item.validate();
+            }
+        }
     }
 
     static class FotocasaItemBuilder {
@@ -254,8 +268,8 @@ public class FotocasaItem {
         }
 
         private void check(JSONObject mainObj, JSONObject secondaryObj) {
-            notNull(mainObj, "mainObj cannot be null");
-            notNull(secondaryObj, "secondaryObj cannot be null");
+            Assert.notNull(mainObj, "mainObj cannot be null");
+            Assert.notNull(secondaryObj, "secondaryObj cannot be null");
         }
 
     }

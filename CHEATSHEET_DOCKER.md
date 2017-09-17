@@ -33,3 +33,9 @@ export DOCKER_HOST=tcp://192.168.99.100:2376 -- la maquina asociada al docker_ho
 `eval $(docker-machine env)` - configurar el shell
 
 `docker rmi $(docker images -f "dangling=true" -q)` - eliminar imagenes <none>
+
+`docker network inspect renthell_default` - inspect network
+
+`docker info`- docker INFO
+
+`docker exec -ti <container_name> bash` - docker container bash

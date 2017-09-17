@@ -9,6 +9,6 @@ spring:
 kafka:
   bootstrap-servers: kafka:9092
   groupid:
-    events: events-group
+    events: events-group-scoring
   topic:
     events: test

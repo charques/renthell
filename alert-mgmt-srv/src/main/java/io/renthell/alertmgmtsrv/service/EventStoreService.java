@@ -5,5 +5,5 @@ import io.renthell.alertmgmtsrv.web.dto.AlertDto;
 
 public interface EventStoreService {
 
-    public Boolean addAlertEvent(AlertDto item) throws JsonProcessingException;
+    Boolean addAlertEvent(AlertDto item) throws JsonProcessingException;
 }

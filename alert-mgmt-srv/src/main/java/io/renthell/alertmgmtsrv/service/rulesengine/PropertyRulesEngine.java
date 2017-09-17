@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface PropertyRulesEngine {
 
-    List<RuleResult> evaluateRules(PropertyDto propertyDto, ScoringStatsDto scoringStatsDto);
+    List<RuleResult> evaluateRules(PropertyDto propertyDto, List<ScoringStatsDto> scoringStatsDto);
 }

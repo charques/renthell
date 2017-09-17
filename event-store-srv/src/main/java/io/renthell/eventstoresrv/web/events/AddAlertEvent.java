@@ -24,8 +24,4 @@ public class AddAlertEvent extends BaseEvent {
         super();
     }
 
-    public AddAlertEvent(final String correlationId) {
-        super(correlationId);
-    }
-
 }

@@ -30,11 +30,10 @@ public class PropertyMgmtController {
     @RequestMapping(value = "/property-transaction", method = RequestMethod.POST)
     public @ResponseBody
     ResponseEntity<?> createPropertyTransaction(final @Valid @RequestBody PropertyInputDto property) {
-        log.info("Creating Property : {}", property);
 
         try {
             eventStoreService.produceAddPropertyTransactionEvent(property);
-            log.info("Property transaction added: OK");
+            log.info("createPropertyTransaction: OK");
             return new ResponseEntity<String>(HttpStatus.OK);
 
         } catch (JsonProcessingException e) {

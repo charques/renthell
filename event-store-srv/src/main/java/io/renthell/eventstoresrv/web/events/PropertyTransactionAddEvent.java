@@ -53,8 +53,4 @@ public class PropertyTransactionAddEvent extends BaseEvent {
         super();
     }
 
-    public PropertyTransactionAddEvent(final String correlationId) {
-        super(correlationId);
-    }
-
 }

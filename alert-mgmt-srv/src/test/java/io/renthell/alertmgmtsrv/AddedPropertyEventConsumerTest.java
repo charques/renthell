@@ -124,7 +124,7 @@ public class AddedPropertyEventConsumerTest {
             .queryParam("rooms", "4");
 
     URI uri2 = builder2.build().toUri();
-    String scoringResponseBody = "{\"scoring\":{\"transactionId\":\"3\",\"month\":7,\"year\":2017,\"postalCode\":\"28014\"},\"priceAverage\":1058.5,\"priceMedian\":1000.5,\"priceMts2Average\":7.560714324315389,\"priceMts2Median\":7.14642858505249,\"firstRange\":{\"percentage\":33,\"range\":\"[801-1000]\"},\"secondRange\":{\"percentage\":33,\"range\":\"[1001-1200]\"},\"aggregated\":false}";
+    String scoringResponseBody = "[{\"scoring\":{\"transactionId\":\"3\",\"month\":7,\"year\":2017,\"postalCode\":\"28014\"},\"priceAverage\":1058.5,\"priceMedian\":1000.5,\"priceMts2Average\":7.560714324315389,\"priceMts2Median\":7.14642858505249,\"firstRange\":{\"percentage\":33,\"range\":\"[801-1000]\"},\"secondRange\":{\"percentage\":33,\"range\":\"[1001-1200]\"},\"aggregated\":false}]";
     mockServer.expect(requestTo(uri2.toString())).andRespond(withSuccess(scoringResponseBody, MediaType.APPLICATION_JSON));
 
     // mock event store rest api

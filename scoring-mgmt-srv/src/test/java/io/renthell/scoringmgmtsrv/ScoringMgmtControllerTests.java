@@ -98,6 +98,8 @@ public class ScoringMgmtControllerTests {
         List<ScoringStatsDto> scoringStatsDtoList = jsonMapper.readValue(result.getResponse().getContentAsString(),
                 new TypeReference<List<ScoringStatsDto>>(){});
 
+
+
         assertThat(scoringStatsDtoList.size()).isEqualTo(2);
     }
 

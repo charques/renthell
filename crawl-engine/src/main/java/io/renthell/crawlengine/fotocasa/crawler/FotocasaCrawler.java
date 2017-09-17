@@ -63,24 +63,29 @@ public class FotocasaCrawler extends WebCrawler {
         if (page.getParseData() instanceof HtmlParseData) {
             HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
             WebURL webUrl = page.getWebURL();
-            log.debug("Status code: {}", page.getStatusCode());
-            log.debug("Response headers: {}", page.getFetchResponseHeaders().toString());
-            log.debug("Redirected to URL: {}", page.getRedirectedToUrl());
-            log.debug("Outgoing Urls: {}", htmlParseData.getOutgoingUrls());
+            //log.debug("Status code: {}", page.getStatusCode());
+            //log.debug("Response headers: {}", page.getFetchResponseHeaders().toString());
+            //log.debug("Redirected to URL: {}", page.getRedirectedToUrl());
+            //log.debug("Outgoing Urls: {}", htmlParseData.getOutgoingUrls());
+            //log.info(webUrl.getURL());
 
-            log.info(webUrl.getURL());
-
+            FotocasaItem parsedItem = null;
             try {
-                FotocasaItem parsedItem = (new FotocasaPageParser())
+                parsedItem = (new FotocasaPageParser())
                         .webUrl(webUrl)
                         .parseData(htmlParseData)
                         .build();
-                log.debug(parsedItem.toString());
 
+            } catch (ParseException | JSONException e1) {
+                log.error("Parse ERROR: " + e1.getMessage() + " - " + webUrl);
+            }
+
+            try {
+                parsedItem.validate();
                 fotocasaService.saveUpdate(parsedItem);
-
-            } catch (ParseException | JSONException e) {
-                log.warn(e.getMessage());
+            }
+            catch (IllegalArgumentException e2) {
+                log.error("Validation ERROR: " + e2.getMessage() + " - " + webUrl);
             }
         }
 

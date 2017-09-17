@@ -32,7 +32,7 @@ public class FotocasaService {
             // save new item
             itemToSave.setCreatedDate(new Date());
             itemSaved = fotocasaRepository.save(itemToSave);
-            log.info("Saved: " + itemSaved.toString());
+            log.info("Saved OK: " + itemSaved.getWebUrl());
 
             // post ADD property transaction
             propertyMgmtService.addPropertyTransaction(itemSaved, 0);
@@ -45,7 +45,7 @@ public class FotocasaService {
                     List<FotocasaTransactionItem> transactions = itemRetrieved.getTransactions();
                     transactions.add(transaction);
                     itemRetrieved.setTransactions(transactions);
-                    transactionIndex = 0;
+                    transactionIndex = transactions.size()-1;
                 }
                 else {
                     // update transaction
@@ -57,13 +57,13 @@ public class FotocasaService {
                 itemRetrieved.setUpdated(true);
                 // update item
                 itemSaved = fotocasaRepository.save(itemRetrieved);
-                log.info("Updated: " + itemSaved.toString());
+                log.info("Updated OK: " + itemSaved.getWebUrl());
 
                 // post UPDATED property transaction event
                 propertyMgmtService.addPropertyTransaction(itemSaved, transactionIndex);
             }
             else {
-                log.info("No update: " + itemRetrieved.toString());
+                log.info("No action: " + itemRetrieved.getWebUrl());
             }
         }
         return itemSaved;

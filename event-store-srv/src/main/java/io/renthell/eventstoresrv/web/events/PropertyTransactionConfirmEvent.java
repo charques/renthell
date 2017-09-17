@@ -21,8 +21,4 @@ public class PropertyTransactionConfirmEvent extends BaseEvent {
         super();
     }
 
-    public PropertyTransactionConfirmEvent(final String correlationId) {
-        super(correlationId);
-    }
-
 }

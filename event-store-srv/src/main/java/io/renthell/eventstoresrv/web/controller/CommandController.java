@@ -5,6 +5,7 @@ import io.renthell.eventstoresrv.service.exception.EventRetrievingException;
 import io.renthell.eventstoresrv.web.command.AddAlertCmd;
 import io.renthell.eventstoresrv.web.command.AddPropertyTransactionCmd;
 import io.renthell.eventstoresrv.web.command.ConfirmPropertyTransactionCmd;
+import io.renthell.eventstoresrv.web.dto.EventDto;
 import io.renthell.eventstoresrv.web.events.AddAlertEvent;
 import io.renthell.eventstoresrv.web.events.BaseEvent;
 import io.renthell.eventstoresrv.web.events.PropertyTransactionAddEvent;
@@ -45,9 +46,8 @@ public class CommandController {
         log.info("Adding property transaction {}", addPropertyCommand.toString());
         PropertyTransactionAddEvent event = modelMapper.map(addPropertyCommand, PropertyTransactionAddEvent.class);
         String correlationId = UUID.randomUUID().toString();
-        event.setCorrelationId(correlationId);
 
-        return produceEvent(event, ucBuilder);
+        return produceEvent(event, correlationId, ucBuilder);
     }
 
     @RequestMapping(value = "/confirm-property-transaction", method = RequestMethod.POST)
@@ -57,9 +57,8 @@ public class CommandController {
         log.info("Confirming property transaction {}", confirmPropertyCommand.toString());
         PropertyTransactionConfirmEvent event = modelMapper.map(confirmPropertyCommand, PropertyTransactionConfirmEvent.class);
         String correlationId = UUID.randomUUID().toString();
-        event.setCorrelationId(correlationId);
 
-        return produceEvent(event, ucBuilder);
+        return produceEvent(event, correlationId, ucBuilder);
     }
 
     @RequestMapping(value = "/add-alert", method = RequestMethod.POST)
@@ -69,18 +68,17 @@ public class CommandController {
         log.info("Adding alert {}", addAlertCommand.toString());
         AddAlertEvent event = modelMapper.map(addAlertCommand, AddAlertEvent.class);
         String correlationId = UUID.randomUUID().toString();
-        event.setCorrelationId(correlationId);
 
-        return produceEvent(event, ucBuilder);
+        return produceEvent(event, correlationId, ucBuilder);
     }
 
     @RequestMapping(value = "/get-event/{uuid}", method = RequestMethod.GET)
     public ResponseEntity<?> getEvent(@PathVariable("uuid") String uuid) {
         log.info("Fetching Event with uuid {}", uuid);
         try {
-            BaseEvent baseEvent = eventStoreService.findById(uuid);
-            if (baseEvent != null) {
-                return new ResponseEntity<>(baseEvent, HttpStatus.OK);
+            EventDto eventDto = eventStoreService.findById(uuid);
+            if (eventDto != null) {
+                return new ResponseEntity<>(eventDto, HttpStatus.OK);
             }
         }
         catch (EventRetrievingException e) {
@@ -92,9 +90,10 @@ public class CommandController {
         throw new EventNotFoundException(uuid);
     }
 
-    private ResponseEntity<?> produceEvent(BaseEvent event, UriComponentsBuilder ucBuilder) {
+    private ResponseEntity<?> produceEvent(BaseEvent event, String correlationId, UriComponentsBuilder ucBuilder) {
         try {
-            String eventId = eventStoreService.saveAndPublish(event);
+            String eventId = eventStoreService.saveAndPublish(event, correlationId);
+            log.info("Event produced: {}", eventId);
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(ucBuilder.path("/command/get-event/{id}").buildAndExpand(eventId).toUri());
             return new ResponseEntity<String>(headers, HttpStatus.CREATED);

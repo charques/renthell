@@ -38,7 +38,6 @@ public class EventConsumer {
 
   @KafkaListener(topics = "${kafka.topic.events}")
   public void consumeEvent(String payload) {
-    log.info("Event consumed. Event payload='{}'", payload);
 
     try {
       JsonNode payloadJson = objectMapper.readTree(payload);
@@ -47,7 +46,7 @@ public class EventConsumer {
         PropertyTransactionDto propertyTransactionDto = buildPropertyDto(payload);
         alertService.evaluateProperty(propertyTransactionDto);
 
-        log.info("Property evaluated.");
+        log.info("Property transaction confirmed event processed.");
       }
 
       latch.countDown();

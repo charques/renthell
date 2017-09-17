@@ -43,7 +43,6 @@ public class EventConsumer {
 
   @KafkaListener(topics = "${kafka.topic.events}")
   public void consumeEvent(String payload) {
-    log.info("Event consumed. Event payload='{}'", payload);
 
     try {
       JsonNode payloadJson = objectMapper.readTree(payload);
@@ -52,7 +51,7 @@ public class EventConsumer {
         PropertyDto propertyDto = buildPropertyDto(payload);
         ScoringStatsDto scoringStatsDto = scoringService.addPropertyToScoring(propertyDto);
 
-        log.info("Scoring updated: {}", scoringStatsDto.toString());
+        log.info("Property transaction added event processed. Scoring updated: {}", scoringStatsDto.toString());
       }
 
       latch.countDown();
@@ -76,9 +75,9 @@ public class EventConsumer {
       date = format.parse(publishDateString);
     }
     String postalCode = eventPayloadJson.get("postalCode").textValue();
-    int rooms = Integer.parseInt(eventPayloadJson.get("rooms").textValue());
-    Float price = Float.parseFloat(eventPayloadJson.get("price").textValue());
-    int mts2 = Integer.parseInt(eventPayloadJson.get("mts2").textValue());
+    int rooms = getInteger(eventPayloadJson.get("rooms").textValue());
+    Float price = getFloat(eventPayloadJson.get("price").textValue());
+    int mts2 = getInteger(eventPayloadJson.get("mts2").textValue());
 
     PropertyDto propertyDto = new PropertyDto();
     propertyDto.setTransactionId(transactionId);
@@ -89,7 +88,24 @@ public class EventConsumer {
     propertyDto.setMts2(mts2);
 
     return propertyDto;
+  }
 
+  private Float getFloat(String numberStr) {
+    try{
+      return Float.parseFloat(numberStr);
+    }
+    catch(NumberFormatException e) {
+      return 0F;
+    }
+  }
+
+  private Integer getInteger(String numberStr) {
+    try{
+      return Integer.parseInt(numberStr);
+    }
+    catch(NumberFormatException e) {
+      return 0;
+    }
   }
 
 }

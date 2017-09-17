@@ -15,6 +15,6 @@ endpoints:
 kafka:
   bootstrap-servers: kafka:9092
   groupid:
-    events: events-group
+    events: events-group-property
   topic:
     events: test

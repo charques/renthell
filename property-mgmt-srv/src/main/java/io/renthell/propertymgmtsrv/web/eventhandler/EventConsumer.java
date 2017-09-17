@@ -45,8 +45,6 @@ public class EventConsumer {
 
   @KafkaListener(topics = "${kafka.topic.events}")
   public void consumeEvent(String payload) {
-    log.info("Event consumed. Event payload='{}'", payload);
-
     try {
       JsonNode payloadJson = objectMapper.readTree(payload);
 
@@ -106,9 +104,9 @@ public class EventConsumer {
     final TransactionDto transactionDto = new TransactionDto();
     transactionDto.setTransactionId(eventPayloadJson.get("transactionId").textValue());
     transactionDto.setTransaction(eventPayloadJson.get("transaction").textValue());
-    transactionDto.setPrice(eventPayloadJson.get("price").floatValue());
-    transactionDto.setPriceMin(eventPayloadJson.get("priceMin").floatValue());
-    transactionDto.setPriceMax(eventPayloadJson.get("priceMax").floatValue());
+    transactionDto.setPrice(getFloat(eventPayloadJson.get("price").textValue()));
+    transactionDto.setPriceMin(getFloat(eventPayloadJson.get("priceMin").textValue()));
+    transactionDto.setPriceMax(getFloat(eventPayloadJson.get("priceMax").textValue()));
     transactionDto.setPriceRange(eventPayloadJson.get("priceRange").textValue());
 
     List<TransactionDto> transactions = new ArrayList<>();
@@ -116,5 +114,14 @@ public class EventConsumer {
     propertyDto.setTransactions(transactions);
 
     return propertyDto;
+  }
+
+  private Float getFloat(String numberStr) {
+    try{
+      return Float.parseFloat(numberStr);
+    }
+    catch(NumberFormatException e) {
+      return 0F;
+    }
   }
 }

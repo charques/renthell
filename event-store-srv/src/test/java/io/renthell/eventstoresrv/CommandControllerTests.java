@@ -1,10 +1,12 @@
 package io.renthell.eventstoresrv;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.renthell.eventstoresrv.web.command.AddPropertyTransactionCmd;
 import io.renthell.eventstoresrv.persistence.model.RawEvent;
 import io.renthell.eventstoresrv.config.ConfigServerWithFongoConfiguration;
 import io.renthell.eventstoresrv.web.command.ConfirmPropertyTransactionCmd;
+import io.renthell.eventstoresrv.web.dto.EventDto;
 import io.renthell.eventstoresrv.web.events.BaseEvent;
 import io.renthell.eventstoresrv.web.events.PropertyTransactionAddEvent;
 import org.junit.Assert;
@@ -84,8 +86,10 @@ public class CommandControllerTests {
         ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:8980/commands/get-event/" + rawEventFongo.getId()));
         resultAction.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
         MvcResult result = resultAction.andReturn();
-        BaseEvent baseEventResponse = jsonMapper.readValue(result.getResponse().getContentAsString(), PropertyTransactionAddEvent.class);
-        Assert.assertEquals(rawEventFongo.getId(), baseEventResponse.getId());
+
+        JsonNode baseEventResponse = jsonMapper.readTree(result.getResponse().getContentAsString());
+        String uuid = baseEventResponse.get("uuid").asText();
+        Assert.assertEquals(rawEventFongo.getId(), uuid);
     }
 
     @Test

@@ -18,7 +18,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-public class RawEvent  implements Serializable {
+public class RawEvent implements Serializable {
 
     @Id
     private String id;

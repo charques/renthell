@@ -1,6 +1,10 @@
 package io.renthell.crawlengine.fotocasa.model;
 
-import lombok.*;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.util.Assert;
 
 /**
  * Created by cfhernandez on 8/7/17.
@@ -17,6 +21,11 @@ public class FotocasaTransactionItem {
     private String priceMin;
     private String priceRange;
     private String priceOas;
+
+    public void validate() {
+        Assert.notNull(price, "Price can not be null");
+        Assert.isTrue(price.length() > 0, "Price can not be empty");
+    }
 
     @Override
     public boolean equals(Object o) {

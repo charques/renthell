@@ -2,6 +2,7 @@ package io.renthell.propertymgmtsrv.web.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -12,6 +13,7 @@ import java.util.List;
  */
 @Getter
 @Setter
+@ToString
 public class PropertyDto {
 
     private String identifier;

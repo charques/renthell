@@ -3,6 +3,7 @@ package io.renthell.eventstoresrv.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.renthell.eventstoresrv.service.exception.EventRetrievingException;
+import io.renthell.eventstoresrv.web.dto.EventDto;
 import io.renthell.eventstoresrv.web.events.BaseEvent;
 import io.renthell.eventstoresrv.persistence.model.RawEvent;
 import io.renthell.eventstoresrv.persistence.repo.RawEventRepo;
@@ -29,8 +30,10 @@ public class EventStoreServiceDefault implements EventStoreService {
     private KafkaProducerService kafkaProducer;
 
     @Override
-    public String saveAndPublish(final BaseEvent event) throws JsonProcessingException {
-        RawEvent rawEventToSave = convert(event);
+    public String saveAndPublish(final BaseEvent event, final String correlationId) throws JsonProcessingException {
+        String eventAsString = jsonMapper.writeValueAsString(event);
+        RawEvent rawEventToSave = new RawEvent(correlationId, eventAsString, event.getClass().getCanonicalName());
+
         RawEvent rawEventSaved = eventRepo.save(rawEventToSave);
 
         kafkaProducer.publishEvent(rawEventSaved);
@@ -39,7 +42,7 @@ public class EventStoreServiceDefault implements EventStoreService {
     }
 
     @Override
-    public BaseEvent findById(String uuid) throws EventRetrievingException {
+    public EventDto findById(String uuid) throws EventRetrievingException {
         RawEvent rawEvent = eventRepo.findOne(uuid);
 
         if(rawEvent != null) {
@@ -48,8 +51,14 @@ public class EventStoreServiceDefault implements EventStoreService {
                 BaseEvent baseEvent = (BaseEvent) c.newInstance();
                 String payload = rawEvent.getPayload();
                 baseEvent = jsonMapper.readValue(payload, baseEvent.getClass());
-                baseEvent.setId(rawEvent.getId());
-                return baseEvent;
+
+                EventDto eventDto = new EventDto();
+                eventDto.setUuid(rawEvent.getId());
+                eventDto.setType(rawEvent.getType());
+                eventDto.setCorrelationId(rawEvent.getCorrelationId());
+                eventDto.setCreationDate(rawEvent.getCreationDate());
+                eventDto.setEvent(baseEvent);
+                return eventDto;
 
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IOException e) {
                 throw new EventRetrievingException(uuid, e);
@@ -58,16 +67,4 @@ public class EventStoreServiceDefault implements EventStoreService {
         return null;
     }
 
-    private RawEvent convert(final BaseEvent event) throws JsonProcessingException {
-        final RawEvent rawEvent = new RawEvent();
-        rawEvent.setType(event.getClass().getCanonicalName());
-        rawEvent.setCorrelationId(event.getCorrelationId());
-
-        String eventAsString = null;
-        eventAsString = jsonMapper.writeValueAsString(event);
-        rawEvent.setPayload(eventAsString);
-        log.info(rawEvent.toString());
-
-        return rawEvent;
-    }
 }
