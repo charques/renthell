@@ -19,6 +19,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -66,7 +67,7 @@ public class PropertyMgmtControllerTests {
     private RestTemplate restTemplate;
 
     @Test
-    public void testAddPropertyTransactionSuccess() throws Exception {
+    public void testAddPropertyTransaction_Success() throws Exception {
 
         // mock event store rest api
         MockRestServiceServer mockServer = MockRestServiceServer.bindTo(restTemplate).build();
@@ -83,7 +84,7 @@ public class PropertyMgmtControllerTests {
     }
 
     @Test
-    public void testAddPropertyTransactionError() throws Exception {
+    public void testAddPropertyTransaction_EventStoreBadRequestError() throws Exception {
 
         // mock event store rest api
         MockRestServiceServer mockServer = MockRestServiceServer.bindTo(restTemplate).build();
@@ -103,7 +104,30 @@ public class PropertyMgmtControllerTests {
     }
 
     @Test
-    public void testGetPropertyTransactionSuccess() throws Exception {
+    public void testAddPropertyTransaction_JsonError() throws Exception {
+        // add property transaction
+        String malformedBody = "{\"identifier\":\"142550444\",\"creationDate\":}";
+
+        mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:8091/api/property-transaction")
+                .contentType(MediaType.APPLICATION_JSON).content(malformedBody))
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+    }
+
+    @Test
+    public void testAddPropertyTransaction_BadMediaTypeError() throws Exception {
+        // add property transaction
+        PropertyDto property = new PropertyDto();
+        property.setIdentifier("142550444");
+
+        String body = jsonMapper.writeValueAsString(property);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:8091/api/property-transaction")
+                .contentType(MediaType.APPLICATION_XML).content(body))
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+    }
+
+    @Test
+    public void testGetPropertyTransaction_Success() throws Exception {
         Property propertyFongo = getTestProperty("142550444");
         Transaction transactionFongo = propertyFongo.getTransactions().get(0);
 
@@ -122,13 +146,13 @@ public class PropertyMgmtControllerTests {
     }
 
     @Test
-    public void testGetPropertyTransactionNoResult() throws Exception {
+    public void testGetPropertyTransaction_NoResult() throws Exception {
         ResultActions resultAction = mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:8091/api/property-transaction/0" ));
         resultAction.andExpect(MockMvcResultMatchers.status().is4xxClientError());
     }
 
     @Test
-    public void testGetPropertyTransactionListSuccess() throws Exception {
+    public void testGetPropertyTransaction_ListSuccess() throws Exception {
         Property propertyFongo1 = getTestProperty("142550444");
         Transaction transactionFongo1 = propertyFongo1.getTransactions().get(0);
         Property propertyFongo2 = getTestProperty("142550442");

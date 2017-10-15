@@ -3,7 +3,6 @@ package io.renthell.propertymgmtsrv.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import io.renthell.propertymgmtsrv.configuration.EventStoreConfiguration;
 import io.renthell.propertymgmtsrv.web.dto.PropertyInputDto;
 import lombok.extern.slf4j.Slf4j;

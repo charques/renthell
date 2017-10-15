@@ -5,7 +5,7 @@ import io.renthell.propertymgmtsrv.web.dto.PropertyInputDto;
 
 public interface EventStoreService {
 
-    public Boolean produceAddPropertyTransactionEvent(PropertyInputDto item) throws JsonProcessingException;
+    Boolean produceAddPropertyTransactionEvent(PropertyInputDto item) throws JsonProcessingException;
 
-    public Boolean produceConfirmPropertyTransactionEvent(String propertyId, String transactionId);
+    Boolean produceConfirmPropertyTransactionEvent(String propertyId, String transactionId);
 }

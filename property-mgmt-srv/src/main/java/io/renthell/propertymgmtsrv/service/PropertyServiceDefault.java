@@ -43,7 +43,7 @@ public class PropertyServiceDefault implements PropertyService {
         Property propertySaved = null;
         if (propertyRetrieved == null) {
             // save new item
-            Property propertyToSave = buildProperty(propertyDto);
+            Property propertyToSave = modelMapper.map(propertyDto, Property.class);
             propertyToSave.updateCalculations();
             transaction = propertyToSave.getTransactions().get(0);
             propertySaved = propertyRepo.save(propertyToSave);
@@ -51,7 +51,7 @@ public class PropertyServiceDefault implements PropertyService {
         } else {
             TransactionDto transactionDto = propertyDto.getTransactions().get(0);
             Integer transactionIndex = getTransactionIndex(propertyRetrieved, transactionDto.getTransactionId());
-            transaction = buildTransaction(transactionDto);
+            transaction = modelMapper.map(transactionDto, Transaction.class);
 
             if(transactionIndex < 0) {
                 // new transaction
@@ -73,7 +73,7 @@ public class PropertyServiceDefault implements PropertyService {
             log.info("Property updated: " + propertySaved.toString());
         }
 
-        PropertyDto result = buildPropertyDto(propertySaved);
+        PropertyDto result = modelMapper.map(propertySaved, PropertyDto.class);
 
         // produce confirm event
         eventStoreService.produceConfirmPropertyTransactionEvent(result.getIdentifier(), transaction.getTransactionId());
@@ -90,25 +90,13 @@ public class PropertyServiceDefault implements PropertyService {
     @Override
     public PropertyDto findOne(String id) {
         Property property = propertyRepo.findOne(id);
-        return (property != null) ? buildPropertyDto(property) : null;
+        return (property != null) ? modelMapper.map(property, PropertyDto.class) : null;
     }
 
     private List<PropertyDto> buildPropertyDtoList(List<Property> propertylist) {
         java.lang.reflect.Type targetListType = new TypeToken<List<PropertyDto>>() {}.getType();
         List<PropertyDto> propertyDtos = modelMapper.map(propertylist, targetListType);
         return propertyDtos;
-    }
-
-    private PropertyDto buildPropertyDto(Property property) {
-        return modelMapper.map(property, PropertyDto.class);
-    }
-
-    private Property buildProperty(PropertyDto property) {
-        return modelMapper.map(property, Property.class);
-    }
-
-    private Transaction buildTransaction(TransactionDto transactionDto) {
-        return modelMapper.map(transactionDto, Transaction.class);
     }
 
     private Integer getTransactionIndex(Property savedItem, String transactionId) {
